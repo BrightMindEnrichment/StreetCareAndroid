@@ -42,7 +42,8 @@ class Event {
     var contactNumber: String? =null
     var email: String? = null
     var consentBox: Boolean? = false
-    var likedByMe: Boolean? = false
+    var likedByMe: Boolean = false
+    var likeCount: Int = 0 // To store user IDs of who liked the event
 
     fun addValue(value:String) {
         this.itemList.add(value)

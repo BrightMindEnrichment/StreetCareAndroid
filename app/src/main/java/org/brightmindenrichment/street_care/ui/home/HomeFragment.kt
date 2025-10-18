@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,7 +15,7 @@ import com.google.android.material.slider.Slider
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.CardHomeFragmentBinding
 import org.brightmindenrichment.street_care.databinding.FragmentHomeBinding
-
+import org.brightmindenrichment.street_care.ui.user.ChapterMembershipFormOneAcitivity
 
 class HomeFragment : Fragment() {
     // Companion object
@@ -124,6 +125,9 @@ class HomeFragment : Fragment() {
             verificationBanner.findViewById<ImageButton>(R.id.btn_close).setOnClickListener {
                 verificationBanner.visibility = View.GONE
                 isBannerDismissed = true
+            }
+            verificationBanner.findViewById<Button>(R.id.btn_become_a_member).setOnClickListener {
+                context?.startActivity(Intent(context, ChapterMembershipFormOneAcitivity::class.java))
             }
         }
     }

@@ -49,10 +49,16 @@ class ChapterMembershipFormTwoAcitivity :AppCompatActivity (){
 
         // Next button click listener
         btnNext.setOnClickListener {
-            val name = personalData?.getString("name")
+            val firstName = personalData?.getString("firstName")
+            val lastName = personalData?.getString("lastName")
             val email = personalData?.getString("email")
             val phone = personalData?.getString("phone")
-            val address = personalData?.getString("address")
+            val addressLine1 = personalData?.getString("addressLine1")
+            val addressLine2 = personalData?.getString("addressLine2")
+            val city = personalData?.getString("city")
+            val state = personalData?.getString("state")
+            val zipcode = personalData?.getString("zipcode")
+            val country = personalData?.getString("country")
             val daysAvailable = multiSelectDays.text?.toString()
             val hoursAvailable = editTextHoursAvailable.text?.toString()
             val consent = spinnerConsent.selectedItem?.toString()
@@ -67,10 +73,16 @@ class ChapterMembershipFormTwoAcitivity :AppCompatActivity (){
 
             // Pass data to the next activity
             val intent = Intent(this, ChapterMembershipFormThreeAcitivity::class.java)
-            intent.putExtra("name", name)
+            intent.putExtra("firstName", firstName)
+            intent.putExtra("lastName", lastName)
             intent.putExtra("email", email)
             intent.putExtra("phone", phone)
-            intent.putExtra("address", address)
+            intent.putExtra("addressLine1", addressLine1)
+            intent.putExtra("addressLine2", addressLine2)
+            intent.putExtra("city", city)
+            intent.putExtra("state", state)
+            intent.putExtra("zipcode", zipcode)
+            intent.putExtra("country", country)
             intent.putExtra("daysAvailable", daysAvailable)
             intent.putExtra("hoursAvailable", hoursAvailable)
             intent.putExtra("consent", consent)

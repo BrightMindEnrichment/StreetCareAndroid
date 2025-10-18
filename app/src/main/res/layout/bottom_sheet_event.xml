@@ -362,44 +362,58 @@
 
             </com.google.android.flexbox.FlexboxLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp">
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
-            <!-- Space filler: pushes buttons to the right -->
-            <View
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
-            <!-- Like Button -->
-            <ImageButton
-                android:id="@+id/btnLike"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_heart_outline"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/like"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginEnd="12dp" />
+                <ImageButton
+                    android:id="@+id/btnLike"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_heart_outline"
+                    android:contentDescription="@string/like"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toStartOf="@id/btnShare"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true" />
 
-            <!-- Share Button -->
-            <ImageButton
-                android:id="@+id/btnShare"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_share"
-                android:contentDescription="@string/share"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:focusable="true" />
+                <TextView
+                    android:id="@+id/tvLikeCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="0"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/black"
+                    android:includeFontPadding="false"
+                    app:layout_constraintTop_toBottomOf="@id/btnLike"
+                    app:layout_constraintStart_toStartOf="@id/btnLike"
+                    app:layout_constraintEnd_toEndOf="@id/btnLike"
+                    android:layout_gravity="center_horizontal"/>
 
-        </LinearLayout>
+
+                <!-- Share Button -->
+                <ImageButton
+                    android:id="@+id/btnShare"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_share"
+                    android:contentDescription="@string/share"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <LinearLayout

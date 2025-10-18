@@ -134,16 +134,18 @@ class ChapterMembershipFormOneAcitivity : AppCompatActivity() {
                     }
                 }
 
-                val fullAddress = "$address, $address2, $city, $state, $zipcode, $country";
-                val name = "$firstName, $lastName"
-
-
                 // Pass data to the next activity
                 val intent: Intent = Intent(this@ChapterMembershipFormOneAcitivity, ChapterMembershipFormTwoAcitivity::class.java)
-                intent.putExtra("name", name)
+                intent.putExtra("firstName", firstName)
+                intent.putExtra("lastName", lastName)
                 intent.putExtra("email", email)
                 intent.putExtra("phone", phone)
-                intent.putExtra("address", fullAddress)
+                intent.putExtra("addressLine1", address)
+                intent.putExtra("addressLine2", address2)
+                intent.putExtra("city", city)
+                intent.putExtra("state", state)
+                intent.putExtra("zipcode", zipcode)
+                intent.putExtra("country", country)
 
                 startActivity(intent)
             }

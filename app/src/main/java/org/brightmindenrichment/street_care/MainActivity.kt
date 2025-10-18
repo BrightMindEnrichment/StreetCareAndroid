@@ -28,6 +28,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
@@ -51,6 +52,7 @@ import org.brightmindenrichment.street_care.notification.NotificationWorker
 import org.brightmindenrichment.street_care.ui.community.model.DatabaseEvent
 import org.brightmindenrichment.street_care.ui.user.UserSingleton
 import org.brightmindenrichment.street_care.ui.user.UserRepository
+import org.brightmindenrichment.street_care.ui.visit.InteractionLogDialog
 import org.brightmindenrichment.street_care.util.Constants.NOTIFICATION_WORKER
 import org.brightmindenrichment.street_care.util.DataStoreManager
 import org.brightmindenrichment.street_care.util.Extensions
@@ -217,7 +219,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.loginRedirectFragment, R.id.nav_community, R.id.nav_user
+                R.id.nav_home, R.id.loginRedirectFragment, R.id.nav_community, R.id.nav_user, R.id.nav_interaction_log
             )
         )
 
@@ -234,7 +236,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.loginRedirectFragment -> {
                     if (Firebase.auth.currentUser != null) {
-                        navController.navigate(R.id.nav_visit)
+                        navController.navigate(R.id.nav_interaction_log)
                     } else {
                         navController.navigate(R.id.loginVisitLogFragment)
                     }
@@ -260,7 +262,7 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.nav_home,R.id.loginVisitLogFragment,R.id.loginRedirectFragment, R.id.nav_visit, R.id.nav_community, R.id.nav_profile -> {
+                R.id.nav_home,R.id.loginVisitLogFragment,R.id.loginRedirectFragment, R.id.nav_visit, R.id.nav_community, R.id.nav_profile, R.id.nav_interaction_log -> {
                     bottomNavView.visibility = View.VISIBLE
                 }
                 else -> {

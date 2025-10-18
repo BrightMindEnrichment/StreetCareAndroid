@@ -67,9 +67,9 @@ class ProfileFragment : Fragment() {
         binding.txteditprofile.setOnClickListener{
             findNavController().navigate(R.id.action_nav_profile_to_nav_editprofile)
         }
-        /*binding.textbadges.setOnClickListener{
+        binding.textbadges.setOnClickListener{
             findNavController().navigate(R.id.action_nav_profile_to_nav_profileBadges)
-        }
+        }/*
         binding.
         textMyEvents.setOnClickListener{
             findNavController().navigate(R.id.action_nav_profile_to_profileMyEvents)

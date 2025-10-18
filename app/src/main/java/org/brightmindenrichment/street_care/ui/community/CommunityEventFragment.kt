@@ -2,7 +2,6 @@ package org.brightmindenrichment.street_care.ui.community
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
@@ -35,7 +34,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.notification.ChangedType
-import org.brightmindenrichment.street_care.ui.community.adapter.CommunityHelpRequestAdapter
 import org.brightmindenrichment.street_care.ui.community.adapter.CommunityRecyclerAdapter
 import org.brightmindenrichment.street_care.ui.community.data.Event
 import org.brightmindenrichment.street_care.ui.community.data.EventDataAdapter
@@ -59,6 +57,7 @@ import org.brightmindenrichment.street_care.util.Queries.getQueryToFilterEventsA
 import org.brightmindenrichment.street_care.util.Queries.getQueryToFilterEventsByType
 import org.brightmindenrichment.street_care.util.Queries.getUpcomingEventsQuery
 import org.brightmindenrichment.street_care.util.Share
+import org.brightmindenrichment.street_care.util.showLoginDialog
 import java.util.Date
 
 
@@ -410,6 +409,8 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                                 val bsTextViewRegistered: TextView = bottomSheetView.findViewById(R.id.tvRegistered)
                                 val isPastEvents = communityPageName == CommunityPageName.PAST_EVENTS
                                 val bsFlexboxLayoutSkills: FlexboxLayout = bottomSheetView.findViewById(R.id.flSkills)
+                                val bsButtonLiked: ImageButton = bottomSheetView.findViewById(R.id.btnLike)
+                                val tvLikeCount: TextView = bottomSheetView.findViewById(R.id.tvLikeCount)
 
                                 refreshBottomSheet(
                                     updatedEvent,
@@ -422,7 +423,9 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                                     bsLinearLayoutVerifiedAndIcon,
                                     bsTextViewRegistered,
                                     isPastEvents,
-                                    bsFlexboxLayoutSkills
+                                    bsFlexboxLayoutSkills,
+                                    bsButtonLiked,
+                                    tvLikeCount
                                 )
                             }
                         }
@@ -613,12 +616,8 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
             val bsLinearLayoutEventDesc: LinearLayout = bottomSheetView.findViewById<LinearLayout>(R.id.linearLayoutEventDesc)
             val bsButtonShare: ImageButton = bottomSheetView.findViewById(R.id.btnShare)
             val bsButtonLike: ImageButton = bottomSheetView.findViewById(R.id.btnLike)
-            bsButtonLike.setOnClickListener { v ->
-                val btn = v as ImageButton
-                val liked = !(btn.tag as? Boolean ?: false)
-                btn.tag = liked
-                btn.setImageResource(if (liked) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline)
-            }
+            val tvLikeCount: TextView = bottomSheetView.findViewById(R.id.tvLikeCount)
+
 
             (recyclerView?.adapter as CommunityRecyclerAdapter).setRefreshBottomSheet { event ->
                 refreshBottomSheet(
@@ -632,7 +631,9 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     linearLayoutVerifiedAndIcon = bsLinearLayoutVerifiedAndIcon,
                     textViewRegistered = bsTextViewRegistered,
                     isPastEvents = isPastEvents,
-                    flexboxLayoutSkills = bsFlexboxLayoutSkills
+                    flexboxLayoutSkills = bsFlexboxLayoutSkills,
+                    buttonLike = bsButtonLike,
+                    tvLikeCount = tvLikeCount
                 )
             }
 
@@ -646,6 +647,38 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         Share.shareEvent(requireContext(), event.eventId)
                     }
 
+                    bsButtonLike.setOnClickListener {
+                        if (Firebase.auth.currentUser == null) {
+                            showLoginDialog(requireContext())
+                            return@setOnClickListener
+                        }
+                        event.likedByMe = !event.likedByMe
+                        if (event.likedByMe) {
+                            event.likeCount++
+                            bsButtonLike.setImageResource(R.drawable.ic_heart_filled)
+                        } else {
+                            event.likeCount--
+                            bsButtonLike.setImageResource(R.drawable.ic_heart_outline)
+                        }
+                        tvLikeCount.text = event.likeCount.toString()
+
+                        communityRecyclerAdapter.notifyItemChanged(position)
+                        eventDataAdapter.setLikedOutreachEvent(event.eventId, event.likedByMe) { success ->
+                            if (!success) {
+                                event.likedByMe = !event.likedByMe
+                                if (event.likedByMe) {
+                                    event.likeCount++
+                                    bsButtonLike.setImageResource(R.drawable.ic_heart_filled)
+                                } else {
+                                    event.likeCount--
+                                    bsButtonLike.setImageResource(R.drawable.ic_heart_outline)
+                                }
+                                tvLikeCount.text = event.likeCount.toString()
+
+                                communityRecyclerAdapter.notifyItemChanged(position)
+                            }
+                        }
+                    }
 
                     (recyclerView.adapter as CommunityRecyclerAdapter).setCurrentBottomSheetEvent(event)
                     bsTextViewTitle.text = event.title
@@ -851,7 +884,9 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         bsLinearLayoutVerifiedAndIcon,
                         bsTextViewRegistered,
                         isPastEvents,
-                        bsFlexboxLayoutSkills
+                        bsFlexboxLayoutSkills,
+                        bsButtonLike,
+                        tvLikeCount
                     )
 
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -933,7 +968,9 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                                 bsLinearLayoutVerifiedAndIcon,
                                 bsTextViewRegistered,
                                 isPastEvents,
-                                bsFlexboxLayoutSkills
+                                bsFlexboxLayoutSkills,
+                                bsButtonLike,
+                                tvLikeCount
                             )
                             (recyclerView.adapter as CommunityRecyclerAdapter).notifyItemChanged(position)
                             Log.d("Liked Event Firebase Update", "Liked Event Firebase Update Success")
@@ -1016,7 +1053,9 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
         linearLayoutVerifiedAndIcon: LinearLayout,
         textViewRegistered: TextView,
         isPastEvents: Boolean,
-        flexboxLayoutSkills: FlexboxLayout
+        flexboxLayoutSkills: FlexboxLayout,
+        buttonLike: ImageButton,
+        tvLikeCount: TextView,
     ) {
 
         val isSignedUp = event.signedUp
@@ -1034,6 +1073,10 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
             cardViewEvent = null,
             bottomSheetView = bottomSheetView,
         )
+
+        buttonLike.setImageResource(if (event.likedByMe) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline)
+        tvLikeCount.text = event.likeCount.toString()
+
 
         event.skills?.let { skills ->
             flexboxLayoutSkills.removeAllViews()

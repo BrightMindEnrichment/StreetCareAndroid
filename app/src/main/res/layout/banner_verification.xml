@@ -46,7 +46,6 @@
         tools:text="Profile verification will allow anyone who is verified to post upcoming events and document their interactions with homeless people."
         android:textColor="@color/black"
         android:lineSpacingExtra="2dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_banner_sub_header" />
@@ -61,5 +60,25 @@
         android:src="@drawable/ic_close"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Button
+        android:id="@+id/btn_become_a_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_16dp"
+        android:textAllCaps="false"
+        android:textColor="@color/accent_yellow"
+        android:textSize="15sp"
+        app:fontFamily="Poppins"
+        android:textStyle="bold"
+        android:paddingHorizontal="45dp"
+        android:paddingVertical="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/custom_button"
+        android:text="@string/become_a_member"
+        app:layout_constraintTop_toBottomOf="@id/tv_banner_body"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

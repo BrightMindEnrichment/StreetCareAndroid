@@ -238,7 +238,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -264,17 +263,43 @@
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
-                <ImageButton
-                    android:id="@+id/btnLike"
-                    android:layout_width="20dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/likeBlock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
                     android:layout_marginStart="10dp"
-                    android:src="@drawable/ic_heart_outline"
-                    android:contentDescription="@string/like"
-                    android:background="@android:color/transparent"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:visibility="gone">
+
+                    <ImageButton
+                        android:id="@+id/btnLike"
+                        android:layout_width="20dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/ic_heart_outline"
+                        android:contentDescription="@string/like"
+                        android:background="@android:color/transparent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/tvLikeCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        android:includeFontPadding="false"
+                        app:layout_constraintTop_toBottomOf="@id/btnLike"
+                        app:layout_constraintStart_toStartOf="@id/btnLike"
+                        app:layout_constraintEnd_toEndOf="@id/btnLike"
+                        android:layout_gravity="center_horizontal"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- Share (match flag style: 20x30 ImageView) -->
                 <ImageButton
@@ -287,7 +312,8 @@
                     android:contentDescription="@string/share"
                     android:background="@android:color/transparent"
                     android:clickable="true"
-                    android:focusable="true" />
+                    android:focusable="true"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

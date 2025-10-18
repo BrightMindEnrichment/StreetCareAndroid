@@ -350,6 +350,40 @@ class EventDataAdapter(private val scope: CoroutineScope) {
     }
     */
 
+    fun setLikedOutreachEvent(eventId: String?, isLiked: Boolean, onComplete: (success: Boolean) -> Unit) {
+        val currentUser = Firebase.auth.currentUser
+        if (currentUser == null || eventId.isNullOrEmpty()) {
+            onComplete(false)
+            return
+        }
+
+        val userId = currentUser.uid
+        val db = Firebase.firestore
+        val eventRef = db.collection("outreachEventsDev").document(eventId)
+        val userRef = db.collection("users").document(userId)
+
+        db.runTransaction { transaction ->
+            if (isLiked) {
+                // Atomically add the user's ID to the event's 'likes' array
+                transaction.update(eventRef, "likes", FieldValue.arrayUnion(userId))
+                // Atomically add the event's ID to the user's 'likedOutreach' array
+                transaction.update(userRef, "likedOutreach", FieldValue.arrayUnion(eventId))
+            } else {
+                // Atomically remove the user's ID from the event's 'likes' array
+                transaction.update(eventRef, "likes", FieldValue.arrayRemove(userId))
+                // Atomically remove the event's ID from the user's 'likedOutreach' array
+                transaction.update(userRef, "likedOutreach", FieldValue.arrayRemove(eventId))
+            }
+            // Transaction must return a value. null is fine for write-only transactions.
+            null
+        }.addOnSuccessListener {
+            Log.d("FirestoreLike", "Like/unlike transaction was successful.")
+            onComplete(true)
+        }.addOnFailureListener { e ->
+            Log.e("FirestoreLike", "Like/unlike transaction failed.", e)
+            onComplete(false)
+        }
+    }
     private fun checkQuery(event: Event, inputText: String): Boolean {
         val title = event.title.lowercase().trim()
         val description = event.description?.lowercase()?.trim() ?: "unknown"
@@ -445,6 +479,11 @@ class EventDataAdapter(private val scope: CoroutineScope) {
                             }
 
                         }
+
+                        val user = Firebase.auth.currentUser
+                        val likes = document.get("likes") as? List<*>
+                        event.likeCount = likes?.size ?: 0
+                        event.likedByMe = user != null && likes?.contains(user.uid) == true
 
                         if(!checkQuery(event, inputText)) continue
 

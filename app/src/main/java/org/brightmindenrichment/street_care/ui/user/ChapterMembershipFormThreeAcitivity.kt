@@ -59,7 +59,7 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
                     calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
                     // Format the date and set it to the TextInputEditText
-                    val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                     editTextSignatureDate.setText(dateFormat.format(calendar.time))
                 },
                 calendar.get(Calendar.YEAR),
@@ -95,23 +95,27 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
                 return@setOnClickListener
             } else {
 
-                val name = previousFormData?.getString("name").toString().trim()
-                val email = previousFormData?.getString("email").toString().trim()
-                val phone = previousFormData?.getString("phone").toString().trim()
-                val address = previousFormData?.getString("address").toString().trim()
-                val daysAvailable = previousFormData?.getString("daysAvailable").toString().trim()
-                val hoursAvailable = previousFormData?.getString("hoursAvailable").toString().trim()
-                val consent = previousFormData?.getString("consent").toString().trim()
-                val source = previousFormData?.getString("source").toString().trim()
-                val whyVolunteer = previousFormData?.getString("whyVolunteer").toString().trim()
-
                 val signatureName = editTextSignatureName.text.toString().trim()
                 val fullName = editTextFullName.text.toString().trim()
                 val signatureDate = editTextSignatureDate.text.toString().trim()
                 val comments = editTextComments.text.toString().trim()
 
-                val currentDateInMillis = System.currentTimeMillis()
-                val currentDateTimestamp = Timestamp(Date(currentDateInMillis))
+                val firstName     = previousFormData?.getString("firstName").orEmpty()
+                val lastName      = previousFormData?.getString("lastName").orEmpty()
+                val email         = previousFormData?.getString("email").orEmpty()
+                val phone         = previousFormData?.getString("phone").orEmpty()
+                val addressLine1  = previousFormData?.getString("addressLine1").orEmpty()
+                val addressLine2  = previousFormData?.getString("addressLine2").orEmpty()
+                val city          = previousFormData?.getString("city").orEmpty()
+                val state         = previousFormData?.getString("state").orEmpty()
+                val zipcode       = previousFormData?.getString("zipcode").orEmpty()
+                val country       = previousFormData?.getString("country").orEmpty()
+
+                val daysAvailable = previousFormData?.getString("daysAvailable").orEmpty()
+                val hoursAvailable= previousFormData?.getString("hoursAvailable").orEmpty()
+                val consent       = previousFormData?.getString("consent").orEmpty()     // “Yes/No”
+                val source        = previousFormData?.getString("source").orEmpty()
+                val whyVolunteer  = previousFormData?.getString("whyVolunteer").orEmpty()
 
                 // Validate input
                 if (signatureName.isEmpty() || fullName.isEmpty() || signatureDate.isEmpty()) {
@@ -120,20 +124,25 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
                 }
 
                 addEvent(
-                    name = name,
+                    firstName = firstName,
+                    lastName = lastName,
                     email = email,
                     phone = phone,
-                    address = address,
-                    daysAvailable= daysAvailable,
+                    addressLine1 = addressLine1,
+                    addressLine2 = addressLine2,
+                    city = city,
+                    state = state,
+                    zipcode = zipcode,
+                    country = country,
+                    daysAvailable = daysAvailable,
                     hoursAvailable = hoursAvailable,
                     consent = consent,
                     source = source,
                     whyVolunteer = whyVolunteer,
                     signatureName = signatureName,
-                    fullName = fullName,
+                    nameForSignature = fullName,
                     signatureDate = signatureDate,
-                    comments = comments,
-                    currentDateTimestamp = currentDateTimestamp
+                    comments = comments
                 )
             }
 
@@ -151,20 +160,25 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
     }
 
     private fun addEvent(
-        name: String,
+        firstName: String,
+        lastName: String,
         email: String,
         phone: String,
-        address: String,
+        addressLine1: String,
+        addressLine2: String,
+        city: String,
+        state: String,
+        zipcode: String,
+        country: String,
         daysAvailable: String,
         hoursAvailable: String,
         consent: String,
         source: String,
         whyVolunteer: String,
         signatureName: String,
-        fullName: String,
+        nameForSignature: String,
         signatureDate: String,
-        comments: String,
-        currentDateTimestamp: Timestamp,
+        comments: String
     ) {
 
         val db = Firebase.firestore
@@ -172,26 +186,31 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
         val randomId = java.util.UUID.randomUUID().toString()
 
         // Create a map to store data
+        // Changed field names to match BME_Form_data tracker
         val data = hashMapOf(
-            "Address" to address,
-            "Comments. You can add more information on how you heard about us and share any other relevant information." to comments,
-            "Date of Signature" to signatureDate,
-            "Days of the week available to volunteer" to daysAvailable,
-            "Email" to email,
-            "How did you hear about us?" to source,
-            "If under 18, please provide written consent from a parent or guardian." to consent,
-            "Name" to name,
-            "Number of hours available to volunteer (weekly)" to hoursAvailable,
-            "Phone Number" to phone,
-            "Signature (If minor, Guardian's signature)" to signatureName,
-            "Submission Create Date" to currentDateTimestamp,
-            "Submission ID" to randomId,
-            "Submission Status" to "unread",
-            "Why do you want to volunteer at Street Care?" to whyVolunteer
+            "FirstName" to firstName,
+            "LastName" to lastName,
+            "EmailAddress" to email,
+            "PhoneNumber" to phone,
+            "AddressLine1" to addressLine1,
+            "AddressLine2" to addressLine2,
+            "ZipCode" to zipcode,
+            "Country" to country,
+            "City" to city,
+            "State" to state,
+            "Weekdays" to daysAvailable,
+            "VolunteerHours" to hoursAvailable,
+            "Under18" to consent,
+            "HearAboutUs" to source,
+            "VolunteerText" to whyVolunteer,
+            "Signature" to signatureName,
+            "NameForSignature" to nameForSignature,
+            "DateOfSignature" to signatureDate,
+            "Comments" to comments
         )
 
         // Save to Firebase
-        db.collection("SCChapterMembershipForm")
+        db.collection("BMEMembershipForm")
             .add(data)
             .addOnSuccessListener {
                 val user = Firebase.auth.currentUser
