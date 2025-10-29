@@ -20,8 +20,8 @@ android {
         applicationId "com.app.bmeapplication1"
         minSdk 31
         targetSdk 34
-        versionCode 248
-        versionName "24.8"
+        versionCode 250
+        versionName "25.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
