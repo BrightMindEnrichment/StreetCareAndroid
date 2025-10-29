@@ -143,7 +143,7 @@ class LikedPostsFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun setupBottomSheetClickHandlers(
         event: Event,
         position: Int,
-        communityRecyclerAdapter: LikedPostsRecyclerAdapter,
+        communityRecyclerAdapter: Any,
         recyclerView: RecyclerView
     ) {
         // Get bottom sheet UI elements
