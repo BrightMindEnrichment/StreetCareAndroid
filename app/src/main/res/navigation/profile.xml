@@ -76,6 +76,9 @@
         <action
             android:id="@+id/action_nav_profile_to_profileMyEvents"
             app:destination="@id/profileMyEvents" />
+        <action
+            android:id="@+id/action_nav_profile_to_likedPostsFragment"
+            app:destination="@id/likedPostsFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_editprofile"
@@ -101,6 +104,12 @@
         android:name="org.brightmindenrichment.street_care.ui.user.ChangePasswordFragment"
         android:label="@string/change_password"
         tools:layout="@layout/change_password" />
+
+    <fragment
+        android:id="@+id/likedPostsFragment"
+        android:name="org.brightmindenrichment.street_care.ui.user.LikedPostsFragment"
+        android:label="@string/liked_posts"
+        tools:layout="@layout/fragment_liked_posts" />
 
 
 </navigation>

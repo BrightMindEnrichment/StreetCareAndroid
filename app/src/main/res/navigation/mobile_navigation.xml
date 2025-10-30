@@ -757,5 +757,11 @@
         android:label="UserFragment"
         tools:layout="@layout/fragment_profile"/>
 
+    <fragment
+        android:id="@+id/likedPostsFragment"
+        android:name="org.brightmindenrichment.street_care.ui.user.LikedPostsFragment"
+        android:label="@string/liked_posts"
+        tools:layout="@layout/fragment_liked_posts" />
+
 
 </navigation>

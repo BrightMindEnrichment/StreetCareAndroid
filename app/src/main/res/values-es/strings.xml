@@ -660,6 +660,8 @@ y enviarlo a nosotros a <a href="mailto:volunteer@streetcare.us">volunteer@stree
     <string name="like">Me gusta</string>
     <string name="share">Compartir</string>
     <string name="become_a_member">Hazte Miembro</string>
+    <string name="liked_posts">Publicaciones que me gustan</string>
+    <string name="no_liked_posts_yet">Aún no hay publicaciones que te gusten</string>
 
     <string name="please_login_title">Por favor inicia sesión</string>
     <string name="please_login_message">Necesitas iniciar sesión para dar "me gusta" a este evento. ¿Quieres iniciar sesión ahora?</string>
