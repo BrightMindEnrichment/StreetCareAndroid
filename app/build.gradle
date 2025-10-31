@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
 
     androidResources {
         generateLocaleConfig true
@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "com.app.bmeapplication1"
         minSdk 31
-        targetSdk 34
+        targetSdk 36
         versionCode 250
         versionName "25.0"
 
