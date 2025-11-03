@@ -336,6 +336,7 @@ a la comunidad.</string>
     <string name="title_with_star">Título*</string>
     <string name="enter_email">Introduzca su dirección de correo electrónico</string>
     <string name="contact_number">Número de contacto</string>
+    <string name="phone_number">número de teléfono</string>
     <string name="enter_contact_number">Introduzca el número de contacto</string>
     <string name="consent_text">Al seleccionar esta casilla, doy mi consentimiento para compartir públicamente mis datos de contacto y la dirección del evento en esta plataforma/espacio comunitario para facilitar la participación en el evento de divulgación. Entiendo que esta información será visible para otros y acepto las consideraciones de privacidad asociadas. \n</string>
     <string name="publish_event">Publicar</string>

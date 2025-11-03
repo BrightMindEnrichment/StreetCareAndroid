@@ -475,7 +475,7 @@
         android:id="@+id/additional2"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Additional2"
         android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_additional2">
+        tools:layout="@layout/fragment_question1">
         <action
             android:id="@+id/action_additional2_to_visitForm7a"
             app:destination="@id/visitForm7a" />
@@ -573,7 +573,7 @@
         android:id="@+id/additional10"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Additional10"
         android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_additional10">
+        tools:layout="@layout/fragment_question2">
         <action
             android:id="@+id/action_additional10_to_additional9"
             app:destination="@id/additional9" />

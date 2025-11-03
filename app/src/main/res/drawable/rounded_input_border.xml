@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Solid color of the background (usually white) -->
+    <solid android:color="@color/white" />
+
+    <!-- Stroke (border) properties -->
+    <stroke
+        android:width="1dp"
+        android:color="@color/gray700" />
+
+    <!-- Radius of the corners -->
+    <corners android:radius="8dp" />
+
+    <!-- Optional: Add padding inside the border if needed (e.g., if used with standard EditText) -->
+    <!-- <padding
+        android:left="12dp"
+        android:top="12dp"
+        android:right="12dp"
+        android:bottom="12dp" /> -->
+</shape>
