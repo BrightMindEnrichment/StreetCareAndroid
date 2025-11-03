@@ -317,12 +317,14 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="first_one_to_join">Be the first one to join!</string>
     <string name="public_help_request_title">Public a request to Community Hub</string>
     <string name="public_help_request_content">If this person experiencing homelessness requires further assistance, please provide additional details so we can share with the community and rally support to help them.</string>
+    <string name="help_needed">Help needed</string>
     <string name="help_request_second_title">Help other volunteers to find them</string>
     <string name="help_request_second_content">Please provide as many details as you can to help us locate them</string>
     <string name="help_requests_skills">Select the help they need*</string>
     <string name="title_with_star">Title*</string>
     <string name="enter_email">Enter email address</string>
     <string name="contact_number">Contact Number</string>
+    <string name="phone_number">Phone Number</string>
     <string name="enter_contact_number">Enter contact number</string>
     <string name="consent_text">By selecting this checkbox, I consent to sharing my contact details and event address publicly on this platform / community space to facilitate participation in the outreach event. I understand that this information will be visible to others and acknowledge the associated privacy considerations. \n</string>
     <string name="publish_event">Publish</string>
