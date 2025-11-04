@@ -208,11 +208,6 @@
             app:destination="@id/sharedCommunityVisitLogFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/nav_interaction_log"
-        android:name="org.brightmindenrichment.street_care.ui.visit.BlankInteractionLogFragment"
-        android:label="Interaction Log"
-        tools:layout="@layout/fragment_blank" />
 
 
 
