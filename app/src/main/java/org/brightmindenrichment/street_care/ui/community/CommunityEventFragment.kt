@@ -28,10 +28,12 @@ import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.notification.ChangedType
 import org.brightmindenrichment.street_care.ui.community.adapter.CommunityRecyclerAdapter
@@ -297,7 +299,7 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
                     }
                     1-> {
-                        if(Firebase.auth.currentUser!=null) {
+                        if(FirebaseAuth.getInstance().currentUser!=null) {
                             findNavController().popBackStack()
                             findNavController().navigate(R.id.nav_add_event, Bundle().apply {
                                 //putBoolean("isPastEvents", isPastEvents)
@@ -648,7 +650,7 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
 
                     bsButtonLike.setOnClickListener {
-                        if (Firebase.auth.currentUser == null) {
+                        if (FirebaseAuth.getInstance().currentUser == null) {
                             showLoginDialog(requireContext())
                             return@setOnClickListener
                         }
@@ -720,7 +722,7 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     val uid = event.uid;
 
                     var type :String? = "";
-                    val db = Firebase.firestore
+                    val db = FirebaseFirestore.getInstance()
                     db.collection("users").whereEqualTo("uid", uid.toString())
                         .get()
                         .addOnSuccessListener { querySnapshot ->
@@ -801,7 +803,7 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     )
 
                     ivFlag.setOnClickListener {
-                        val currentUser = Firebase.auth.currentUser ?: return@setOnClickListener
+                        val currentUser = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
                         val eventRef = db.collection("outreachEventsDev").document(event.eventId!!)
                         val currentUserId = currentUser.uid
 

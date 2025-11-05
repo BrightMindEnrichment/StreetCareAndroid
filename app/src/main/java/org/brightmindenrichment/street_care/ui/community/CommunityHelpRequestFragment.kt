@@ -21,10 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.community.adapter.CommunityHelpRequestAdapter
 import org.brightmindenrichment.street_care.ui.community.data.HelpRequest
@@ -87,7 +89,7 @@ class CommunityHelpRequestFragment : Fragment() {
         // Attach an empty adapter; if you have a current user, pass its UID; otherwise, use an empty string.
         recyclerView.adapter = CommunityHelpRequestAdapter(
             controller = helpRequestDataAdapter,
-            currentUserId = Firebase.auth.currentUser?.uid ?: "",
+            currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: "",
             context = requireContext()
         )
 
@@ -205,13 +207,13 @@ class CommunityHelpRequestFragment : Fragment() {
                 helpRequestDataAdapter,
                 defaultQuery,
                 "",
-                Firebase.auth.currentUser?.uid ?: "guest"
+                FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
             )
 
             searchEvents(
                 helpRequestDataAdapter,
                 defaultQuery,
-                Firebase.auth.currentUser?.uid ?: "guest"
+                FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
             )
 
 //        }
@@ -383,7 +385,7 @@ class CommunityHelpRequestFragment : Fragment() {
                     val uid = helpRequest.uid;
 
                     var type :String? = "";
-                    val db = Firebase.firestore
+                    val db = FirebaseFirestore.getInstance()
                     db.collection("users").whereEqualTo("uid", uid.toString())
                         .get()
                         .addOnSuccessListener { querySnapshot ->

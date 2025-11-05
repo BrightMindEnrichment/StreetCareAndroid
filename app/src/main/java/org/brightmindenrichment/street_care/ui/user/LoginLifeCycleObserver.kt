@@ -20,9 +20,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.OAuthProvider
-import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ class LoginLifeCycleObserver(
 
     override fun onCreate(owner: LifecycleOwner) {
         Log.d(TAG, "GoogleSignInLifeCycleObserver created")
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance()
     }
 
     suspend fun fetchGoogleSignInCredentials() {
@@ -129,7 +129,7 @@ class LoginLifeCycleObserver(
     }
 
     private fun handleFirebaseLogin(authResult: AuthResult) {
-        UserSingleton.userModel = UserModel(currentUser = Firebase.auth.currentUser)
+        UserSingleton.userModel = UserModel(currentUser = FirebaseAuth.getInstance().currentUser)
         val isNew = authResult.additionalUserInfo!!.isNewUser
         if (isNew) {
             setFirebaseNewUser(UserSingleton.userModel.currentUser)

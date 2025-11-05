@@ -20,8 +20,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentProfileBinding
@@ -99,7 +99,7 @@ class ProfileFragment : Fragment() {
     private fun buttonSignOutOnClick() {
         if (currentUser != null) {
             googleSignOut()
-            Firebase.auth.signOut()
+            FirebaseAuth.getInstance().signOut()
             UserSingleton.userModel = UserModel()
             Log.d(TAG, "Firebase user sign out")
             findNavController().popBackStack()

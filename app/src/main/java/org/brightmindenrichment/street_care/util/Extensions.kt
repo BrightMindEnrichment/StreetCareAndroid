@@ -37,13 +37,14 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.CoroutineScope
@@ -768,7 +769,7 @@ class Extensions {
             changedType: String,
             eventId: String,
         ) {
-            Firebase.auth.currentUser?.let {
+            FirebaseAuth.getInstance().currentUser?.let {
                 // create pendingIntent to redirect to the event fragment when users click the notification
                 //val pendingIntent = createPendingIntentByTaskStackBuilder(changedType, eventId, eventTitle, context)
                 val pendingIntent = createPendingIntent(changedType, eventId, eventTitle, context)

@@ -17,10 +17,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.MainActivity
 import org.brightmindenrichment.street_care.R
 import java.util.Calendar
@@ -78,7 +80,7 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
         val btnSaveChanges = findViewById<Button>(R.id.btn_save_changes)
         val btnNext = findViewById<Button>(R.id.btn_cancel)
 
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance()
 
         val previousFormData = intent.extras
 
@@ -89,7 +91,7 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
         // Handle Save button click
         btnSaveChanges.setOnClickListener {
 
-            val user = Firebase.auth.currentUser
+            val user = FirebaseAuth.getInstance().currentUser
             if (user == null) {
                 Toast.makeText(this, getString(R.string.please_login_before_event), Toast.LENGTH_LONG).show()
                 return@setOnClickListener
@@ -181,7 +183,7 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
         comments: String
     ) {
 
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance()
 
         val randomId = java.util.UUID.randomUUID().toString()
 
@@ -213,7 +215,7 @@ class ChapterMembershipFormThreeAcitivity : AppCompatActivity(){
         db.collection("BMEMembershipForm")
             .add(data)
             .addOnSuccessListener {
-                val user = Firebase.auth.currentUser
+                val user = FirebaseAuth.getInstance().currentUser
                 if (user != null) {
                     val usersDocRef = db.collection("users").document(user.uid)
 

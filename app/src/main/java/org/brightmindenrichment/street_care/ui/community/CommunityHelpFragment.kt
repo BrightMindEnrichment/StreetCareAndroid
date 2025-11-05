@@ -11,8 +11,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentCommunityHelpBinding
 import org.brightmindenrichment.street_care.ui.community.viewModel.CommunityHelpViewModel
@@ -108,7 +109,7 @@ class CommunityHelpFragment : Fragment() {
     }
 
     private fun enableMyPost() {
-        if (Firebase.auth.currentUser != null) {
+        if (FirebaseAuth.getInstance().currentUser != null) {
             val myPostText: TextView? = activity?.findViewById(R.id.toolbar_title_text)
             myPostText?.let {
                 myPostText.visibility = View.VISIBLE
