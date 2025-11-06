@@ -752,5 +752,19 @@
         android:label="UserFragment"
         tools:layout="@layout/fragment_profile"/>
 
+    <fragment
+        android:id="@+id/consentFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.ConsentFragment"
+        android:label="@string/visit_log_inside" />
+
+    <fragment
+        android:id="@+id/successFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SuccessFragment"
+        android:label="@string/interaction_logged_title" />
+
+    <action
+        android:id="@+id/action_consentFragment_to_successFragment"
+        app:destination="@id/successFragment" />
+
 
 </navigation>
