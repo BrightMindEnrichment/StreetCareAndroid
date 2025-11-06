@@ -85,10 +85,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-storage'
     //firebase - If we want to use 'where' for query in firebase
-    implementation 'com.google.firebase:firebase-auth-ktx'
+    //implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-firestore-ktx'
+    //implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-messaging'
     // For FirebaseUI, you need to specify the version separately as it's not included in the Firebase BoM
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
