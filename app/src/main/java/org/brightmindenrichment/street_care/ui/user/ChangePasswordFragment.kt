@@ -64,7 +64,7 @@ class ChangePasswordFragment : Fragment() {
         val user = UserSingleton.userModel.currentUser
 
             // Check if the user is logged in
-            user?.let {
+        user?.let {
                 // Get user's email
                 val email = user.email
 
