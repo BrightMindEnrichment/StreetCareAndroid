@@ -3,10 +3,12 @@ package org.brightmindenrichment.street_care.ui.community.data
 import android.content.ContentValues
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.firestore.ktx.firestore MOD
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.google.firebase.firestore.ListenerRegistration
@@ -52,7 +54,7 @@ class EventDataAdapter(private val scope: CoroutineScope) {
         }
 
     fun setupFlagStatusListeners(onFlagStatusChanged: (Event) -> Unit) {
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
 
         for (listener in eventListeners.values) {
             listener.remove()
@@ -113,9 +115,9 @@ class EventDataAdapter(private val scope: CoroutineScope) {
     fun setLikedEvent(event: Event, onComplete: (Event) -> Unit) {
 
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser
-        if (Firebase.auth.currentUser == null) {
-            Firebase.auth.signInAnonymously()
+        val user = FirebaseAuth.getInstance().currentUser // MOD
+        if (FirebaseAuth.getInstance().currentUser == null) { // MOD
+            FirebaseAuth.getInstance().signInAnonymously() // MOD
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d("Auth", "Signed in anonymously")
@@ -125,7 +127,7 @@ class EventDataAdapter(private val scope: CoroutineScope) {
                 }
         }
 
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
         val doesLike: Boolean = event.signedUp
         val usersDocRef = user?.let { db.collection("users").document(it.uid) }
         val eventsDocRef = db.collection("outreachEventsDev").document(event.eventId!!)
@@ -256,9 +258,9 @@ class EventDataAdapter(private val scope: CoroutineScope) {
    fun setLikedEvent(event: Event, onComplete: (Event) -> Unit) {
 
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return
 
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance()
         val doesLike: Boolean = event.signedUp
         if (doesLike) {  // add a record if liked
 
@@ -351,14 +353,14 @@ class EventDataAdapter(private val scope: CoroutineScope) {
     */
 
     fun setLikedOutreachEvent(eventId: String?, isLiked: Boolean, onComplete: (success: Boolean) -> Unit) {
-        val currentUser = Firebase.auth.currentUser
+        val currentUser = FirebaseAuth.getInstance().currentUser // MOD
         if (currentUser == null || eventId.isNullOrEmpty()) {
             onComplete(false)
             return
         }
 
         val userId = currentUser.uid
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
         val eventRef = db.collection("outreachEventsDev").document(eventId)
         val userRef = db.collection("users").document(userId)
 
@@ -413,10 +415,10 @@ class EventDataAdapter(private val scope: CoroutineScope) {
     ) {
         showProgressBar()
         // make sure somebody is logged in
-        // val user = Firebase.auth.currentUser ?: return
+        // val user = FirebaseAuth.getInstance().currentUser ?: return
         var prevMonth: String? = null
         var prevDay: String? = null
-        //val db = Firebase.firestore
+        //val db = FirebaseFirestore.getInstance()
         //val query = db.collection("events").orderBy("date", Query.Direction.DESCENDING)
         query.get()
             .addOnSuccessListener { result ->
@@ -480,7 +482,7 @@ class EventDataAdapter(private val scope: CoroutineScope) {
 
                         }
 
-                        val user = Firebase.auth.currentUser
+                        val user = FirebaseAuth.getInstance().currentUser // MOD
                         val likes = document.get("likes") as? List<*>
                         event.likeCount = likes?.size ?: 0
                         event.likedByMe = user != null && likes?.contains(user.uid) == true
@@ -585,9 +587,9 @@ class EventDataAdapter(private val scope: CoroutineScope) {
    private fun refreshedLiked(onComplete: () -> Unit) {
 
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return // MOD
 
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
 
         /*db.collection("likedEvents").whereEqualTo("uid", user.uid).get()
             .addOnSuccessListener { results ->
@@ -602,7 +604,7 @@ class EventDataAdapter(private val scope: CoroutineScope) {
 
                 onComplete()
             }
-            .addOnFailureListener { exceptioon ->
+            .addOnFailureListener { exception ->
                 onComplete()
             }*/
        db.collection("likedEvents").get()
@@ -644,13 +646,13 @@ class EventDataAdapter(private val scope: CoroutineScope) {
     ) {
 
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser
+        val user = FirebaseAuth.getInstance().currentUser // MOD
 
         if (user == null) {
             onComplete()
             return
         }
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
 
         db.collection("users")
             .document(user.uid)

@@ -14,7 +14,8 @@ import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -127,10 +128,10 @@ class SignUpFragment : Fragment() {
             } else if (TextUtils.isEmpty(password)) {
                 binding.editTextSignUpPassword.setError(getString(R.string.mandatory))
             } else {
-                Firebase.auth.createUserWithEmailAndPassword(email, password)
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password) // MOD
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            val currentUser = Firebase.auth.currentUser
+                            val currentUser = FirebaseAuth.getInstance().currentUser // MOD
                             val userData = hashMapOf<String, Any>(
                                 "dateCreated" to Date(),
                                 "deviceType" to "Android",

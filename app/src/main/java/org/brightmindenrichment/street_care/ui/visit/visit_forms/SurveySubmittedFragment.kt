@@ -13,12 +13,14 @@ import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentSurvaySubmittedBinding
 import android.widget.Toast
 import android.util.Log
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.auth.ktx.auth MOD
+// import com.google.firebase.firestore.ktx.firestore MOD
 import com.google.firebase.ktx.Firebase
 import android.content.ContentValues.TAG
 import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class SurveySubmittedFragment : Fragment() {
@@ -94,8 +96,8 @@ class SurveySubmittedFragment : Fragment() {
 
 
     fun updateVisitLogField(documentId: String) {
-        val user = Firebase.auth.currentUser ?: return
-        val db = Firebase.firestore
+        val user = FirebaseAuth.getInstance().currentUser ?: return // MOD
+        val db = FirebaseFirestore.getInstance() // MOD
 
         db.collection("users").document(user.uid).get()
             .addOnSuccessListener { document ->
@@ -171,8 +173,8 @@ class SurveySubmittedFragment : Fragment() {
 
         // Function to save the visit log details to Firebase "PersonalVisitLog"
     private fun saveVisitLog() {
-        val user = Firebase.auth.currentUser
-        val db = Firebase.firestore
+        val user = FirebaseAuth.getInstance().currentUser // MOD
+        val db = FirebaseFirestore.getInstance() // MOD
 
         // Ensure a user is logged in
         if (user != null) {

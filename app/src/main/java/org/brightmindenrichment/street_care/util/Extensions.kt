@@ -37,7 +37,8 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -768,7 +769,7 @@ class Extensions {
             changedType: String,
             eventId: String,
         ) {
-            Firebase.auth.currentUser?.let {
+            FirebaseAuth.getInstance().currentUser?.let { // MOD
                 // create pendingIntent to redirect to the event fragment when users click the notification
                 //val pendingIntent = createPendingIntentByTaskStackBuilder(changedType, eventId, eventTitle, context)
                 val pendingIntent = createPendingIntent(changedType, eventId, eventTitle, context)

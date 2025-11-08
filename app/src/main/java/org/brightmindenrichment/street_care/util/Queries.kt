@@ -3,9 +3,11 @@ package org.brightmindenrichment.street_care.util
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.firestore.ktx.firestore MOD
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import org.brightmindenrichment.street_care.ui.community.data.Event
@@ -15,19 +17,19 @@ import java.util.Date
 
 object Queries {
     /*
-    val defaultQuery = Firebase.firestore
+    val defaultQuery = FirebaseFirestore.getInstance()
         .collection("events")
         .orderBy("date", Query.Direction.DESCENDING)
      */
 
-    val defaultQuery = Firebase.firestore
+    val defaultQuery = FirebaseFirestore.getInstance() // MOD
         .collection("outreachEventsDev")
         .orderBy("eventDate", Query.Direction.DESCENDING)
 
     fun getHelpRequestDefaultQuery(
         order: Query.Direction = Query.Direction.ASCENDING
     ): Query {
-        return Firebase.firestore
+        return FirebaseFirestore.getInstance() // MOD
             .collection("helpRequests")
             .orderBy("createdAt", order)
     }
@@ -36,7 +38,7 @@ object Queries {
         order: Query.Direction = Query.Direction.DESCENDING
     ): Query {
         val targetDay = Timestamp(Date(System.currentTimeMillis()))
-        return Firebase.firestore
+        return FirebaseFirestore.getInstance() // MOD
             .collection("outreachEventsDev")
             .whereEqualTo("status","approved")
             .whereLessThan("eventDate", targetDay)
@@ -48,7 +50,7 @@ object Queries {
         order: Query.Direction = Query.Direction.ASCENDING
     ): Query {
         val targetDay = Timestamp(Date(System.currentTimeMillis()))
-        return Firebase.firestore
+        return FirebaseFirestore.getInstance() // MOD
             .collection("outreachEventsDev")
             .whereEqualTo("status","approved")
             .whereGreaterThanOrEqualTo("eventDate", targetDay)
@@ -58,7 +60,7 @@ object Queries {
     fun getUpcomingEventsQueryUpTo50(
         order: Query.Direction = Query.Direction.ASCENDING
     ): Query {
-        return Firebase.firestore
+        return FirebaseFirestore.getInstance() // MOD
             .collection("outreachEvents")
             .orderBy("eventDate", order)
             .limit(50)  // Limits to 50 documents
@@ -67,7 +69,7 @@ object Queries {
     fun getHelpRequestDefaultQueryUpTo50(
         order: Query.Direction = Query.Direction.ASCENDING
     ): Query {
-        return Firebase.firestore
+        return FirebaseFirestore.getInstance() // MOD
             .collection("helpRequests")
             .orderBy("createdAt", order)
             .limit(50)  // Limits to 50 documents
@@ -78,7 +80,7 @@ object Queries {
         helpRequestId: String,
     ): Query {
         val targetDay = Timestamp(Date(System.currentTimeMillis()))
-        return Firebase.firestore
+        return FirebaseFirestore.getInstance() // MOD
             .collection("outreachEventsDev")
             .whereGreaterThanOrEqualTo("eventDate", targetDay)
             .whereArrayContains("helpRequest", helpRequestId)
@@ -86,9 +88,9 @@ object Queries {
     }
 
     fun getLikedEventsQuery(order: Query.Direction = Query.Direction.ASCENDING): Query {
-        val user = Firebase.auth.currentUser
+        val user = FirebaseAuth.getInstance().currentUser // MOD
         val userId= user?.uid.toString()
-        return Firebase.firestore
+        return FirebaseFirestore.getInstance() // MOD
             .collection("outreachEventsDev")
             .whereArrayContains("participants",userId)
             .orderBy("eventDate", order)
@@ -103,14 +105,14 @@ object Queries {
     ): Query {
         val currDay = Timestamp(Date(System.currentTimeMillis()))
         return if(isPastEvents) {
-            Firebase.firestore
+            FirebaseFirestore.getInstance() // MOD
                 .collection("outreachEventsDev")
                 .whereLessThan("eventDate", currDay)
                 .whereGreaterThanOrEqualTo("eventDate", targetDate)
                 .orderBy("eventDate", order)
         }
         else {
-            Firebase.firestore
+            FirebaseFirestore.getInstance() // MOD
                 .collection("outreachEventsDev")
                 .whereGreaterThanOrEqualTo("eventDate", currDay)
                 .whereGreaterThanOrEqualTo("eventDate", targetDate)
@@ -125,14 +127,14 @@ object Queries {
     ): Query {
         val currDay = Timestamp(Date(System.currentTimeMillis()))
         return if(isPastEvents) {
-            Firebase.firestore
+            FirebaseFirestore.getInstance() // MOD
                 .collection("outreachEventsDev")
                 .whereLessThan("eventDate", currDay)
                 .whereLessThan("eventDate", targetDate)
                 .orderBy("eventDate", order)
         }
         else {
-            Firebase.firestore
+            FirebaseFirestore.getInstance() // MOD
                 .collection("outreachEventsDev")
                 .whereGreaterThanOrEqualTo("eventDate", currDay)
                 .whereLessThan("eventDate", targetDate)
@@ -144,12 +146,12 @@ object Queries {
         val targetDay = Timestamp(Date(System.currentTimeMillis()))
 
         return if(isPastEvents){
-            Firebase.firestore
+            FirebaseFirestore.getInstance() // MOD
                 .collection("outreachEventsDev")
                 .whereLessThan("eventDate", targetDay)
                 .whereArrayContains("skills",skill)
         } else{
-            Firebase.firestore
+            FirebaseFirestore.getInstance() // MOD
                 .collection("outreachEventsDev")
                 .whereGreaterThanOrEqualTo("eventDate", targetDay)
                 .whereArrayContains("skills",skill)
@@ -159,7 +161,7 @@ object Queries {
     }
 
     fun getQueryToFilterHelpRequestsByType(skill: String, order: Query.Direction = Query.Direction.ASCENDING): Query{
-        return Firebase.firestore
+        return FirebaseFirestore.getInstance() // MOD
             .collection("helpRequests")
             .whereArrayContains("skills", skill)
             .orderBy("title", order)

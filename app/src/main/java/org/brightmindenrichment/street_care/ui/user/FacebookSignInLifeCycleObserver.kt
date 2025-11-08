@@ -12,7 +12,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
@@ -26,7 +26,7 @@ class FacebookSignInLifeCycleObserver(private val registryOwner: ActivityResultR
         callbackManager = CallbackManager.Factory.create()
 
 
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance() // MOD
     }
     fun requestFacebookSignin() {
 
@@ -63,7 +63,7 @@ class FacebookSignInLifeCycleObserver(private val registryOwner: ActivityResultR
                         Log.d(TAG, "signInWithCredential:success")
                         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                             // connect if not connected
-                            val currentUser = Firebase.auth.currentUser
+                            val currentUser = FirebaseAuth.getInstance().currentUser // MOD
                             val isNew = task.result.additionalUserInfo!!.isNewUser
                             if(isNew){
                                 val userData = Users(currentUser?.displayName.toString(),currentUser?.uid ?: "??",currentUser?.email.toString())

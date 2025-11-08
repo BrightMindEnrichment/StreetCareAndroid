@@ -30,9 +30,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.firestore.ktx.firestore MOD
 import com.google.firebase.ktx.Firebase
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -40,6 +40,8 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.community.model.CommunityPageName
 import org.brightmindenrichment.street_care.ui.user.ChapterMembershipFormOneAcitivity
@@ -329,7 +331,7 @@ class AddEventFragment : Fragment() {
         }
 
         btnSubmit.setOnClickListener {
-            if (Firebase.auth.currentUser == null) {
+            if (FirebaseAuth.getInstance().currentUser == null) { // MOD
                 context?.let { context ->
                     Extensions.showDialog(
                         context,
@@ -716,7 +718,7 @@ class AddEventFragment : Fragment() {
         consentGiven: Boolean
     ) {
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return // MOD
         val totalSlots = (maxCapacity.ifBlank { "-1" }).toInt()
         val helpRequest = if(helpRequestId == null) listOf() else listOf(helpRequestId)
         val stateAbbr = getStateOrProvinceAbbreviation(state)
@@ -752,7 +754,7 @@ class AddEventFragment : Fragment() {
         )
         // save to firebase
 
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
         val usersDocRef = db.collection("users").document(user.uid)
 
         usersDocRef.get().addOnSuccessListener { document ->
@@ -807,7 +809,7 @@ class AddEventFragment : Fragment() {
                         dialogView.findViewById<TextView>(R.id.textViewMessage).text = message
                         dialogView.findViewById<TextView>(R.id.approvalTextView).text = approvalMessage
                         dialogView.findViewById<TextView>(R.id.learnMoreTextView).text = learnMoreText
-                        val usersDocRef1 = Firebase.firestore.collection("users").document(user.uid)
+                        val usersDocRef1 = FirebaseFirestore.getInstance().collection("users").document(user.uid) // MOD
 
                         usersDocRef1.get()
                             .addOnSuccessListener { document ->

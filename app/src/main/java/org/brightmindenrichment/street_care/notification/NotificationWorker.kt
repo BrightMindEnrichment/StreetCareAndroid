@@ -6,10 +6,12 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.firestore.ktx.firestore MOD
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
@@ -47,14 +49,14 @@ class NotificationWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted workerParameters: WorkerParameters,
 ): CoroutineWorker(appContext, workerParameters) {
-    private val db = Firebase.firestore
+    private val db = FirebaseFirestore.getInstance() // MOD
     private lateinit var dataStoreManager: DataStoreManager
     //private val databaseEvents: List<DatabaseEvent> = eventsDatabase.eventDao().getAllEventsDesc()
 
     override suspend fun doWork(): Result {
         Log.d("workManager", "do work...")
         dataStoreManager = DataStoreManager(appContext)
-        if(Firebase.auth.currentUser != null) {
+        if(FirebaseAuth.getInstance().currentUser != null) { // MOD
             Log.d("workManager", "user has logged in")
             CoroutineScope(IO).launch {
                 val listenerRegistration = addSnapshotListenerToCollection(

@@ -15,7 +15,8 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.card.MaterialCardView
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.firestore.ktx.firestore MOD
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.community.data.HelpRequest
@@ -37,7 +38,7 @@ class CommunityHelpRequestAdapter(
     //private val isPastEvents: Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val db = Firebase.firestore
+    val db = FirebaseFirestore.getInstance() // MOD
 
     interface ClickListener {
         fun onClick(helpRequest: HelpRequest, position: Int){}

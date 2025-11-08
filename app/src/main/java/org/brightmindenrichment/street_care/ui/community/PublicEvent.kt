@@ -21,7 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
@@ -264,7 +265,7 @@ class PublicEvent : Fragment(), AdapterView.OnItemSelectedListener {
             Log.d("PublicEvent", "Flag clicked for ${visitLog.id}, current isFlagged: ${visitLog.isFlagged}")
 
             // Check authentication
-            val currentUser = Firebase.auth.currentUser
+            val currentUser = FirebaseAuth.getInstance().currentUser // MOD
             if (currentUser == null) {
                 Toast.makeText(
                     requireContext(),
@@ -1259,7 +1260,7 @@ class PublicEvent : Fragment(), AdapterView.OnItemSelectedListener {
                 Log.d("PublicEvent", "Flag clicked for ${visitLog.id}, current isFlagged: ${visitLog.isFlagged}")
 
                 // Check authentication
-                val currentUser = Firebase.auth.currentUser
+                val currentUser = FirebaseAuth.getInstance().currentUser // MOD
                 if (currentUser == null) {
                     Toast.makeText(
                         holder.itemView.context,

@@ -1,7 +1,8 @@
 package org.brightmindenrichment.street_care.ui.community.adapter
 
 import android.util.*
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.firestore.ktx.firestore MOD
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.ui.community.data.Event
 
@@ -10,7 +11,7 @@ class pendingEventAdapter {
 
     var events: MutableList<Event> = mutableListOf()
     val size: Int get() { return events.size }
-    val db = Firebase.firestore
+    val db = FirebaseFirestore.getInstance() // MOD
     fun refresh(onComplete: () -> Unit) {
 
 

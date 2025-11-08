@@ -12,7 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.BuildConfig
 import org.brightmindenrichment.street_care.R
@@ -131,7 +132,7 @@ class VisitFormFragment1 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onViewStateRestored(savedInstanceState)
-        if (Firebase.auth.currentUser == null) {
+        if (FirebaseAuth.getInstance().currentUser == null) { // MOD
             Extensions.showDialog(
                 requireContext(),
                 view.context.getString(R.string.anonymous_user_title),

@@ -2,8 +2,10 @@ package org.brightmindenrichment.street_care.ui.visit.repository
 
 
 import android.util.Log
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.auth.FirebaseAuth
+// import com.google.firebase.auth.ktx.auth MOD
+import com.google.firebase.firestore.FirebaseFirestore
+// import com.google.firebase.firestore.ktx.firestore MOD
 import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
 import java.util.Date
@@ -15,7 +17,7 @@ class VisitLogRepositoryImp : VisitLogRepository {
 
     override fun saveVisitLog(visitLog: VisitLog) {
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return // MOD
         Log.d("BME", user.uid)
 
         //Adding code to fix Date and Time issue in whenVisit and andWhenVisitTime
@@ -81,7 +83,7 @@ class VisitLogRepositoryImp : VisitLogRepository {
             "flaggedByUser" to visitLog.flaggedByUser
         )
         // save to firebase
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
         db.collection("VisitLogBook_New").add(visitData).addOnSuccessListener { documentReference ->
             Log.d("BME", "Saved with id ${documentReference.id}")
             // Store this ID somewhere – e.g., inside your visitLog object
@@ -96,10 +98,10 @@ class VisitLogRepositoryImp : VisitLogRepository {
 
     override fun loadVisitLogs(onComplete: () -> Unit) {
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
-        //val user = Firebase.auth.currentUser
+        val user = FirebaseAuth.getInstance().currentUser ?: return // MOD
+        //val user = FirebaseAuth.getInstance().currentUser
         Log.d("BME", user.uid)
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
         //load old DB Collection records
         db.collection("VisitLogBook").whereEqualTo("uid", user.uid).get()
             .addOnSuccessListener { result ->

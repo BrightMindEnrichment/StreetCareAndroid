@@ -11,10 +11,12 @@ import android.util.TypedValue
 import androidx.navigation.NavController
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.firestore.ktx.firestore MOD
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
@@ -102,8 +104,8 @@ class HelpRequestDataAdapter(
         Log.d("debug", "helpRequests refresh")
         showProgressBar()
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser
-        val db = Firebase.firestore
+        val user = FirebaseAuth.getInstance().currentUser // MOD
+        val db = FirebaseFirestore.getInstance() // MOD
         if (user == null) {
             // Guest (logged out) version: Simply fetch help requests without user-specific logic.
             query.get()
@@ -305,9 +307,9 @@ class HelpRequestDataAdapter(
     ) {
 
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return // MOD
 
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance() // MOD
         val helpRequestStatus = helpRequest.status!!
         val helpRequestsDocRef = db.collection("helpRequests").document(helpRequest.id!!)
         when(helpRequestStatus) {

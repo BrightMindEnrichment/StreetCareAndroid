@@ -10,13 +10,15 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.ktx.auth
+// import com.google.firebase.auth.ktx.auth MOD
 import com.google.firebase.ktx.Firebase
 import android.graphics.Color
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.FirebaseFirestore
+// import com.google.firebase.firestore.ktx.firestore MOD
 import org.brightmindenrichment.street_care.util.Extensions
 import org.brightmindenrichment.street_care.util.Queries.getLikedEventsQuery
 import java.text.SimpleDateFormat
@@ -68,7 +70,7 @@ class ProfileMyEvents : Fragment(){
         private fun displayEvents( view: View) {
 
             //connecting to Firebase to get the current user detail
-            val user = Firebase.auth.currentUser ?: return
+            val user = FirebaseAuth.getInstance().currentUser ?: return // MOD
             Log.d("BME current user", user.uid)
 
             if (user != null) {
@@ -173,11 +175,11 @@ class ProfileMyEvents : Fragment(){
 
     private fun removeFromFirebase(documentId: String, onSuccess: () -> Unit) {
         // Remove the document from the Firebase collection
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return // MOD
         val currentUserUid = user.uid
-        val eventsCollection = Firebase.firestore.collection("outreachEventsDev")
+        val eventsCollection = FirebaseFirestore.getInstance().collection("outreachEventsDev") // MOD
 
-        Firebase.firestore.runTransaction { transaction ->
+        FirebaseFirestore.getInstance().runTransaction { transaction -> // MOD
             // Retrieve the current document snapshot
             val documentSnapshot = transaction.get(eventsCollection.document(documentId))
 
@@ -212,7 +214,7 @@ class ProfileMyEvents : Fragment(){
     }
 
     private fun removeFromUsersCollection(outreachEventdocumentId: String,currentUserUid: String) {
-        val usersCollection = Firebase.firestore.collection("users")
+        val usersCollection = FirebaseFirestore.getInstance().collection("users") // MOD
 
         // Fetch all documents in the "users" collection
         usersCollection
