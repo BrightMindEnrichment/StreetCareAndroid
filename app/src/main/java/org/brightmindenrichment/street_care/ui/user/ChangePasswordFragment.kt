@@ -61,7 +61,6 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun changePassword(oldPassword: String, newPassword: String) {
-
         val user = UserSingleton.userModel.currentUser
 
             // Check if the user is logged in
