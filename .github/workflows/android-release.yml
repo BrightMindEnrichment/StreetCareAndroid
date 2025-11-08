@@ -33,7 +33,7 @@ jobs:
         # This creates a local.properties file that your build.gradle can read.
         # This is the standard and safest way to handle API keys.
         run: |
-          echo "apiKey=${{ secrets.API_KEY }}" > ./local.properties
+          echo "API_KEY=${{ secrets.API_KEY }}" > ./local.properties
         
       - name: 5. Decode and setup Keystore
         # Decodes the base64 encoded keystore file from secrets and places it in the app module's directory
