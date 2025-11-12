@@ -52,7 +52,7 @@ jobs:
         # This step only runs if you filled in the 'specific_version' input
         if: github.event.inputs.specific_version != ''
         id: version_bump_specific
-        uses: madhead/android-version-actions@v1.4.0
+        uses: chkfung/android-version-actions@v1.2.3
         with:
           # IMPORTANT: Verify this path is correct for your project
           gradleFilePath: app/build.gradle
@@ -63,7 +63,7 @@ jobs:
         # This step only runs if you did NOT provide a 'specific_version'
         if: github.event.inputs.specific_version == '' 
         id: version_bump_auto
-        uses: madhead/android-version-actions@v1.4.0
+        uses: chkfung/android-version-actions@v1.2.3
         with:
           # IMPORTANT: Verify this path is correct for your project
           gradleFilePath: app/build.gradle
