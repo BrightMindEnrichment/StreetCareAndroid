@@ -32,6 +32,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="10dp"
         android:lineHeight="28dp"
+        android:textAlignment="center"
         android:textColor="@color/light_primary"
         />
 <!--    android:text="@string/provided_help_msg"-->
