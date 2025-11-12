@@ -182,15 +182,15 @@ class VisitFormFragment0 : Fragment() {
 
 
         val btnOK = dialogView.findViewById<TextView>(R.id.ok_btn)
-        val checkBox = dialogView.findViewById<CheckBox>(R.id.cbDontShowAgain)
+//        val checkBox = dialogView.findViewById<CheckBox>(R.id.cbDontShowAgain)
 
 
         btnOK.setOnClickListener {
-            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            if (checkBox.isChecked) {
-
-                prefs.edit().putBoolean("dont_show_again", true).apply()
-            }
+//            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+//            if (checkBox.isChecked) {
+//
+//                prefs.edit().putBoolean("dont_show_again", true).apply()
+//            }
             sharedVisitViewModel.resetVisitLogPage()
 
             findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
