@@ -85,13 +85,29 @@ object Queries {
             .orderBy("eventDate", order)
     }
 
-    fun getLikedEventsQuery(order: Query.Direction = Query.Direction.ASCENDING): Query {
-        val user = Firebase.auth.currentUser
-        val userId= user?.uid.toString()
-        return Firebase.firestore
-            .collection("outreachEventsDev")
-            .whereArrayContains("participants",userId)
-            .orderBy("eventDate", order)
+    fun getLikedEventsQuery(
+        eventIds: List<String> = emptyList(),
+        order: Query.Direction = Query.Direction.ASCENDING
+    ): Query {
+        return if (eventIds.isNotEmpty()) {
+            // Query by specific event IDs (limited to 10 for Firestore's whereIn constraint)
+            // Note: Cannot use whereGreaterThanOrEqualTo with whereIn on document IDs
+            // Date filtering must be done client-side
+            val batch = eventIds.take(10)
+            Firebase.firestore
+                .collection("outreachEventsDev")
+                .whereIn(com.google.firebase.firestore.FieldPath.documentId(), batch)
+        } else {
+            // Fallback: try to use likes array if available
+            val user = Firebase.auth.currentUser
+            val userId = user?.uid ?: ""
+            val targetDay = Timestamp(Date(System.currentTimeMillis()))
+            Firebase.firestore
+                .collection("outreachEventsDev")
+                .whereArrayContains("likes", userId)
+                .whereGreaterThanOrEqualTo("eventDate", targetDay)
+                .orderBy("eventDate", order)
+        }
     }
 
 

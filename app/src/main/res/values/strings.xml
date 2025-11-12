@@ -662,7 +662,8 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="hours_hint">Hours</string>
     <string name="minutes_hint">Minutes</string>
     <string name="become_a_member">Become a Member</string>
-
+    <string name="liked_posts">Liked Posts</string>
+    <string name="no_liked_posts_yet">No liked posts yet</string>
     <string name="please_login_title">Please Log In</string>
     <string name="please_login_message">You need to be logged in to like this event. Would you like to login now?</string>
 

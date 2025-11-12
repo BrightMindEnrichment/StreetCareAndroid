@@ -49,12 +49,24 @@
         android:drawablePadding="4dp" />
 
     <TextView
+        android:id="@+id/txtlikedposts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/liked_posts"
+        android:textColor="@color/forget_blue"
+        android:textStyle="normal"
+        app:layout_constraintTop_toBottomOf="@id/txteditprofile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
         android:id="@+id/textbadges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/badges_earned"
         android:textColor="@color/forget_blue"
-        app:layout_constraintTop_toBottomOf="@id/txteditprofile"
+        app:layout_constraintTop_toBottomOf="@id/txtlikedposts"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
@@ -75,11 +87,11 @@
         layout="@layout/card_impact"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txteditprofile" />
+        app:layout_constraintTop_toBottomOf="@+id/textbadges" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnsignout"
