@@ -15,7 +15,8 @@ import android.widget.Toast
 import android.util.Log
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
+// import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentVisitForm5Binding
@@ -68,7 +69,7 @@ class VisitFormFragment5 : Fragment() {
             sharedVisitViewModel.visitLog.comments = notes
             Log.d("VisitForm", "User-entered rating notes: $notes")
 
-            if (Firebase.auth.currentUser == null) {
+            if (FirebaseAuth.getInstance().currentUser == null) {
                 Extensions.showDialog(
                     requireContext(),
                     view.context.getString(R.string.anonymous_user_title),

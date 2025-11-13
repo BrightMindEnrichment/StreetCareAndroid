@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
+// import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.ui.community.model.CommunityActivityHelp
 import org.brightmindenrichment.street_care.ui.community.model.CommunityActivityRequest
@@ -21,7 +21,7 @@ class CommunityWantHelpViewModel : ViewModel() {
             loadList()
         }
     }
-    private val db = Firebase.firestore
+    private val db = FirebaseFirestore.getInstance()
 
 
     fun loadList() {
