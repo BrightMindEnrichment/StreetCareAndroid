@@ -4,10 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <!-- Toolbar -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
@@ -28,13 +31,14 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center_vertical"
-                android:text="Interaction Log"
+                android:text="@string/menu_visit"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:fontFamily="Poppins" />
         </com.google.android.material.appbar.MaterialToolbar>
 
+        <!-- Body -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,9 +54,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginTop="35dp"
-                android:layout_marginBottom="35dp"
-                android:text="Individual Interaction 1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/individual_interaction_title_1"
                 android:textColor="@color/black"
                 android:textSize="34sp"
                 android:textStyle="bold"
@@ -62,7 +66,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_interaction"
                 android:layout_width="match_parent"
-                android:layout_height="520dp"
+                android:layout_height="530dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="5dp"
@@ -79,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Header row -->
+                    <!-- Header -->
                     <LinearLayout
                         android:id="@+id/headerRow"
                         android:layout_width="match_parent"
@@ -96,7 +100,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Question 1/4"
+                            android:text="@string/Individual_Interaction_Question_1"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
 
@@ -109,12 +113,12 @@
                             android:gravity="center"
                             android:paddingVertical="6dp"
                             android:background="@drawable/rounded_btn"
-                            android:textSize="@dimen/text_size12"
+                            android:textSize="15sp"
                             app:fontFamily="Poppins"
                             android:textStyle="bold"/>
                     </LinearLayout>
 
-                    <!-- Content (same inset as header/divider) -->
+                    <!-- Content -->
                     <LinearLayout
                         android:id="@+id/contentInset"
                         android:layout_width="match_parent"
@@ -125,12 +129,11 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="14dp">
 
-                        <!-- Overlay group -->
+                        <!-- Divider + First Name -->
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <!-- The divider, drawn on top edge -->
                             <com.google.android.material.divider.MaterialDivider
                                 android:id="@+id/headerDivider"
                                 android:layout_width="match_parent"
@@ -138,19 +141,18 @@
                                 android:layout_gravity="top"
                                 app:dividerColor="@color/gray300" />
 
-                            <!-- First name (no top margin so borders meet) -->
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/tilFirstName"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:layout_width="match_parent"
-                                android:layout_height="50dp"
-                                android:layout_marginTop="-5dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:hint="@string/hint_first_name"
+                                app:strokeWidth="1dp"
+                                app:strokeColor="@color/black"
+                                android:imeOptions="actionNext"
                                 android:layout_marginLeft="8dp"
                                 android:layout_marginRight="8dp"
-                                android:hint="First Name (Person You Interacted)*"
-                                android:textColorHint="#80000000"
-                                android:imeOptions="actionNext"
-                                app:boxStrokeColor="@color/gray700"
                                 app:boxCornerRadiusTopStart="10dp"
                                 app:boxCornerRadiusTopEnd="10dp"
                                 app:boxCornerRadiusBottomStart="10dp"
@@ -161,18 +163,24 @@
                                     android:id="@+id/etFirstName"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                    android:minHeight="42dp"
+                                    android:background="@drawable/rounded_border_field"
+                                    android:gravity="center_vertical|start"
+                                    android:includeFontPadding="false"
                                     android:imeOptions="actionNext"
-                                    android:textSize="14sp" />
+                                    android:textSize="15sp" />
                             </com.google.android.material.textfield.TextInputLayout>
                         </FrameLayout>
-                        <!-- Last name -->
+
+                        <!-- Last Name -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/tilLastName"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:hint="Last Name"
+                            android:hint="@string/hint_last_name"
                             android:textColorHint="#80000000"
                             android:imeOptions="actionNext"
                             android:layout_marginLeft="8dp"
@@ -187,7 +195,13 @@
                                 android:id="@+id/etLastName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:imeOptions="actionNext" />
+                                style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                android:minHeight="42dp"
+                                android:gravity="center_vertical|start"
+                                android:background="@drawable/rounded_border_field"
+                                android:textSize="15sp"
+                                android:includeFontPadding="false"
+                                android:imeOptions="actionNext"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <!-- Location -->
@@ -195,9 +209,9 @@
                             android:id="@+id/tilLocation"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:hint="Location or Landmark"
+                            android:hint="@string/hint_location"
                             android:textColorHint="#80000000"
                             android:imeOptions="actionNext"
                             android:layout_marginLeft="8dp"
@@ -212,10 +226,16 @@
                                 android:id="@+id/etLocation"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:imeOptions="actionNext" />
+                                style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                android:minHeight="42dp"
+                                android:gravity="center_vertical|start"
+                                android:background="@drawable/rounded_border_field"
+                                android:includeFontPadding="false"
+                                android:textSize="15sp"
+                                android:imeOptions="actionNext"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- State + Zip (both align because they live in the same inset and use weights) -->
+                        <!-- State + Zip -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -228,7 +248,7 @@
                                 android:id="@+id/tilState"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                                 android:layout_width="0dp"
-                                android:layout_height="50dp"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:hint="@string/State"
                                 android:textColorHint="#80000000"
@@ -245,7 +265,13 @@
                                     android:id="@+id/actState"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:inputType="none" />
+                                    android:gravity="center_vertical|start"
+                                    android:textSize="15sp"
+                                    style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                    android:minHeight="42dp"
+                                    android:background="@drawable/rounded_border_field"
+                                    android:includeFontPadding="false"
+                                    android:inputType="none"/>
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <View
@@ -256,9 +282,9 @@
                                 android:id="@+id/tilZip"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:layout_width="0dp"
-                                android:layout_height="50dp"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:hint="Zip Code"
+                                android:hint="@string/Zipcode"
                                 android:textColorHint="#80000000"
                                 android:imeOptions="actionNext"
                                 app:boxCornerRadiusTopStart="10dp"
@@ -271,28 +297,38 @@
                                     android:id="@+id/etZip"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:inputType="number" />
+                                    android:gravity="center_vertical|start"
+                                    android:textSize="15sp"
+                                    android:background="@drawable/rounded_border_field"
+                                    style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                    android:minHeight="42dp"
+                                    android:includeFontPadding="false"
+                                    android:inputType="number"/>
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
 
-                        <!-- Date + Time row (still inside the inset) -->
+                        <!-- Date + Time Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp">
+                            android:layout_marginTop="25dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp">
 
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/datePickerCard"
                                 android:layout_width="0dp"
-                                android:layout_height="43dp"
+                                android:layout_height="47dp"
                                 android:layout_weight="1"
                                 android:layout_marginEnd="8dp"
                                 app:cardCornerRadius="8dp"
+                                app:strokeWidth="1dp"
                                 app:strokeColor="@color/black"
-                                app:strokeWidth="1dp">
+                                app:boxCornerRadiusTopStart="10dp"
+                                app:boxCornerRadiusTopEnd="10dp"
+                                app:boxCornerRadiusBottomStart="10dp"
+                                app:boxCornerRadiusBottomEnd="10dp">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -307,7 +343,6 @@
                                         android:layout_marginEnd="8dp"
                                         android:src="@drawable/baseline_calendar_month_24" />
 
-                                    <!-- make this flexible -->
                                     <TextView
                                         android:id="@+id/tvDate"
                                         android:layout_width="0dp"
@@ -315,8 +350,8 @@
                                         android:layout_weight="1"
                                         android:maxLines="1"
                                         android:ellipsize="end"
-                                        android:text="03/30/2025"
-                                        android:textSize="18sp"
+                                        android:text="@string/default_date"
+                                        android:textSize="17sp"
                                         app:fontFamily="Poppins"
                                         android:textColor="@color/black"/>
                                 </LinearLayout>
@@ -325,12 +360,12 @@
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/timePickerCard"
                                 android:layout_width="0dp"
-                                android:layout_height="43dp"
+                                android:layout_height="47dp"
                                 android:layout_weight="1"
                                 android:layout_marginStart="8dp"
                                 app:cardCornerRadius="8dp"
-                                app:strokeColor="@color/gray700"
-                                app:strokeWidth="1dp">
+                                app:strokeWidth="1dp"
+                                app:strokeColor="@color/black">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -345,7 +380,6 @@
                                         android:layout_marginEnd="8dp"
                                         android:src="@drawable/baseline_access_time_24" />
 
-                                    <!-- make this flexible -->
                                     <TextView
                                         android:id="@+id/tvTime"
                                         android:layout_width="0dp"
@@ -353,15 +387,14 @@
                                         android:layout_weight="1"
                                         android:maxLines="1"
                                         android:ellipsize="end"
-                                        android:text="11:35AM MDT"
+                                        android:text="@string/default_time"
                                         android:textColor="@color/black"
-                                        android:textSize="15sp"
-                                        app:fontFamily="Poppins"/>
+                                        android:textSize="15sp"/>
                                 </LinearLayout>
                             </com.google.android.material.card.MaterialCardView>
                         </LinearLayout>
 
-                        <!-- Buttons (still aligned because inside inset) -->
+                        <!-- Buttons -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -400,7 +433,6 @@
                         </LinearLayout>
 
                     </LinearLayout>
-                    <!-- /contentInset -->
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>

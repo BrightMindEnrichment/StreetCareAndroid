@@ -665,6 +665,14 @@ If needed, you may fill out  one log \n for your entire day.
 
     <string name="please_login_title">Please Log In</string>
     <string name="please_login_message">You need to be logged in to like this event. Would you like to login now?</string>
+    <string name="provide_details_prompt">Would you like to provide\ndetails for each person\nyou supported?</string>
+    <string name="individual_interaction_title_1">Individual Interaction 1</string>
+    <string name="Individual_Interaction_Question_1">Question 1/4</string>
+    <string name="hint_first_name">First Name (Person You Interacted)*</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_location">Location or Landmark</string>
+    <string name="default_date">03/30/2025</string>
+    <string name="default_time">11:35 AM MDT</string>
 
 
 </resources>
