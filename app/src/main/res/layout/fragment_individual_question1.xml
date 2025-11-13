@@ -362,7 +362,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="47dp"
                                 android:layout_weight="1"
-                                android:layout_marginStart="8dp"
+                                android:layout_marginStart="1dp"
                                 app:cardCornerRadius="8dp"
                                 app:strokeWidth="1dp"
                                 app:strokeColor="@color/black">
