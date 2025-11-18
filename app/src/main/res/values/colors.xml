@@ -40,4 +40,6 @@
     <color name="status_green"> #36B37E</color>
     <color name="status_red"> #D32F2F</color>
     <color name="status_amber"> #FEED00</color>
+    <color name="app_green">#1A4314</color>
+    <color name="app_dark_gray">#424242</color>
 </resources>
