@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context=".ui.loginteraction.LogInteractionQ2Fragment">
+    android:background="@android:color/white">
 
     <!-- Status bar placeholder -->
     <View
@@ -243,7 +242,7 @@
                     app:tint="#FFC700"
                     android:padding="7dp"
                     android:contentDescription="Increase count"
-                    tools:src="@drawable/ic_plus_placeholder"/>
+                    tools:src="@drawable/ic_plus"/>
 
             </LinearLayout>
 
