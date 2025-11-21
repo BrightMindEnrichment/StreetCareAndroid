@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Top bar with red circle behind close -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <FrameLayout
+                android:id="@+id/btn_close"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true">
+
+                <!-- Smaller red circle: 28dp -->
+                <View
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/red_circle_bg" />
+
+                <!-- X icon slightly bigger inside smaller circle -->
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_close"
+                    android:tint="#FFFFFF"
+                    android:contentDescription="Close" />
+            </FrameLayout>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Interaction Log"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:fontFamily="Poppins"
+                android:textColor="#000000" />
+        </RelativeLayout>
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Log Your Interaction"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:fontFamily="Poppins"
+            android:textColor="@color/black"
+            android:gravity="center" />
+
+        <!-- Progress indicators -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="12dp">
+
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="12dp"
+                android:src="@drawable/progress_dot_filled"
+                android:contentDescription="Progress step 1"/>
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/progress_dot_filled"
+                android:contentDescription="Progress step 2"/>
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/progress_dot_filled"
+                android:contentDescription="Progress step 3"/>
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/progress_dot_filled"
+                android:contentDescription="Progress step 4"/>
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/progress_dot_outline"
+                android:contentDescription="Progress step 5"/>
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/progress_dot_dark"
+                android:contentDescription="Progress step 6"/>
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/progress_dot_dark"
+                android:contentDescription="Progress step 7"/>
+        </LinearLayout>
+
+        <!-- Card Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <!-- Question header -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_question"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Question 5/7"
+                        android:textSize="16sp"
+                        android:textColor="#424242" />
+
+                    <TextView
+                        android:id="@+id/btn_skip"
+                        android:layout_width="90dp"
+                        android:layout_height="38dp"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/button_skip_outline"
+                        android:text="Skip"
+                        android:textColor="#0D3B3B"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false" />
+                </RelativeLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:background="#E0E0E0" />
+
+                <!-- Section 1: Number of people helped -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Number of people helped"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:fontFamily="Poppins"
+                    android:textColor="@color/black"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp">
+
+                    <!-- Minus button (smaller outer size but larger icon) -->
+                    <FrameLayout
+                        android:id="@+id/btn_decrease_helped"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp">
+
+                        <View
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/circle_button_bg"/>
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_minus"
+                            android:tint="#F4D03F"
+                            android:contentDescription="Decrease count"/>
+                    </FrameLayout>
+
+                    <!-- Counter value (slightly reduced spacing) -->
+                    <TextView
+                        android:id="@+id/tv_count_helped"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="1"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        app:fontFamily="Poppins"
+                        android:textColor="#000000" />
+
+                    <!-- Plus button (smaller outer size but larger icon) -->
+                    <FrameLayout
+                        android:id="@+id/btn_increase_helped"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp">
+
+                        <View
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/circle_button_bg"/>
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_plus"
+                            android:tint="#F4D03F"
+                            android:contentDescription="Increase count"/>
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Section 2: How many people joined you -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:text="How many people have joined you?"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:fontFamily="Poppins"
+                    android:textColor="#000000"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp">
+
+                    <!-- Minus button (smaller outer size but larger icon) -->
+                    <FrameLayout
+                        android:id="@+id/btn_decrease_joined"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp">
+
+                        <View
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/circle_button_bg"/>
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_minus"
+                            android:tint="#F4D03F"
+                            android:contentDescription="Decrease count"/>
+                    </FrameLayout>
+
+                    <!-- Counter value (reduced spacing) -->
+                    <TextView
+                        android:id="@+id/tv_count_joined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="0"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        app:fontFamily="Poppins"
+                        android:textColor="#000000" />
+
+                    <!-- Plus button (smaller outer size but larger icon) -->
+                    <FrameLayout
+                        android:id="@+id/btn_increase_joined"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp">
+
+                        <View
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/circle_button_bg"/>
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_plus"
+                            android:tint="#F4D03F"
+                            android:contentDescription="Increase count"/>
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Navigation buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="24dp">
+
+                    <TextView
+                        android:id="@+id/btn_previous"
+                        android:layout_width="110dp"
+                        android:layout_height="36dp"
+                        android:gravity="center"
+                        android:text="Previous"
+                        android:textColor="#0D3B3B"
+                        android:background="@drawable/button_outline"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:includeFontPadding="false"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/btn_next"
+                        android:layout_width="120dp"
+                        android:layout_height="36dp"
+                        android:gravity="center"
+                        android:text="Next"
+                        android:textColor="#F4D03F"
+                        android:background="@drawable/button_next_filled"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:includeFontPadding="false" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</ScrollView>

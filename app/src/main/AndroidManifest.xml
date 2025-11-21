@@ -30,6 +30,7 @@
             android:configChanges="locale|layoutDirection"
             android:launchMode="singleTop"
             android:theme="@style/Theme.StreetCare.NoActionBar"/>
+
         <activity
             android:name=".SplashScreen"
             android:exported="true"
@@ -47,18 +48,16 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.user.ChapterMembershipFormOneAcitivity" />
         <activity android:name=".ui.user.ChapterMembershipFormTwoAcitivity" />
         <activity android:name=".ui.user.ChapterMembershipFormThreeAcitivity" />
-        
 
-        <!-- If you want to disable android.startup completely. -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove">
         </provider>
-
 
         <service
             android:name=".notification.MyFirebaseMessagingService"
@@ -73,5 +72,6 @@
             android:value="${API_KEY}" />
 
     </application>
+
 
 </manifest>
