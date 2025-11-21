@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 1. red circle, fixed size -->
+    <item
+        android:width="22dp"
+        android:height="22dp"
+        android:gravity="center"
+        android:drawable="@drawable/red_circle" />
+
+    <!-- 2. white X on top, centered -->
+    <item
+        android:width="16dp"
+        android:height="16dp"
+        android:gravity="center"
+        android:drawable="@drawable/ic_close"
+        android:textColor="@color/white"
+        />
+
+</layer-list>
