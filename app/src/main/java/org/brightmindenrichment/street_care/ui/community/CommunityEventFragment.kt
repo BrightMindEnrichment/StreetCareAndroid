@@ -35,9 +35,17 @@ import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.notification.ChangedType
 import org.brightmindenrichment.street_care.ui.community.adapter.CommunityRecyclerAdapter
+import org.brightmindenrichment.street_care.ui.community.data.CommunityData
 import org.brightmindenrichment.street_care.ui.community.data.Event
 import org.brightmindenrichment.street_care.ui.community.data.EventDataAdapter
+import org.brightmindenrichment.street_care.ui.community.data.EventYear
 import org.brightmindenrichment.street_care.ui.community.model.CommunityPageName
+import org.brightmindenrichment.street_care.ui.community.StickyHeaderItemDecorator
+import org.brightmindenrichment.street_care.util.Extensions.Companion.getDateTimeFromTimestamp
+import org.brightmindenrichment.street_care.util.Extensions.Companion.dateParser
+import org.brightmindenrichment.street_care.util.StateAbbreviation.getStateOrProvinceAbbreviation
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import org.brightmindenrichment.street_care.ui.user.getUserType
 import org.brightmindenrichment.street_care.ui.user.verificationMark
 import org.brightmindenrichment.street_care.util.DebouncingQueryTextListener
@@ -73,6 +81,17 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var defaultQuery = getPastEventsQuery()
     private var communityPageName = CommunityPageName.UPCOMING_EVENTS
     private var helpRequestId: String? = null
+    private var likedEventIds: List<String> = emptyList()
+    
+    // Date filter for liked events (client-side filtering)
+    private enum class LikedDateFilter {
+        ALL,
+        LAST_7_DAYS,
+        LAST_30_DAYS,
+        NEXT_7_DAYS,
+        NEXT_30_DAYS
+    }
+    private var likedDateFilter = LikedDateFilter.ALL
 
     //private lateinit var fragmentCommunityEventView: View
     private lateinit var bottomSheetView: ScrollView
@@ -95,6 +114,7 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 communityPageName = name
             }
             helpRequestId = it.getString("helpRequestId")
+            likedEventIds = it.getStringArrayList("likedEventIds") ?: emptyList()
         }
         //Log.d("syncWebApp", "after, isPastEvents: $isPastEvents")
 
@@ -134,10 +154,77 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
         recyclerView.adapter = communityRecyclerAdapter
         //fragmentCommunityEventView = view
         //if(!isPastEvents) defaultQuery = getUpcomingEventsQuery()
-        when(communityPageName) {
-            CommunityPageName.PAST_EVENTS -> defaultQuery = getPastEventsQuery()
-            CommunityPageName.UPCOMING_EVENTS -> defaultQuery = getUpcomingEventsQuery()
-            CommunityPageName.HELP_REQUESTS -> defaultQuery = getHelpRequestEventsQuery(helpRequestId = helpRequestId!!)
+        when (communityPageName) {
+            CommunityPageName.PAST_EVENTS -> {
+                defaultQuery = getPastEventsQuery()
+                setupEventsWithQuery(defaultQuery)
+            }
+
+            CommunityPageName.UPCOMING_EVENTS -> {
+                defaultQuery = getUpcomingEventsQuery()
+                setupEventsWithQuery(defaultQuery)
+            }
+
+            CommunityPageName.HELP_REQUESTS -> {
+                defaultQuery = getHelpRequestEventsQuery(helpRequestId = helpRequestId!!)
+                setupEventsWithQuery(defaultQuery)
+            }
+
+            CommunityPageName.LIKED_EVENTS -> {
+                // If likedEventIds is empty, fetch from user document
+                if (likedEventIds.isEmpty()) {
+                    val currentUser = Firebase.auth.currentUser
+                    if (currentUser == null) {
+                        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+                        val tv = view?.findViewById<LinearLayout>(R.id.root)?.findViewById<TextView>(R.id.text_view)
+                        val rv = view?.findViewById<RecyclerView>(R.id.recyclerCommunity)
+                        progressBar?.visibility = View.GONE
+                        rv?.visibility = View.GONE
+                        tv?.visibility = View.VISIBLE
+                        tv?.text = getString(R.string.no_liked_posts_yet)
+                        return@onViewCreated
+                    }
+                    
+                    val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+                    progressBar?.visibility = View.VISIBLE
+                    
+                    Firebase.firestore
+                        .collection("users")
+                        .document(currentUser.uid)
+                        .get()
+                        .addOnSuccessListener { userDocument ->
+                            val fetchedLikedIds = userDocument.get("likedOutreach") as? List<String> ?: emptyList()
+                            likedEventIds = fetchedLikedIds
+                            
+                            if (fetchedLikedIds.isEmpty()) {
+                                progressBar?.visibility = View.GONE
+                                val tv = view?.findViewById<LinearLayout>(R.id.root)?.findViewById<TextView>(R.id.text_view)
+                                val rv = view?.findViewById<RecyclerView>(R.id.recyclerCommunity)
+                                rv?.visibility = View.GONE
+                                tv?.visibility = View.VISIBLE
+                                tv?.text = getString(R.string.no_liked_posts_yet)
+                            } else {
+                                defaultQuery = org.brightmindenrichment.street_care.util.Queries.getLikedEventsQuery(
+                                    likedEventIds
+                                )
+                                setupEventsWithQuery(defaultQuery)
+                            }
+                        }
+                        .addOnFailureListener {
+                            progressBar?.visibility = View.GONE
+                            val tv = view?.findViewById<LinearLayout>(R.id.root)?.findViewById<TextView>(R.id.text_view)
+                            val rv = view?.findViewById<RecyclerView>(R.id.recyclerCommunity)
+                            rv?.visibility = View.GONE
+                            tv?.visibility = View.VISIBLE
+                            tv?.text = getString(R.string.no_liked_posts_yet)
+                        }
+                } else {
+                    defaultQuery = org.brightmindenrichment.street_care.util.Queries.getLikedEventsQuery(
+                        likedEventIds
+                    )
+                    setupEventsWithQuery(defaultQuery)
+                }
+            }
         }
 
 //        val pageTitle = if(isPastEvents) "Past Events" else "Upcoming Events"
@@ -172,6 +259,16 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     getString(R.string.next_60_days),
                     getString(R.string.next_90_days),
                     getString(R.string.other_upcoming_events),
+                    getString(R.string.reset)
+                )
+            }
+            CommunityPageName.LIKED_EVENTS -> {
+                menuItems = listOf(
+                    getString(R.string.select),
+                    getString(R.string.last_7_days),
+                    getString(R.string.last_30_days),
+                    getString(R.string.next_7_days),
+                    getString(R.string.next_30_days),
                     getString(R.string.reset)
                 )
             }
@@ -278,6 +375,15 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
 //                        Log.d("filter", "itemAddNewId: " + itemAddNew.itemId)
                     }
 
+                    CommunityPageName.LIKED_EVENTS -> {
+                        // Same spinner behavior as UPCOMING_EVENTS, but no "add new" button
+                        spinner.background = ResourcesCompat.getDrawable(resources, R.drawable.filter_layer, null)
+
+                        val itemEventsFilter = menu.add(Menu.NONE, 0, 0, "events filter").apply {
+                            actionView = spinner
+                            setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                        }
+                    }
                     else -> Unit
                 }
 
@@ -367,10 +473,14 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         })
 
+    }
+
+
+    private fun setupEventsWithQuery(query: Query) {
         refreshEvents(
             eventDataAdapter,
             this@CommunityEventFragment.resources,
-            defaultQuery,
+            query,
             ""
         ) {
             eventDataAdapter.setupFlagStatusListeners { updatedEvent ->
@@ -432,17 +542,13 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
                 }
             }
+            searchEvents(
+                eventDataAdapter,
+                this@CommunityEventFragment.resources,
+                query
+            )
         }
-
-        searchEvents(
-            eventDataAdapter,
-            this@CommunityEventFragment.resources,
-            defaultQuery
-        )
-
-
     }
-
 
     private fun createTextView(text: String): TextView {
         val textView = TextView(context)
@@ -476,15 +582,20 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
             DebouncingQueryTextListener(lifecycle) { inputText ->
                 inputText?.let {
                     userInputText = it
-                    requestQuery(
-                        it,
-                        eventDataAdapter,
-                        view,
-                        bottomSheetView,
-                        bottomSheetBehavior,
-                        resources,
-                        query
-                    )
+                    // For LIKED_EVENTS, re-apply client-side filter with search text
+                    if (communityPageName == CommunityPageName.LIKED_EVENTS && likedDateFilter != LikedDateFilter.ALL) {
+                        applyLikedEventsFilter(likedDateFilter)
+                    } else {
+                        requestQuery(
+                            it,
+                            eventDataAdapter,
+                            view,
+                            bottomSheetView,
+                            bottomSheetBehavior,
+                            resources,
+                            query
+                        )
+                    }
                 }
             }
         )
@@ -1439,12 +1550,389 @@ class CommunityEventFragment : Fragment(), AdapterView.OnItemSelectedListener {
         Log.d("filter", "selectedItem: $selectedItem")
     }
 
+    private fun likedEventsItemSelected(parent: AdapterView<*>, pos: Int) {
+        var shouldUpdateSelectedItemPos = true
+        val selectedItem = parent.getItemAtPosition(pos).toString()
+
+        when (selectedItem) {
+            getString(R.string.select) -> {
+                shouldUpdateSelectedItemPos = false
+            }
+            getString(R.string.last_7_days) -> {
+                applyLikedEventsFilter(LikedDateFilter.LAST_7_DAYS)
+            }
+            getString(R.string.last_30_days) -> {
+                applyLikedEventsFilter(LikedDateFilter.LAST_30_DAYS)
+            }
+            getString(R.string.next_7_days) -> {
+                applyLikedEventsFilter(LikedDateFilter.NEXT_7_DAYS)
+            }
+            getString(R.string.next_30_days) -> {
+                applyLikedEventsFilter(LikedDateFilter.NEXT_30_DAYS)
+            }
+            getString(R.string.reset) -> {
+                likedDateFilter = LikedDateFilter.ALL
+                userInputText = ""
+                searchView.setQuery("", false)
+                view?.findViewById<Spinner>(R.id.events_filter)?.setSelection(0)
+                defaultQuery = org.brightmindenrichment.street_care.util.Queries.getLikedEventsQuery(likedEventIds)
+                setupEventsWithQuery(defaultQuery)
+            }
+        }
+
+        if (shouldUpdateSelectedItemPos) {
+            selectedItemPos = pos
+        }
+    }
+
+    private fun applyLikedEventsFilter(filter: LikedDateFilter) {
+        likedDateFilter = filter
+
+        // If filter is ALL, use normal query path
+        if (filter == LikedDateFilter.ALL) {
+            defaultQuery = org.brightmindenrichment.street_care.util.Queries.getLikedEventsQuery(likedEventIds)
+            setupEventsWithQuery(defaultQuery)
+            return
+        }
+
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+        val textView = view?.findViewById<LinearLayout>(R.id.root)?.findViewById<TextView>(R.id.text_view)
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerCommunity)
+
+        progressBar?.visibility = View.VISIBLE
+        recyclerView?.visibility = View.GONE
+        textView?.visibility = View.GONE
+
+        // defaultQuery in LIKED_EVENTS should already be getLikedEventsQuery(likedEventIds)
+        defaultQuery.get()
+            .addOnSuccessListener { result ->
+                scope.launch {
+                    val filteredEvents = mutableListOf<CommunityData>()
+                    var prevMonth: String? = null
+                    var prevDay: String? = null
+
+                    for (document in result) {
+                        yield()
+                        var event = Event()
+                        event.title = document.get("title")?.toString() ?: "Unknown"
+                        event.consentBox = (document.get("consentStatus") ?: false) as Boolean
+                        event.contactNumber = document.get("contactNumber")?.toString() ?: "Unknown"
+                        event.email = document.get("emailAddress")?.toString() ?: "Unknown"
+                        event.description = document.get("description")?.toString() ?: "Unknown"
+                        event.isFlagged = (document.get("isFlagged") ?: false) as Boolean
+                        event.flaggedByUser = document.get("flaggedByUser")?.toString()
+
+                        val location = document.get("location") as? Map<*, *>
+                        if (location != null) {
+                            val stateName = location["state"] ?: ""
+                            val stateAbbr = getStateOrProvinceAbbreviation(stateName.toString())
+                            event.city = location["city"]?.toString()
+                            event.state = stateAbbr
+                            event.street = location["street"]?.toString()
+                            event.zipcode = location["zipcode"]?.toString()
+                            event.location = "${location["street"]}, ${location["city"]}, $stateAbbr ${location["zipcode"]}"
+                        } else {
+                            event.location = "Unknown"
+                        }
+
+                        event.eventId = document.id
+                        event.uid = document.get("uid").toString()
+                        event.time = getDateTimeFromTimestamp(document.get("eventDate")).split("at ")[1]
+
+                        document.get("interests")?.let {
+                            try {
+                                event.interest = it.toString().toInt()
+                            } catch (e: Exception) {
+                                event.interest = 0
+                            }
+                        }
+
+                        event.eventStartTime = document.get("eventStartTime").toString()
+                        event.eventEndTime = document.get("eventEndTime").toString()
+                        event.createdAt = document.get("createdAt").toString()
+                        event.helpRequest = (document.get("helpRequest") as? ArrayList<String>) ?: arrayListOf()
+                        event.helpType = document.get("helpType").toString()
+                        event.participants = (document.get("participants") as? ArrayList<String>) ?: arrayListOf()
+                        event.skills = (document.get("skills") as? ArrayList<String>) ?: arrayListOf()
+                        event.approved = (document.get("approved") ?: false) as Boolean
+                        event.totalSlots = document.get("totalSlots")?.toString()?.toIntOrNull()
+
+                        val user = Firebase.auth.currentUser
+                        val likes = document.get("likes") as? List<*>
+                        event.likeCount = likes?.size ?: 0
+                        event.likedByMe = user != null && likes?.contains(user.uid) == true
+
+                        // Apply text search filter
+                        if (!checkQuery(event, userInputText)) continue
+
+                        // Apply date filter
+                        val eventDate = document.get("eventDate") as? Timestamp
+                        if (eventDate != null && !isLikedEventInDateRange(eventDate, filter)) continue
+
+                        // Process date formatting and layout (same as EventDataAdapter)
+                        val date: String = document.get("eventDate")?.toString() ?: "Unknown"
+                        if (date != "Unknown") {
+                            val localDateTime = dateParser(date)
+                            val month = localDateTime?.month ?: "Unknown"
+                            val dayOfMonth = localDateTime?.dayOfMonth?.toString() ?: "NA"
+                            val dayOfWeek = localDateTime?.dayOfWeek?.toString() ?: "NA"
+                            val year = localDateTime?.year ?: "Unknown"
+                            val monthName = month.toString()
+
+                            if (dayOfWeek.length > 3) {
+                                event.day = dayOfWeek.substring(0, 3)
+                            }
+
+                            event.date = dayOfMonth
+                            event.year = "$monthName $year"
+
+                            // Handle month headers and day layout
+                            if (prevMonth != null) {
+                                if (!month.toString().equals(prevMonth)) {
+                                    prevMonth = month.toString()
+                                    event.layoutType = Extensions.TYPE_NEW_DAY
+                                    val eventYear = EventYear()
+                                    eventYear.year = "$monthName $year"
+                                    val community = CommunityData(eventYear, Extensions.TYPE_MONTH)
+                                    filteredEvents.add(community)
+                                } else {
+                                    if (dayOfMonth != prevDay) {
+                                        prevDay = dayOfMonth
+                                        event.layoutType = Extensions.TYPE_NEW_DAY
+                                    } else {
+                                        event.layoutType = Extensions.TYPE_DAY
+                                    }
+                                }
+                            } else {
+                                prevMonth = month.toString()
+                                prevDay = dayOfMonth
+                                event.layoutType = Extensions.TYPE_NEW_DAY
+                                val eventYear = EventYear()
+                                eventYear.year = "$monthName $year"
+                                val community = CommunityData(eventYear, Extensions.TYPE_MONTH)
+                                filteredEvents.add(community)
+                            }
+
+                            val communityEvent = CommunityData(event, event.layoutType!!)
+                            filteredEvents.add(communityEvent)
+                        }
+                    }
+
+                    if (filteredEvents.isNotEmpty()) {
+                        textView?.visibility = View.GONE
+                        progressBar?.visibility = View.GONE
+                        recyclerView?.visibility = View.VISIBLE
+                        recyclerView?.layoutManager = LinearLayoutManager(view?.context)
+
+                        // Create a new EventDataAdapter and populate it with filtered events using reflection
+                        val filteredEventDataAdapter = EventDataAdapter(scope)
+                        try {
+                            val field = EventDataAdapter::class.java.getDeclaredField("communityDataList")
+                            field.isAccessible = true
+                            val list = field.get(filteredEventDataAdapter) as MutableList<CommunityData>
+                            list.clear()
+                            list.addAll(filteredEvents)
+                        } catch (e: Exception) {
+                            Log.e("FilteredEvents", "Failed to populate filtered adapter", e)
+                            // Fallback: use original adapter
+                        }
+                        val communityRecyclerAdapter = CommunityRecyclerAdapter(filteredEventDataAdapter, communityPageName)
+                        recyclerView?.adapter = communityRecyclerAdapter
+
+                        // Setup click listener for bottom sheet - reuse existing refreshBottomSheet logic
+                        communityRecyclerAdapter.setRefreshBottomSheet { event ->
+                            refreshBottomSheet(
+                                event,
+                                bottomSheetView.findViewById(R.id.relativeLayoutImage),
+                                bottomSheetView.findViewById(R.id.textInterested),
+                                bottomSheetView.findViewById(R.id.btnRSVP),
+                                bottomSheetView.findViewById(R.id.buttonInterested),
+                                bottomSheetView.findViewById(R.id.tvEventStatus),
+                                bottomSheetView.findViewById(R.id.llVerifiedAndRegistered),
+                                bottomSheetView.findViewById(R.id.llVerifiedAndIcon),
+                                bottomSheetView.findViewById(R.id.tvRegistered),
+                                false, // isPastEvents
+                                bottomSheetView.findViewById(R.id.flSkills),
+                                bottomSheetView.findViewById(R.id.btnLike),
+                                bottomSheetView.findViewById(R.id.tvLikeCount)
+                            )
+                        }
+
+                        communityRecyclerAdapter.setClickListener(object : CommunityRecyclerAdapter.ClickListener {
+                            @SuppressLint("ResourceAsColor")
+                            override fun onClick(event: Event, position: Int) {
+                                // Reuse existing bottom sheet click handler setup
+                                val bsTextViewTitle: TextView = bottomSheetView.findViewById<TextView>(R.id.textViewCommunityTitle)
+                                val bsTextViewCommunityLocation: TextView = bottomSheetView.findViewById<TextView>(R.id.textViewCommunityLocation)
+                                val bsTextViewCommunityTime: TextView = bottomSheetView.findViewById<TextView>(R.id.textViewCommunityTime)
+                                val bsTextViewCommunityDesc: TextView = bottomSheetView.findViewById<TextView>(R.id.textViewCommunityDesc)
+                                val bsButtonShare: ImageButton = bottomSheetView.findViewById(R.id.btnShare)
+                                val bsButtonLike: ImageButton = bottomSheetView.findViewById(R.id.btnLike)
+                                val tvLikeCount: TextView = bottomSheetView.findViewById(R.id.tvLikeCount)
+                                val bsButtonClose: AppCompatButton = bottomSheetView.findViewById(R.id.buttonClose)
+
+                                bsButtonShare.setOnClickListener {
+                                    Share.shareEvent(requireContext(), event.eventId)
+                                }
+
+                                bsButtonLike.setOnClickListener {
+                                    if (Firebase.auth.currentUser == null) {
+                                        showLoginDialog(requireContext())
+                                        return@setOnClickListener
+                                    }
+                                    event.likedByMe = !event.likedByMe
+                                    if (event.likedByMe) {
+                                        event.likeCount++
+                                        bsButtonLike.setImageResource(R.drawable.ic_heart_filled)
+                                    } else {
+                                        event.likeCount--
+                                        bsButtonLike.setImageResource(R.drawable.ic_heart_outline)
+                                    }
+                                    tvLikeCount.text = event.likeCount.toString()
+
+                                    communityRecyclerAdapter.notifyItemChanged(position)
+                                    eventDataAdapter.setLikedOutreachEvent(event.eventId, event.likedByMe) { success ->
+                                        if (!success) {
+                                            event.likedByMe = !event.likedByMe
+                                            if (event.likedByMe) {
+                                                event.likeCount++
+                                                bsButtonLike.setImageResource(R.drawable.ic_heart_filled)
+                                            } else {
+                                                event.likeCount--
+                                                bsButtonLike.setImageResource(R.drawable.ic_heart_outline)
+                                            }
+                                            tvLikeCount.text = event.likeCount.toString()
+                                            communityRecyclerAdapter.notifyItemChanged(position)
+                                        }
+                                    }
+                                }
+
+                                bsButtonClose.setOnClickListener {
+                                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                                }
+
+                                bsTextViewTitle.text = event.title
+                                bsTextViewCommunityLocation.text = if (!event.city.isNullOrEmpty() && !event.state.isNullOrEmpty()) {
+                                    "${event.street}, ${event.city}, ${event.state} ${event.zipcode}"
+                                } else {
+                                    event.location.orEmpty()
+                                }
+                                bsTextViewCommunityTime.text = event.time
+                                val eventDesc = event.description?.takeIf { it.isNotBlank() }
+                                bsTextViewCommunityDesc.text = eventDesc
+
+                                bsButtonLike.setImageResource(
+                                    if (event.likedByMe) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline
+                                )
+                                tvLikeCount.text = event.likeCount.toString()
+
+                                communityRecyclerAdapter.setCurrentBottomSheetEvent(event)
+                                refreshBottomSheet(
+                                    event,
+                                    bottomSheetView.findViewById(R.id.relativeLayoutImage),
+                                    bottomSheetView.findViewById(R.id.textInterested),
+                                    bottomSheetView.findViewById(R.id.btnRSVP),
+                                    bottomSheetView.findViewById(R.id.buttonInterested),
+                                    bottomSheetView.findViewById(R.id.tvEventStatus),
+                                    bottomSheetView.findViewById(R.id.llVerifiedAndRegistered),
+                                    bottomSheetView.findViewById(R.id.llVerifiedAndIcon),
+                                    bottomSheetView.findViewById(R.id.tvRegistered),
+                                    false, // isPastEvents
+                                    bottomSheetView.findViewById(R.id.flSkills),
+                                    bsButtonLike,
+                                    tvLikeCount
+                                )
+
+                                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                            }
+                        })
+
+                        val stickyHeaderItemDecorator = StickyHeaderItemDecorator(communityRecyclerAdapter)
+                        recyclerView?.addItemDecoration(stickyHeaderItemDecorator)
+                        
+                        // Setup search listener for filtered liked events
+                        searchView.setOnQueryTextListener(
+                            DebouncingQueryTextListener(lifecycle) { inputText ->
+                                inputText?.let {
+                                    userInputText = it
+                                    // Re-apply filter with new search text
+                                    applyLikedEventsFilter(likedDateFilter)
+                                } ?: run {
+                                    userInputText = ""
+                                    applyLikedEventsFilter(likedDateFilter)
+                                }
+                            }
+                        )
+                    } else {
+                        progressBar?.visibility = View.GONE
+                        recyclerView?.visibility = View.GONE
+                        textView?.visibility = View.VISIBLE
+                        textView?.text = getString(R.string.no_results_were_found)
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("LikedEventsFilter", "Error loading filtered events", exception)
+                progressBar?.visibility = View.GONE
+                recyclerView?.visibility = View.GONE
+                textView?.visibility = View.VISIBLE
+                textView?.text = getString(R.string.no_results_were_found)
+            }
+    }
+
+    private fun isLikedEventInDateRange(eventDate: Timestamp, dateFilter: LikedDateFilter): Boolean {
+        if (dateFilter == LikedDateFilter.ALL) return true
+
+        val currentTime = System.currentTimeMillis()
+        val eventTime = eventDate.toDate().time
+
+        return when (dateFilter) {
+            LikedDateFilter.LAST_7_DAYS -> {
+                val targetDate = currentTime - getDayInMilliSec(7)
+                eventTime >= targetDate && eventTime <= currentTime
+            }
+            LikedDateFilter.LAST_30_DAYS -> {
+                val targetDate = currentTime - getDayInMilliSec(30)
+                eventTime >= targetDate && eventTime <= currentTime
+            }
+            LikedDateFilter.NEXT_7_DAYS -> {
+                val targetDate = currentTime + getDayInMilliSec(7)
+                eventTime >= currentTime && eventTime <= targetDate
+            }
+            LikedDateFilter.NEXT_30_DAYS -> {
+                val targetDate = currentTime + getDayInMilliSec(30)
+                eventTime >= currentTime && eventTime <= targetDate
+            }
+            else -> true
+        }
+    }
+
+    private fun checkQuery(event: Event, inputText: String): Boolean {
+        val title = event.title.lowercase().trim()
+        val description = event.description?.lowercase()?.trim() ?: "unknown"
+        val location = event.location?.lowercase()?.trim() ?: "unknown"
+        val skills = event.skills?.map { it.lowercase() } ?: emptyList()
+        var checkSkills = false
+        for (skill in skills) {
+            if (skill.contains(inputText.lowercase().trim())) {
+                checkSkills = true
+                break
+            }
+        }
+        return inputText.isEmpty() ||
+                title.contains(inputText.lowercase().trim()) ||
+                description.contains(inputText.lowercase().trim()) ||
+                location.contains(inputText.lowercase().trim()) ||
+                checkSkills
+    }
+
     override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
         // An item is selected.
         // You can retrieve the selected item using parent.getItemAtPosition(pos).
         when(communityPageName) {
             CommunityPageName.PAST_EVENTS -> pastEventsItemSelected(parent, pos, true)
             CommunityPageName.UPCOMING_EVENTS -> upcomingEventsItemSelected(parent, pos, false)
+            CommunityPageName.LIKED_EVENTS -> likedEventsItemSelected(parent, pos)
             else -> Unit
         }
 

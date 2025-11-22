@@ -267,7 +267,7 @@ class CommunityRecyclerAdapter(
                              */
                         }
                     }
-                    CommunityPageName.UPCOMING_EVENTS, CommunityPageName.HELP_REQUESTS -> {
+                    CommunityPageName.UPCOMING_EVENTS, CommunityPageName.HELP_REQUESTS, CommunityPageName.LIKED_EVENTS -> {
                         if (isSignedUp) {
                             setRSVPButton(
                                 buttonRSVP = buttonRSVP,

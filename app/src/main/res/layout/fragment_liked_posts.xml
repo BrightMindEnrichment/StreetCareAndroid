@@ -1,84 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.user.LikedPostsFragment"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/root2">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/root"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:background="@drawable/rounded_bar"
-                app:iconifiedByDefault="false"/>
-
-            <include layout="@layout/badge_layout"/>
-
-            <TextView
-                android:id="@+id/text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="20sp"
-                android:textColor="@color/gray"
-                android:padding="20dp"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:textAllCaps="false"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                tools:text="no results were found"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewLikedPosts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/ll_mask"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:visibility="gone"/>
-    </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBarLoading"
+    <LinearLayout
+        android:id="@+id/row_outreach_events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        />
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/row_border_background"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground">
 
-    <FrameLayout
-        android:id="@+id/backgroundOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#80000000"
-        android:visibility="gone">
+        <ImageView
+            android:id="@+id/icon_outreach"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/ic_community" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/text_outreach_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Outreach Events"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <include
-        layout="@layout/bottom_sheet_event"
-        android:id="@+id/bottomLayout" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <ImageView
+            android:id="@+id/icon_chevron"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
+
+    </LinearLayout>
+
+</LinearLayout>

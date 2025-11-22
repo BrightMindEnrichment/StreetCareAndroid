@@ -98,14 +98,13 @@ object Queries {
                 .collection("outreachEventsDev")
                 .whereIn(com.google.firebase.firestore.FieldPath.documentId(), batch)
         } else {
-            // Fallback: try to use likes array if available
+            // Fallback: query all events liked by the user (both past and future)
+            // Date filtering will be done client-side if needed
             val user = Firebase.auth.currentUser
             val userId = user?.uid ?: ""
-            val targetDay = Timestamp(Date(System.currentTimeMillis()))
             Firebase.firestore
                 .collection("outreachEventsDev")
                 .whereArrayContains("likes", userId)
-                .whereGreaterThanOrEqualTo("eventDate", targetDay)
                 .orderBy("eventDate", order)
         }
     }
