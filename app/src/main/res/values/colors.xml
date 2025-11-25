@@ -42,4 +42,9 @@
     <color name="status_amber"> #FEED00</color>
     <color name="app_green">#1A4314</color>
     <color name="app_dark_gray">#424242</color>
+    <color name="Light_black">#454343</color>
+    <color name="unchecked_color">#a8a3a3</color>
+    <color name="checked_color">#a8a3a3</color>
+    <color name="gray_outline">#cccaca</color>
+    <color name="dark_greener">#193030</color>
 </resources>
