@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.EditIndividualInteractionBinding
 import org.brightmindenrichment.street_care.ui.visit.IndividualInteractionAdapter
@@ -19,7 +20,8 @@ class IndividualInteractionFragment : Fragment() {
     private var _binding: EditIndividualInteractionBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: IndividualInteractionViewModel by viewModels()
+    private val viewModel: IndividualInteractionViewModel by navGraphViewModels(R.id.individual_interaction)
+
     private lateinit var adapter: IndividualInteractionAdapter
 
     override fun onCreateView(

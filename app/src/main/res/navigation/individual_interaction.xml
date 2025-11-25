@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/individual_interaction">
+
+
+    <fragment
+        android:id="@+id/individualInteractionFragment"
+        android:name="org.brightmindenrichment.street_care.ui.interaction.IndividualInteractionFragment"
+        android:label="Individual Interaction"
+        tools:layout="@layout/edit_individual_interaction" >
+
+        <action
+            android:id="@+id/action_nav_visit_to_visitFormFragment2"
+            app:destination="@id/visitFormFragment2" >
+            <argument
+                android:name="interactionLogId"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+</navigation>
