@@ -6,12 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:orientation="vertical">-->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -258,7 +253,7 @@
                             android:src="@drawable/baseline_calendar_month_24" />
 
                         <TextView
-                            android:id="@+id/date_picker_action"
+                            android:id="@+id/start_date"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -352,7 +347,7 @@
                             android:src="@drawable/baseline_calendar_month_24" />
 
                         <TextView
-                            android:id="@+id/date_picker_actions"
+                            android:id="@+id/end_date"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -387,7 +382,7 @@
                             android:src="@drawable/baseline_access_time_24" />
 
                         <TextView
-                            android:id="@+id/time_picker"
+                            android:id="@+id/end_time"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"

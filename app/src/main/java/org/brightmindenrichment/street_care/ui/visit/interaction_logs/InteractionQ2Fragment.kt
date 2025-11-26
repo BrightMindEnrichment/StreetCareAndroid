@@ -1,0 +1,115 @@
+package org.brightmindenrichment.street_care.ui.visit.interaction_logs
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import org.brightmindenrichment.street_care.databinding.FragmentQuestion2Binding
+import androidx.navigation.fragment.findNavController
+import org.brightmindenrichment.street_care.R
+import android.widget.Toast
+
+class InteractionQ2Fragment: Fragment() {
+
+
+    class InteractionQ2Fragment : Fragment() {
+
+        private var _binding: FragmentQuestion2Binding? = null
+        private val binding get() = _binding!!
+
+        private val viewModel: InteractionLogViewModel by activityViewModels()
+
+        override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View {
+            _binding = FragmentQuestion2Binding.inflate(inflater, container, false)
+            return binding.root
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+
+            // Pre-fill fields if ViewModel already has data
+            binding.inputFirstName.setText(viewModel.firstName.value ?: "")
+            binding.inputLastName.setText(viewModel.lastName.value ?: "")
+            binding.inputEmail.setText(viewModel.email.value ?: "")
+            binding.inputPhoneNumber.setText(viewModel.phoneNumber.value ?: "")
+
+            setCloseButton()
+            setPreviousButton()
+            setNextButton()
+            setSkipButton()
+        }
+
+        private fun setCloseButton() {
+            binding.btnClose.setOnClickListener {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
+
+        private fun setPreviousButton() {
+            binding.txtPrevious2.setOnClickListener {
+                findNavController().popBackStack() // go back to Q1
+            }
+        }
+
+        private fun setNextButton() {
+            binding.txtNext2.setOnClickListener {
+
+                val firstName = binding.inputFirstName.text.toString().trim()
+                val lastName = binding.inputLastName.text.toString().trim()
+                val email = binding.inputEmail.text.toString().trim()
+                val phone = binding.inputPhoneNumber.text.toString().trim()
+
+                // Simple validation
+                if (firstName.isEmpty()) {
+                    binding.inputFirstName.error = "Please enter first name"
+                    binding.inputFirstName.requestFocus()
+                    return@setOnClickListener
+                }
+
+                if (lastName.isEmpty()) {
+                    binding.inputLastName.error = "Please enter last name"
+                    binding.inputLastName.requestFocus()
+                    return@setOnClickListener
+                }
+
+                if (email.isEmpty()) {
+                    binding.inputEmail.error = "Please enter email"
+                    binding.inputEmail.requestFocus()
+                    return@setOnClickListener
+                }
+
+                if (phone.isEmpty()) {
+                    binding.inputPhoneNumber.error = "Please enter phone number"
+                    binding.inputPhoneNumber.requestFocus()
+                    return@setOnClickListener
+                }
+
+                // Update ViewModel
+                viewModel.firstName.value = firstName
+                viewModel.lastName.value = lastName
+                viewModel.email.value = email
+                viewModel.phoneNumber.value = phone
+
+                // Navigate to Q3 (replace with your actual action id)
+                findNavController().navigate(R.id.action_interactionQ2_to_interactionQ3)
+            }
+        }
+
+        private fun setSkipButton() {
+            binding.txtSkip3.setOnClickListener {
+                Toast.makeText(requireContext(), "Skipped personal info", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_interactionQ2_to_interactionQ3)
+            }
+        }
+
+        override fun onDestroyView() {
+            super.onDestroyView()
+            _binding = null
+        }
+    }
+}
