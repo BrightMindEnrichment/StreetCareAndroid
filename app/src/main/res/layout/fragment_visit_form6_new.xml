@@ -181,10 +181,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="Number of care\npackages given out"
-                    android:textSize="28sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     app:fontFamily="Poppins"
-                    android:textColor="#071F1E"
+                    android:textColor="@color/black"
                     android:gravity="center" />
 
                 <!-- counter row -->
@@ -255,10 +255,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
                     android:text="What items were included\nin the care package?"
-                    android:textSize="26sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     app:fontFamily="Poppins"
-                    android:textColor="#071F1E"
+                    android:textColor="@color/black"
                     android:gravity="center" />
 
                 <!-- Notes input (multiline) -->

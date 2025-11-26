@@ -171,7 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="Number of people helped"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     app:fontFamily="Poppins"
                     android:textColor="@color/black"
@@ -242,10 +242,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
                     android:text="How many people have joined you?"
-                    android:textSize="18sp"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     app:fontFamily="Poppins"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:gravity="center" />
 
                 <LinearLayout
