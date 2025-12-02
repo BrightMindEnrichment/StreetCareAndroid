@@ -21,9 +21,11 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
+//import com.google.firebase.auth.ktx.auth
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.community.StickyHeaderInterface
 import org.brightmindenrichment.street_care.ui.community.data.CommunityData
@@ -185,7 +187,7 @@ class CommunityRecyclerAdapter(
                 }
             }
             btnLike.setOnClickListener {
-                if (Firebase.auth.currentUser == null) {
+                if (FirebaseAuth.getInstance().currentUser == null) {
                     // User is not logged in, show the dialog and stop further execution
                     showLoginDialog(itemView.context)
                     return@setOnClickListener
@@ -496,8 +498,8 @@ class CommunityRecyclerAdapter(
                 )
 
                 ivFlag.setOnClickListener {
-                    val currentUser = Firebase.auth.currentUser ?: return@setOnClickListener
-                    val db = Firebase.firestore
+                    val currentUser = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
+                    val db = FirebaseFirestore.getInstance()
                     val eventRef = db.collection("outreachEventsDev").document(event.eventId!!)
                     val currentUserId = currentUser.uid
 
@@ -579,7 +581,7 @@ class CommunityRecyclerAdapter(
                 val uid = event.uid;
 
                 var type: String? = "";
-                val db = Firebase.firestore
+                val db = FirebaseFirestore.getInstance()
                 db.collection("users").whereEqualTo("uid", uid.toString())
                     .get()
                     .addOnSuccessListener { querySnapshot ->

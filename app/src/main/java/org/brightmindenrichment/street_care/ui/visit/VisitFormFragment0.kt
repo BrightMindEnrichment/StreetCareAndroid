@@ -18,8 +18,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentVisitBinding
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
@@ -51,7 +52,7 @@ class VisitFormFragment0 : Fragment() {
             binding.btnAddNew.setOnClickListener {
                 // if user is submitting multiple visit log together, the view model field should reset
 
-                if(Firebase.auth.currentUser != null) {
+                if(FirebaseAuth.getInstance().currentUser != null) {
                     // showImpactDialog(requireContext())
                     val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                     val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
@@ -72,7 +73,7 @@ class VisitFormFragment0 : Fragment() {
                 }
 
             }
-            if (Firebase.auth.currentUser != null) {
+            if (FirebaseAuth.getInstance().currentUser != null) {
                 binding.historyMsg.visibility = View.GONE
                 updateUI()
             } else {

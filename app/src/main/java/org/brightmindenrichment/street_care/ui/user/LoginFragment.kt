@@ -16,8 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -108,7 +108,7 @@ class LoginFragment : Fragment() {
                 binding.editTextTextEmailAddress.setError(getString(R.string.enter_valid_email_address))
             }else {
                 disableUI(true)
-                auth = Firebase.auth
+                auth = FirebaseAuth.getInstance()
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         lifecycleScope.launch(Dispatchers.IO) {

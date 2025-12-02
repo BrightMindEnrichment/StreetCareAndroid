@@ -24,8 +24,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.FirebaseStorage
+//import com.google.firebase.ktx.Firebase
+//import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentEditProfileBinding
@@ -45,7 +46,7 @@ class EditProfileFragment : Fragment() {
     private var _binding: FragmentEditProfileBinding? = null
     private val binding get() = _binding!!
     private var isUserImageChanged = false
-    private val storage = Firebase.storage
+    private val storage = FirebaseStorage.getInstance()
     private val storageRef = storage.reference
     private var userName: String = ""
     private var email: String = ""

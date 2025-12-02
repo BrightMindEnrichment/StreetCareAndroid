@@ -16,7 +16,8 @@ import android.graphics.Color
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatButton
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.firestore.ktx.firestore
 import org.brightmindenrichment.street_care.util.Extensions
 import org.brightmindenrichment.street_care.util.Queries.getLikedEventsQuery
 import java.text.SimpleDateFormat
@@ -175,9 +176,9 @@ class ProfileMyEvents : Fragment(){
         // Remove the document from the Firebase collection
         val user = Firebase.auth.currentUser ?: return
         val currentUserUid = user.uid
-        val eventsCollection = Firebase.firestore.collection("outreachEventsDev")
+        val eventsCollection = FirebaseFirestore.getInstance().collection("outreachEventsDev")
 
-        Firebase.firestore.runTransaction { transaction ->
+        FirebaseFirestore.getInstance().runTransaction { transaction ->
             // Retrieve the current document snapshot
             val documentSnapshot = transaction.get(eventsCollection.document(documentId))
 
@@ -212,7 +213,7 @@ class ProfileMyEvents : Fragment(){
     }
 
     private fun removeFromUsersCollection(outreachEventdocumentId: String,currentUserUid: String) {
-        val usersCollection = Firebase.firestore.collection("users")
+        val usersCollection = FirebaseFirestore.getInstance().collection("users")
 
         // Fetch all documents in the "users" collection
         usersCollection

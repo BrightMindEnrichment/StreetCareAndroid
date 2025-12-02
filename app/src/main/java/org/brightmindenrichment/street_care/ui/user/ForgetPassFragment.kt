@@ -11,8 +11,8 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentForgetPassBinding
 import org.brightmindenrichment.street_care.databinding.FragmentVisitBinding
@@ -61,7 +61,7 @@ class ForgetPassFragment : Fragment() {
 
     }
     private fun beginRecovery(mText: String) {
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance()
         auth.sendPasswordResetEmail(mText)
             .addOnCompleteListener(OnCompleteListener<Void?> { task ->
 

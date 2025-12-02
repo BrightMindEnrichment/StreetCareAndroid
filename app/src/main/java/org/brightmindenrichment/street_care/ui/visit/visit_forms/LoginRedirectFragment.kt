@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLoginRedirectBinding
 import org.brightmindenrichment.street_care.databinding.FragmentLoginVisitLogBinding
@@ -21,7 +22,7 @@ class LoginRedirectFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val navController = findNavController()
 
-        if (Firebase.auth.currentUser != null) {
+        if (FirebaseAuth.getInstance().currentUser != null) {
            navController.navigate( R.id.nav_visit)
         } else {
            navController.navigate( R.id.loginVisitLogFragment)

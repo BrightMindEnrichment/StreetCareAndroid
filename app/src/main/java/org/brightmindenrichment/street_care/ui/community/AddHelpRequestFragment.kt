@@ -26,9 +26,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.chaptermembership.checkUserChapterMembership
 import org.brightmindenrichment.street_care.ui.community.data.HelpRequestStatus
@@ -139,7 +141,7 @@ class AddHelpRequestFragment : Fragment() {
         }
 
         btnSubmit.setOnClickListener {
-            if (Firebase.auth.currentUser == null) {
+            if (FirebaseAuth.getInstance().currentUser == null) {
                 context?.let { context ->
                     Extensions.showDialog(
                         context,
@@ -271,7 +273,7 @@ class AddHelpRequestFragment : Fragment() {
         currentDateTimestamp: Timestamp,
     ) {
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return
         val stateAbbr = getStateOrProvinceAbbreviation(state)
         // create a map of help request data so we can add to firebase
         val helpRequestData = hashMapOf(
@@ -292,7 +294,7 @@ class AddHelpRequestFragment : Fragment() {
             "status" to HelpRequestStatus.NeedHelp.status
         )
         // save to firebase
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance()
         db.collection("helpRequests")
             .add(helpRequestData)
             .addOnSuccessListener { documentReference ->
@@ -309,7 +311,7 @@ class AddHelpRequestFragment : Fragment() {
                 dialogView.findViewById<TextView>(R.id.textViewMessage).text = message
                 dialogView.findViewById<TextView>(R.id.approvalTextView).text = approvalMessage
                 dialogView.findViewById<TextView>(R.id.learnMoreTextView).text = learnMoreText
-                val usersDocRef = Firebase.firestore.collection("users").document(user.uid)
+                val usersDocRef = FirebaseFirestore.getInstance().collection("users").document(user.uid)
                 checkUserChapterMembership(user.uid) { status: UserType? ->
                     val learnMoreTextView = dialogView.findViewById<TextView>(R.id.learnMoreLinkTextView)
                     when (status) {

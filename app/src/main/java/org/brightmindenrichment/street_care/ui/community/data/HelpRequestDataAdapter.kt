@@ -10,13 +10,16 @@ import android.util.Log
 import android.util.TypedValue
 import androidx.navigation.NavController
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.FirebaseStorage
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
+//import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,7 +58,7 @@ class HelpRequestDataAdapter(
 ) {
     //var events: MutableList<Event> = mutableListOf()
     private var helpRequestDataList: MutableList<HelpRequestData> = mutableListOf()
-    val storage = Firebase.storage
+    val storage = FirebaseStorage.getInstance()
     val size: Int
         get() {
             return helpRequestDataList.size
@@ -102,8 +105,8 @@ class HelpRequestDataAdapter(
         Log.d("debug", "helpRequests refresh")
         showProgressBar()
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser
-        val db = Firebase.firestore
+        val user = FirebaseAuth.getInstance().currentUser
+        val db = FirebaseFirestore.getInstance()
         if (user == null) {
             // Guest (logged out) version: Simply fetch help requests without user-specific logic.
             query.get()
@@ -305,9 +308,9 @@ class HelpRequestDataAdapter(
     ) {
 
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return
 
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance()
         val helpRequestStatus = helpRequest.status!!
         val helpRequestsDocRef = db.collection("helpRequests").document(helpRequest.id!!)
         when(helpRequestStatus) {
