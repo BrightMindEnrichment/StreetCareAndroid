@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
@@ -37,7 +38,8 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_close"
                     android:tint="#FFFFFF"
-                    android:contentDescription="Close" />
+                    android:contentDescription="Close"
+                    tools:ignore="UseAppTint" />
             </FrameLayout>
 
 
@@ -200,7 +202,8 @@
                             android:layout_gravity="center"
                             android:src="@drawable/ic_minus"
                             android:tint="#F4D03F"
-                            android:contentDescription="Decrease count"/>
+                            android:contentDescription="Decrease count"
+                            tools:ignore="UseAppTint" />
                     </FrameLayout>
 
                     <!-- Counter value (slightly reduced spacing) -->
@@ -232,7 +235,8 @@
                             android:layout_gravity="center"
                             android:src="@drawable/ic_plus"
                             android:tint="#F4D03F"
-                            android:contentDescription="Increase count"/>
+                            android:contentDescription="Increase count"
+                            tools:ignore="UseAppTint" />
                     </FrameLayout>
                 </LinearLayout>
 
@@ -271,7 +275,8 @@
                             android:layout_gravity="center"
                             android:src="@drawable/ic_minus"
                             android:tint="#F4D03F"
-                            android:contentDescription="Decrease count"/>
+                            android:contentDescription="Decrease count"
+                            tools:ignore="UseAppTint" />
                     </FrameLayout>
 
                     <!-- Counter value (reduced spacing) -->
@@ -303,7 +308,8 @@
                             android:layout_gravity="center"
                             android:src="@drawable/ic_plus"
                             android:tint="#F4D03F"
-                            android:contentDescription="Increase count"/>
+                            android:contentDescription="Increase count"
+                            tools:ignore="UseAppTint" />
                     </FrameLayout>
                 </LinearLayout>
 
