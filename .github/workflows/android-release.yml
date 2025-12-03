@@ -40,7 +40,6 @@ jobs:
       - name: 3. Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      # NEW STEP 4: Handle Version Bumping
       # Uses vamsi-alluri/android-version-actions
       # The action logic automatically prioritizes 'specific_version' if provided;
       # otherwise, it falls back to 'SemanticVersioningOptionToIncrement'.
