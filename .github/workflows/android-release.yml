@@ -44,7 +44,7 @@ jobs:
       # The action logic automatically prioritizes 'specific_version' if provided;
       # otherwise, it falls back to 'SemanticVersioningOptionToIncrement'.
       - name: 4. Bump Android Version
-        uses: vamsi-alluri/android-version-actions@v1.2.2
+        uses: vamsi-alluri/android-version-actions@v0.1.0
         with:
           gradlePath: app/build.gradle
           # Always increment the internal version code
