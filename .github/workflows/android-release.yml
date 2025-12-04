@@ -59,7 +59,6 @@ jobs:
           # If specific_version is empty, this handles the patch/minor/major bump
           SemanticVersioningOptionToIncrement: ${{ (github.event_name == 'workflow_dispatch') && github.event.inputs.bump_type || 'patch' }}
 
-
       - name: 5. Inject API Key into local.properties
         run: |
           echo "API_KEY=${{ secrets.API_KEY }}" > ./local.properties
