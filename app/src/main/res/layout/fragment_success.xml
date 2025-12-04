@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical|start"
+            android:background="@drawable/red_round_button"
+            android:contentDescription="@string/close"
+            android:src="@drawable/ic_close"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Interaction Log"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_visitlog2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:strokeColor="@color/gray700"
+        app:strokeWidth="1.2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvSuccess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/interaction_logged_title"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <!-- Button: Add Another Interaction -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddAnother"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/black"
+                android:elevation="6dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="260dp"
+                android:paddingHorizontal="36dp"
+                android:paddingVertical="10dp"
+                android:singleLine="true"
+                android:text="@string/another_visit"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/golden_yellow"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:translationZ="4dp"
+                app:cornerRadius="35dp" />
+
+            <!-- Button: Back to Interaction Log -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/black"
+                android:elevation="6dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="260dp"
+                android:paddingHorizontal="36dp"
+                android:paddingVertical="10dp"
+                android:singleLine="true"
+                android:text="@string/back_interaction"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/golden_yellow"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:translationZ="4dp"
+                app:cornerRadius="35dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Rounded yellow bar -->
+    <!-- Rounded yellow “Completed” bar -->
+    <View
+        android:id="@+id/completedBar"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/progress_completed_pill" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/completed"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+</LinearLayout>

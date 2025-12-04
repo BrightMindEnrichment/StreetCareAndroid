@@ -76,6 +76,11 @@
         <item name="cornerSizeBottomLeft">10dp</item>
         <item name="cornerSizeBottomRight">10dp</item>
     </style>
+    <style name="CheckboxYellowTickTheme">
+<!--        <item name="android:button">@android:drawable/btn_check_material_anim</item>-->
+        <item name="android:colorControlActivated">@color/golden_yellow</item>
+        <item name="android:colorControlNormal">@color/black</item>
+    </style>
 
 
 </resources>
