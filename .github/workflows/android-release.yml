@@ -14,6 +14,10 @@ on:
         description: 'Set a specific version (e.g., 26.0.0). Overrides bump_type.'
         type: string
         required: false
+      specific_version_code:
+        description: 'Set a specific version code (e.g., 42). Overrides automatic increment.'
+        type: string
+        required: false
 
 permissions:
   contents: write
@@ -47,12 +51,14 @@ jobs:
         uses: vamsi-alluri/android-version-actions@v0.1.1
         with:
           gradlePath: app/build.gradle
+          versionCode: ${{ github.event.inputs.specific_version_code }}
           # Always increment the internal version code
           versionCodeIncrementBy: 1
           # If specific_version input is set, this takes priority
           versionName: ${{ github.event.inputs.specific_version }}
           # If specific_version is empty, this handles the patch/minor/major bump
           SemanticVersioningOptionToIncrement: ${{ (github.event_name == 'workflow_dispatch') && github.event.inputs.bump_type || 'patch' }}
+
 
       - name: 5. Inject API Key into local.properties
         run: |
