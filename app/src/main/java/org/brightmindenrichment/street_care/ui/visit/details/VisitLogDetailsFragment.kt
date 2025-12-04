@@ -41,7 +41,7 @@ class VisitLogDetailsFragment : Fragment() {
     ): View {
         binding = FragmentVisitLogDetailsBinding.inflate(inflater)
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Interaction Log"
+        (requireActivity() as AppCompatActivity)
 
         try {
             val visitLog = requireArguments().getParcelable<VisitLog>("visitLog")!!

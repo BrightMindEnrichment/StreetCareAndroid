@@ -18,8 +18,11 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.Date
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import org.brightmindenrichment.street_care.ui.visit.InteractionLogDataAdapter
+import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
+import org.brightmindenrichment.street_care.ui.visit.repository.InteractionLogRepositoryImpl
 
 
 class InteractionQ1Fragment: Fragment() {
@@ -46,48 +49,39 @@ class InteractionQ1Fragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-//        val db = FirebaseFirestore.getInstance()
-//        db.collection("InteractionLog").whereEqualTo("email", "monicasri@brightmindenrichment.org")
-//            //.document("monicasri@brightmindenrichment.org")
-//
-//
-//            .get()
-//            .addOnSuccessListener { result ->
-//                if (result.isEmpty) {
-//                    Log.d("Test", "No documents found")
-//                } else {
-//                    for (doc in result) {
-//                        Log.d("Test", "Found doc: ${doc.id} -> ${doc.data}")
-//                    }
-//                }
-//            }
-        //******************
-//            .addOnSuccessListener { doc ->
-//                if (doc.exists()) {
-//                    Log.d("Test", "Document data: ${doc.data}")
-//                } else {
-//                    Log.d("Test", "Document does not exist")
-//                }
-//            }
-//            .addOnFailureListener { e ->
-//                Log.e("Test", "Error fetching document", e)
-//            }
-//**********************
-//        val adapter = InteractionLogDataAdapter()
-//        adapter.refreshAll {
-//            Log.d("Test", "Fetched ${adapter.size} interactions")
-//            adapter.interactions.forEach { log ->
-//                Log.d("Test", log.toString())
-//            }
-//        }
-
         val adapter = InteractionLogDataAdapter()
 
-        adapter.refreshAll {
-            Log.d("FetchTest", "🔥 Fetch complete. Count = ${adapter.size}")
+        /* Test fetching by Document ID */
+        adapter.fetchByDocumentId(
+            documentId = "AB342F2E-28E5-4D19-B8B5-E68DDAD8D032"
+        ) { success ->
+
+            Log.d("FetchTest", "Fetch complete. Success = $success, Count = ${adapter.size}")
 
             adapter.interactions.forEachIndexed { index, log ->
-                Log.d("FetchTest", "[$index] ID=${log.id}, Email=${log.email}, UserId=${log.userId}")
+                Log.d("FetchTest", "[$index] $log")
+            }
+        }
+
+
+        /* Test saving a new InteractionLog */
+        val repository = InteractionLogRepositoryImpl()
+
+        val testLog = InteractionLog(
+            firstName = "Test",
+            lastName = "User",
+            city = "San Jose",
+            state = "CA",
+            isPublic = true,
+            numPeopleHelped = 5,
+            interactionDate = Timestamp.now()
+        )
+
+        repository.saveInteractionLog(testLog) { success, documentId ->
+            if (success) {
+                Log.d("FirestoreTest", "Saved! Document ID = $documentId")
+            } else {
+                Log.e("FirestoreTest", "Save failed")
             }
         }
 
@@ -278,166 +272,4 @@ class InteractionQ1Fragment: Fragment() {
         super.onDestroyView()
         _binding = null
     }
-//
-//    private var _binding: FragmentQuestion1Binding? = null
-//    private val binding get() = _binding!!
-//
-//    private val viewModel: InteractionLogViewModel by activityViewModels()
-//
-//    private val calendarStart = Calendar.getInstance()
-//    private val calendarEnd = Calendar.getInstance()
-//
-//    private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-//    private val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View {
-//        _binding = FragmentQuestion1Binding.inflate(inflater, container, false)
-//        return binding.root
-//    }
-//
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//
-//        setupDatePickerStart()
-//        setupTimePickerStart()
-//
-//        setupDatePickerEnd()
-//        setupTimePickerEnd()
-//
-//        setupTimezonePicker()
-//
-//        setupNextButton()
-//        setupCloseButton()
-//    }
-//
-//    private fun setupDatePickerStart() {
-//        binding.datePickerCard.setOnClickListener {
-//            val c = calendarStart
-//            DatePickerDialog(
-//                requireContext(),
-//                { _, y, m, d ->
-//                    c.set(y, m, d)
-//                    binding.datePickerAction.text = dateFormat.format(c.time)
-//                    viewModel.updateInteractionDateStart(c.time)
-//                },
-//                c.get(Calendar.YEAR),
-//                c.get(Calendar.MONTH),
-//                c.get(Calendar.DAY_OF_MONTH)
-//            ).show()
-//        }
-//    }
-//
-//    private fun setupTimePickerStart() {
-//        binding.timePickerCard.setOnClickListener {
-//            val c = calendarStart
-//            TimePickerDialog(
-//                requireContext(),
-//                { _, hour, minute ->
-//                    c.set(Calendar.HOUR_OF_DAY, hour)
-//                    c.set(Calendar.MINUTE, minute)
-//                    binding.startTime.text = timeFormat.format(c.time)
-//                    viewModel.updateInteractionTimeStart(c.time)
-//                },
-//                c.get(Calendar.HOUR_OF_DAY),
-//                c.get(Calendar.MINUTE),
-//                false
-//            ).show()
-//        }
-//    }
-//
-//    private fun setupDatePickerEnd() {
-//        binding.datePickerCard1.setOnClickListener {
-//            val c = calendarEnd
-//            DatePickerDialog(
-//                requireContext(),
-//                { _, y, m, d ->
-//                    c.set(y, m, d)
-//                    binding.datePickerActions.text = dateFormat.format(c.time)
-//                    viewModel.updateInteractionDateEnd(c.time)
-//                },
-//                c.get(Calendar.YEAR),
-//                c.get(Calendar.MONTH),
-//                c.get(Calendar.DAY_OF_MONTH)
-//            ).show()
-//        }
-//    }
-//
-//    private fun setupTimePickerEnd() {
-//        binding.timePickerCard1.setOnClickListener {
-//            val c = calendarEnd
-//            TimePickerDialog(
-//                requireContext(),
-//                { _, hour, minute ->
-//                    c.set(Calendar.HOUR_OF_DAY, hour)
-//                    c.set(Calendar.MINUTE, minute)
-//                    binding.timePicker.text = timeFormat.format(c.time)
-//                    viewModel.updateInteractionTimeEnd(c.time)
-//                },
-//                c.get(Calendar.HOUR_OF_DAY),
-//                c.get(Calendar.MINUTE),
-//                false
-//            ).show()
-//        }
-//    }
-//
-//    private fun setupTimezonePicker() {
-//        binding.timezonePickerCard.setOnClickListener {
-//            val dialog = android.app.AlertDialog.Builder(requireContext())
-//            val zones = arrayOf("UTC", "EST", "CST", "MST", "PST")
-//            dialog.setItems(zones) { _, which ->
-//                binding.timezoneText.text = zones[which]
-//                viewModel.updateTimezone(zones[which])
-//            }
-//            dialog.show()
-//        }
-//    }
-//
-//    private fun setupNextButton() {
-//        binding.txtNext2.setOnClickListener {
-//
-//            if (!validateInputs()) return@setOnClickListener
-//
-//            // Navigate to next screen
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_container, InteractionQ2Fragment())
-//                .addToBackStack(null)
-//                .commit()
-//        }
-//    }
-//
-//    private fun validateInputs(): Boolean {
-//        var isValid = true
-//
-//        if (binding.datePickerAction.text.toString().contains("Start Date", ignoreCase = true)) {
-//            binding.dateErrorText.text = "Please select a start date"
-//            binding.dateErrorText.visibility = View.VISIBLE
-//            isValid = false
-//        } else {
-//            binding.dateErrorText.visibility = View.GONE
-//        }
-//
-//        if (binding.startTime.text.toString().contains("Enter", ignoreCase = true)) {
-//            binding.timeErrorText.text = "Please select a start time"
-//            binding.timeErrorText.visibility = View.VISIBLE
-//            isValid = false
-//        } else {
-//            binding.timeErrorText.visibility = View.GONE
-//        }
-//
-//        return isValid
-//    }
-//
-//    private fun setupCloseButton() {
-//        binding.btnClose.setOnClickListener {
-//            requireActivity().onBackPressedDispatcher.onBackPressed()
-//        }
-//    }
-//
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
 }
