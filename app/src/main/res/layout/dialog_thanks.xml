@@ -62,3 +62,4 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </FrameLayout>
+<!--dont use this file, use "dialog_provided_help.xml"-->

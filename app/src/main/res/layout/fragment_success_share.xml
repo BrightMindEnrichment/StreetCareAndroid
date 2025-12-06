@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical|start"
+            android:background="@drawable/red_round_button"
+            android:contentDescription="@string/close"
+            android:src="@drawable/ic_close"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Interaction Log"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:strokeColor="@color/gray700"
+        app:strokeWidth="1.2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tvSuccess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/interaction_logged_title"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddAnother"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/black"
+                android:minWidth="260dp"
+                android:paddingHorizontal="36dp"
+                android:text="@string/another_visit"
+                android:textAllCaps="false"
+                android:textColor="@color/golden_yellow"
+                android:textStyle="bold"
+                app:cornerRadius="35dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/black"
+                android:minWidth="260dp"
+                android:paddingHorizontal="36dp"
+                android:text="@string/back_interaction"
+                android:textAllCaps="false"
+                android:textColor="@color/golden_yellow"
+                android:textStyle="bold"
+                app:cornerRadius="35dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnShareCommunity"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/white"
+                android:minWidth="260dp"
+                android:paddingHorizontal="36dp"
+                android:text="@string/share_with_community"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:cornerRadius="35dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/black"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/progress_completed_pill" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/completed"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+</LinearLayout>

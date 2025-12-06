@@ -751,17 +751,69 @@
 
     <fragment
         android:id="@+id/consentFragment"
-        android:name="org.brightmindenrichment.street_care.ui.visit.ConsentFragment"
-        android:label="@string/visit_log_inside" />
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.ConsentFragment"
+        tools:layout="@layout/fragment_consent">
+        <argument
+            android:name="interactionId"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="create" />
+
+        <action
+            android:id="@+id/action_consentFragment_to_successFragment"
+            app:destination="@id/successFragment"/>
+        <action
+            android:id="@+id/action_consentFragment_to_nav_visit"
+            app:destination="@id/nav_visit"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/successFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SuccessFragment"
-        android:label="@string/interaction_logged_title" />
+        tools:layout="@layout/fragment_success">
+        <action
+            android:id="@+id/action_successFragment_to_visitFormFragment2"
+            app:destination="@id/visitFormFragment2"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_successFragment_to_visitLogFragment"
+            app:destination="@id/nav_visit"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="false" />
+    </fragment>
 
-    <action
-        android:id="@+id/action_consentFragment_to_successFragment"
-        app:destination="@id/successFragment" />
+    <fragment
+        android:id="@+id/successShareFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SuccessShareFragment"
+        tools:layout="@layout/fragment_success_share">
+
+        <argument
+            android:name="interactionId"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <action
+            android:id="@+id/action_successShareFragment_to_visitFormFragment2"
+            app:destination="@id/visitFormFragment2"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/action_successShareFragment_to_visitLogFragment"
+            app:destination="@id/nav_visit"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_successShareFragment_to_consentFragment"
+            app:destination="@id/consentFragment" />
+    </fragment>
 
 
 </navigation>
