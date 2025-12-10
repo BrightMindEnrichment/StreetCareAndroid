@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    compileSdk 36
+    compileSdk 34
 
     androidResources {
         generateLocaleConfig true
@@ -19,9 +19,9 @@ android {
     defaultConfig {
         applicationId "com.app.bmeapplication1"
         minSdk 31
-        targetSdk 36
-        versionCode 250
-        versionName "25.0"
+        targetSdk 34
+        versionCode 248
+        versionName "24.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

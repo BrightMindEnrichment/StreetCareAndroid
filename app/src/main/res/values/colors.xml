@@ -28,7 +28,7 @@
     <color name="error_red">#B00020</color>
     <color name="gray">#FF888888</color>
     <color name="item_selected_black">#33000000</color>
-    <color name="golden_yellow">#FFD700</color>
+    <color name="golden_yellow">#FFE74C</color>
     <color name="banner_yellow">#FFEB3B</color>
     <color name="gray_700">#616161</color>
     <color name="primary_bright_white">#FFFFFF</color>
@@ -47,4 +47,5 @@
     <color name="checked_color">#a8a3a3</color>
     <color name="gray_outline">#cccaca</color>
     <color name="dark_greener">#193030</color>
+
 </resources>

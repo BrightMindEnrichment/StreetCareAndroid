@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="gradle -v"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <View
         android:id="@+id/status_bar_placeholder"
         android:layout_width="match_parent"
@@ -91,7 +100,7 @@
 
                 <View android:layout_width="40dp" android:layout_height="18dp" android:background="@drawable/progress_dot_yellow" android:layout_marginHorizontal="3dp"/>
                 <View android:layout_width="40dp" android:layout_height="18dp" android:background="@drawable/progress_dot_yellow" android:layout_marginHorizontal="3dp"/>
-                <View android:layout_width="40dp" android:layout_height="18dp" android:background="@drawable/progress_dot_yellow" android:layout_marginHorizontal="3dp"/>
+                <View android:layout_width="40dp" android:layout_height="18dp" android:background="@drawable/progress_dot_yellow_with_border" android:layout_marginHorizontal="3dp"/>
                 <View android:layout_width="40dp" android:layout_height="18dp" android:background="@drawable/progress_dot_green_dark" android:layout_marginHorizontal="3dp"/>
                 <View android:layout_width="40dp" android:layout_height="18dp" android:background="@drawable/progress_dot_green_dark" android:layout_marginHorizontal="3dp"/>
                 <View android:layout_width="40dp" android:layout_height="18dp" android:background="@drawable/progress_dot_green_dark" android:layout_marginHorizontal="3dp"/>
