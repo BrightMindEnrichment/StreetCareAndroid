@@ -663,5 +663,13 @@ y enviarlo a nosotros a <a href="mailto:volunteer@streetcare.us">volunteer@stree
 
     <string name="please_login_title">Por favor inicia sesión</string>
     <string name="please_login_message">Necesitas iniciar sesión para dar "me gusta" a este evento. ¿Quieres iniciar sesión ahora?</string>
+    <string name="provide_details_prompt">¿Le gustaría proporcionar\ndetalles de cada persona\na la que apoyó?</string>
+    <string name="individual_interaction_title_1">Interacción Individual 1</string>
+    <string name="Individual_Interaction_Question_1">Pregunta 1/4</string>
+    <string name="hint_first_name">Nombre (persona con la que interactuó)*</string>
+    <string name="hint_last_name">Apellido</string>
+    <string name="hint_location">Ubicación o punto de referencia</string>
+    <string name="default_date">30/03/2025</string>
+    <string name="default_time">11:35 a. m. MDT</string>
 
 </resources>
