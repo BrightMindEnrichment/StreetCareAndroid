@@ -140,21 +140,6 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_save_changes"
-            android:layout_width="189dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/rounded_green_button"
-            android:fontFamily="@font/font_poppins"
-            android:gravity="center"
-            android:text="@string/save"
-            android:textAllCaps="false"
-            android:textColor="@color/accent_yellow"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            tools:ignore="TouchTargetSizeCheck"></androidx.appcompat.widget.AppCompatButton>
-
-        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_cancel"
             android:layout_width="189dp"
             android:layout_height="40dp"
@@ -170,6 +155,21 @@
             tools:ignore="TouchTargetSizeCheck"></androidx.appcompat.widget.AppCompatButton>
 
     </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_save_changes"
+        android:layout_width="189dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rounded_green_button"
+        android:fontFamily="@font/font_poppins"
+        android:gravity="center"
+        android:text="@string/save"
+        android:textAllCaps="false"
+        android:textColor="@color/accent_yellow"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        tools:ignore="TouchTargetSizeCheck"></androidx.appcompat.widget.AppCompatButton>
 
 
 </LinearLayout>
