@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:orientation="vertical">-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical|start"
+            android:src="@drawable/ic_close"
+            android:background="@drawable/red_circular_button"
+            android:contentDescription="@string/close"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Interaction Log"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:fontFamily="Poppins" />
+    </FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="@string/visit_log_inside"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textFontWeight="700"
+        app:fontFamily="Poppins" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="30dp"
+        android:paddingHorizontal="24dp">
+
+        <ProgressBar
+            android:id="@+id/simpleProgressBar"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:progress="100"
+            android:layout_marginEnd="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+        <ProgressBar
+            android:id="@+id/simpleProgressBar2"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:progress="0"
+            android:layout_marginEnd="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+        <ProgressBar
+            android:id="@+id/simpleProgressBar3"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:progress="0"
+            android:layout_marginEnd="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+        <ProgressBar
+            android:id="@+id/simpleProgressBar4"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:progress="0"
+            android:layout_marginEnd="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+        <ProgressBar
+            android:id="@+id/simpleProgressBar5"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:progress="0"
+            android:layout_marginEnd="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+        <ProgressBar
+            android:id="@+id/simpleProgressBar6"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:progress="0"
+            android:layout_marginEnd="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+        <ProgressBar
+            android:id="@+id/simpleProgressBar7"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/custom_progressbar"
+            android:progress="0"
+            android:layout_marginEnd="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_visitlog2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="30dp"
+        android:paddingBottom="@dimen/padding_16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:strokeColor="@color/gray700"
+        app:strokeWidth="1.2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_8dp"
+            app:strokeColor="@color/gray300"
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_gravity="start"
+                    android:textFontWeight="400"
+                    android:textColor="@color/black"
+                    android:text="@string/additional_1_7"
+                    android:textSize="16sp"/>
+
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="19dp"
+                android:layout_marginEnd="19dp"
+                android:background="@color/gray300"/>
+            <TextView
+                android:layout_width="278dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/margin_8dp"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:text="When was your\nInteraction?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size24"
+                android:textStyle="bold"
+                app:fontFamily="Poppins"/>
+
+            <LinearLayout
+                android:layout_width="310dp"
+                android:layout_height="23dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size16"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="310dp"
+                android:layout_height="43dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/date_picker_card"
+                    android:layout_width="0dp"
+                    android:layout_height="43dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="11dp"
+                    app:cardCornerRadius="8dp"
+                    app:strokeColor="@color/gray700"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/baseline_calendar_month_24" />
+
+                        <TextView
+                            android:id="@+id/date_picker_action"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/start_date"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textSize="@dimen/text_size16" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/time_picker_card"
+                    android:layout_width="0dp"
+                    android:layout_height="43dp"
+                    android:layout_marginStart="11dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="8dp"
+                    app:strokeColor="@color/gray700"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/baseline_access_time_24" />
+
+                        <TextView
+                            android:id="@+id/start_time"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/enter_time_without_star"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textSize="@dimen/text_size16" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="310dp"
+                android:layout_height="23dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_time"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size16"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="310dp"
+                android:layout_height="43dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/date_picker_card1"
+                    android:layout_width="0dp"
+                    android:layout_height="43dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="11dp"
+                    app:cardCornerRadius="8dp"
+                    app:strokeColor="@color/gray700"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/baseline_calendar_month_24" />
+
+                        <TextView
+                            android:id="@+id/date_picker_actions"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/enter_date_without_star"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textSize="@dimen/text_size16" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/time_picker_card1"
+                    android:layout_width="0dp"
+                    android:layout_height="43dp"
+                    android:layout_marginStart="11dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="8dp"
+                    app:strokeColor="@color/gray700"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/baseline_access_time_24" />
+
+                        <TextView
+                            android:id="@+id/time_picker"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/enter_time_without_star"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textSize="@dimen/text_size16" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <TextView
+                android:id="@+id/date_error_text"
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/error_red"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/time_error_text"
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/error_red"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/timezonePickerCard"
+                android:layout_width="310dp"
+                android:layout_height="43dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="11dp"
+                app:cardCornerRadius="8dp"
+                app:strokeColor="@color/gray700"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="6dp"
+                        android:src="@drawable/globe_time_zone" />
+
+                    <TextView
+                        android:id="@+id/timezoneText"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_zone"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textSize="@dimen/text_size16"/>
+
+                    <ImageView
+                        android:id="@+id/dropdown_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/outline_arrow_drop_down_24"
+                        android:layout_marginStart="4dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:padding="7dp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:id="@+id/txt_next2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/next_button"
+                    android:textColor="@color/accent1"
+                    android:textFontWeight="600"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="20dp"
+                    android:textSize="@dimen/text_size16"
+                    android:background="@drawable/button_next"
+                    app:fontFamily="Poppins"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    </LinearLayout>
+<!--</ScrollView>-->
+</LinearLayout>
