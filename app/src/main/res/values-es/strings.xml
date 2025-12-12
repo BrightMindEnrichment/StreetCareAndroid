@@ -664,4 +664,9 @@ y enviarlo a nosotros a <a href="mailto:volunteer@streetcare.us">volunteer@stree
     <string name="please_login_title">Por favor inicia sesión</string>
     <string name="please_login_message">Necesitas iniciar sesión para dar "me gusta" a este evento. ¿Quieres iniciar sesión ahora?</string>
 
+    <string name="thanks_modal_title">¡Gracias por ayudar!</string>
+    <string name="thanks_modal_body">Cada registro nos ayuda a entender mejor las necesidades de la comunidad. Es muy útil si documentas tus interacciones con cada persona sin hogar que encuentres: un registro rápido por persona nos ayuda mucho a comprender esas necesidades.</string>
+    <string name="interaction_logged_title">¡Gracias! Tu interacción ha sido registrada.</string>
+
+
 </resources>
