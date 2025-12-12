@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Card with shadow -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/successCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvSuccess"
+                android:text="@string/interaction_logged_title"
+                android:textStyle="bold"
+                android:textSize="30sp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Button: Add Another Interaction -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddAnother"
+                android:text="@string/another_visit"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingHorizontal="36dp"
+                android:paddingVertical="10dp"
+                android:minWidth="260dp"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:backgroundTint="@color/black"
+                android:textColor="@color/golden_yellow"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:elevation="6dp"
+                android:translationZ="4dp"
+                app:cornerRadius="35dp" />
+
+            <!-- Button: Back to Interaction Log -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBack"
+                android:text="@string/back_interaction"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingHorizontal="36dp"
+                android:paddingVertical="10dp"
+                android:minWidth="260dp"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textAlignment="center"
+                android:backgroundTint="@color/black"
+                android:textColor="@color/golden_yellow"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:elevation="6dp"
+                android:translationZ="4dp"
+                app:cornerRadius="35dp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Rounded yellow bar -->
+    <!-- Rounded yellow “Completed” bar -->
+    <View
+        android:id="@+id/completedBar"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/progress_completed_pill" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/completed"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -666,5 +666,11 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="please_login_title">Please Log In</string>
     <string name="please_login_message">You need to be logged in to like this event. Would you like to login now?</string>
 
+    <!-- Thanks modal -->
+    <string name="thanks_modal_title">Thanks for helping out!</string>
+    <string name="thanks_modal_body">
+Each entry helps us understand community needs better. It’s really helpful if you can document interactions with each homeless person you meet—just a quick log per person goes a long way in helping us better understand community needs.
+</string>
+    <string name="interaction_logged_title">Thank you! Your Interaction has been logged.</string>
 
 </resources>
