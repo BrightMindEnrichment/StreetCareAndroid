@@ -362,12 +362,17 @@
 
             </com.google.android.flexbox.FlexboxLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginEnd="10dp">
+                android:layout_marginTop="10dp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
 
                 <ImageButton
@@ -378,8 +383,10 @@
                     android:src="@drawable/ic_heart_outline"
                     android:contentDescription="@string/like"
                     android:background="@android:color/transparent"
-                    app:layout_constraintEnd_toStartOf="@id/btnShare"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvLikeCount"
+                    app:layout_constraintEnd_toStartOf="@id/btnShare"
                     android:layout_marginEnd="8dp"
                     android:clickable="true"
                     android:focusable="true" />
@@ -393,10 +400,11 @@
                     android:textSize="12sp"
                     android:textColor="@android:color/black"
                     android:includeFontPadding="false"
-                    app:layout_constraintTop_toBottomOf="@id/btnLike"
-                    app:layout_constraintStart_toStartOf="@id/btnLike"
-                    app:layout_constraintEnd_toEndOf="@id/btnLike"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_marginEnd="4dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btnLike"/>
 
 
                 <!-- Share Button -->
@@ -412,7 +420,8 @@
                     android:clickable="true"
                     android:focusable="true" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
 
         <LinearLayout
