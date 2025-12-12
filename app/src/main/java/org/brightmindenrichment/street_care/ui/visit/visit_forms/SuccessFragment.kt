@@ -11,7 +11,7 @@ import com.google.android.material.button.MaterialButton
 class SuccessFragment : Fragment(R.layout.fragment_success) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<MaterialButton>(R.id.btnAddAnother).setOnClickListener {
-            findNavController().navigate(R.id.action_successFragment_to_visitFormFragment2)
+            findNavController().navigate(R.id.action_successFragment_to_visitFormFragment1)
         }
         view.findViewById<MaterialButton>(R.id.btnBack).setOnClickListener {
             findNavController().navigate(R.id.action_successFragment_to_visitLogFragment)

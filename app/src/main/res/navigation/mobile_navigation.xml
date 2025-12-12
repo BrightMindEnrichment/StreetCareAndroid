@@ -765,55 +765,29 @@
 
         <action
             android:id="@+id/action_consentFragment_to_successFragment"
-            app:destination="@id/successFragment"/>
-        <action
-            android:id="@+id/action_consentFragment_to_nav_visit"
-            app:destination="@id/nav_visit"
-            app:popUpTo="@id/nav_visit"
-            app:popUpToInclusive="false" />
+            app:destination="@id/successFragment"
+            app:popUpTo="@id/consentFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
         android:id="@+id/successFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SuccessFragment"
         tools:layout="@layout/fragment_success">
+
+        <!-- Add Another → Q1/7 -->
         <action
-            android:id="@+id/action_successFragment_to_visitFormFragment2"
-            app:destination="@id/visitFormFragment2"
+            android:id="@+id/action_successFragment_to_visitFormFragment1"
+            app:destination="@id/visitFormFragment1"
             app:popUpTo="@id/nav_visit"
             app:popUpToInclusive="false" />
+
+        <!-- Back to Interaction Log -->
         <action
             android:id="@+id/action_successFragment_to_visitLogFragment"
             app:destination="@id/nav_visit"
             app:popUpTo="@id/nav_visit"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="true" />
     </fragment>
-
-    <fragment
-        android:id="@+id/successShareFragment"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SuccessShareFragment"
-        tools:layout="@layout/fragment_success_share">
-
-        <argument
-            android:name="interactionId"
-            app:argType="string"
-            android:defaultValue="" />
-
-        <action
-            android:id="@+id/action_successShareFragment_to_visitFormFragment2"
-            app:destination="@id/visitFormFragment2"
-            app:popUpTo="@id/nav_visit"
-            app:popUpToInclusive="false" />
-
-        <action
-            android:id="@+id/action_successShareFragment_to_visitLogFragment"
-            app:destination="@id/nav_visit"
-            app:popUpTo="@id/nav_visit"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_successShareFragment_to_consentFragment"
-            app:destination="@id/consentFragment" />
-    </fragment>
-
 
 </navigation>

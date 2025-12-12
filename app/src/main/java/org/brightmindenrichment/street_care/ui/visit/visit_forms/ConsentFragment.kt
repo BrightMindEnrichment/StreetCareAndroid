@@ -15,6 +15,7 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.FieldValue
 import android.widget.Toast
 import com.google.firebase.auth.auth
+import androidx.core.os.bundleOf
 
 class ConsentFragment : Fragment(R.layout.fragment_consent) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,8 +55,10 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
                     )
                     .addOnSuccessListener {
                         // back to Interaction Log home
-                        findNavController().navigate(R.id.action_consentFragment_to_nav_visit)
-                    }
+                        findNavController().navigate(
+                            R.id.action_consentFragment_to_successFragment,
+                            bundleOf("interactionId" to interactionId)
+                        )                    }
                     .addOnFailureListener {
                         submit.isEnabled = true
                         Toast.makeText(requireContext(), "Failed to share. Please try again.", Toast.LENGTH_LONG).show()
@@ -76,8 +79,12 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
                 db.collection("interactions").add(interaction)
                     .addOnSuccessListener { doc ->
                         // pass id forward so Success/Share screens can use it
-                        val args = Bundle().apply { putString("interactionId", doc.id) }
-                        findNavController().navigate(R.id.action_consentFragment_to_successFragment, args)
+//                        val args = Bundle().apply { putString("interactionId", doc.id) }
+//                        findNavController().navigate(R.id.action_consentFragment_to_successFragment, args)
+                        findNavController().navigate(
+                            R.id.action_consentFragment_to_successFragment,
+                            bundleOf("interactionId" to doc.id)
+                        )
                     }
                     .addOnFailureListener {
                         submit.isEnabled = true
