@@ -173,8 +173,9 @@
     <string name="guest"> Guest</string>
     <string name="warning_new">Warning!</string>
     <string name="login_required">Login Required</string>
-    <string name="provided_help">I provided help!</string>
-    <string name="provided_help_msg">\n Please fill out this form each time you\n perform an outreach. This helps you\n track your contributions and allows\n StreetCare to bring more support \n and services to help the community!</string>
+    <string name="provided_help">Thanks for helping out!</string>
+<!--    <string name="provided_help_msg">\n Please fill out this form each time you\n perform an outreach. This helps you\n track your contributions and allows\n StreetCare to bring more support \n and services to help the community!</string>-->
+    <string name="provided_help_msg">Each entry helps us understand\n community needs better. It’s really\n helpful if you can document\n interactions with each homeless\n person you meet—just a quick log per\n person goes a long way in helping us\n better understand community needs.</string>
     <string name="login_enter">Log in to enter an interaction.</string>
     <string name="warning_dialogue">You will be unable to view or edit\n your interaction logs without \nsigning in</string>
     <string name="button_image">Image Button</string>
