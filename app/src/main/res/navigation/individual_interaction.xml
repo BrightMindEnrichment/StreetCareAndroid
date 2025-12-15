@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/individual_interaction">
+
+    <fragment
+        android:id="@+id/individualInteractionFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.IndividualInteractionFragment"
+        android:label="Individual Interaction"
+        tools:layout="@layout/fragment_individual_interaction">
+
+        <!-- Argument used in Fragment: private val args: IndividualInteractionFragmentArgs by navArgs() -->
+        <argument
+            android:name="interactionLogId"
+            app:argType="string" />
+
+
+        <action
+            android:id="@+id/action_individualInteractionFragment_to_visitFormFragment4"
+            app:destination="@id/visitFormFragment4" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/visitFormFragment2"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment2"
+        android:label="Visit Form 2"
+        tools:layout="@layout/fragment_visit_form2">
+
+        <action
+            android:id="@+id/action_visitFormFragment2_to_visitFormFragment3"
+            app:destination="@id/visitFormFragment3" />
+    </fragment>
+</navigation>
