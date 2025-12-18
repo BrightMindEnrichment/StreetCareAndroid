@@ -100,6 +100,7 @@ object Queries {
         return FirebaseFirestore.getInstance()
             .collection("VisitLogBook_New")
             .whereEqualTo("isPublic", true)
+            .orderBy("timeStamp", order)
             .limit(50)
     }
 

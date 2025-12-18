@@ -249,7 +249,6 @@ class CommunityFragment : Fragment(), OnMapReadyCallback {
         cached = cachedPublicInteractionLog,
         updateCache = { cachedPublicInteractionLog = it },
         query = {
-            // TODO: confirm collection name and sort field
             getPublicInteractionLogQueryUpTo50(Query.Direction.DESCENDING).get()
         },
         getMarkerColor = { document ->
@@ -264,7 +263,6 @@ class CommunityFragment : Fragment(), OnMapReadyCallback {
         cached = cachedVisitLogBookNew,
         updateCache = { cachedVisitLogBookNew = it },
         query = {
-            // TODO: confirm collection name and sort field
             getLoadVisitLogBookNewQueryUpTo50(Query.Direction.DESCENDING).get()
         },
         getMarkerColor = { document ->
