@@ -194,7 +194,7 @@ class VisitFormFragment0 : Fragment() {
             }
             sharedVisitViewModel.resetVisitLogPage()
 
-            findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
+            findNavController().navigate(R.id.individual_interaction)
             dialog.dismiss()
 
         }

@@ -1,4 +1,4 @@
-package org.brightmindenrichment.street_care.ui.interaction
+package org.brightmindenrichment.street_care.ui.visit.visit_forms
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,15 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.EditIndividualInteractionBinding
 import org.brightmindenrichment.street_care.ui.visit.IndividualInteractionAdapter
 import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
 import org.brightmindenrichment.street_care.ui.visit.details.IndividualInteractionViewModel
-
 
 class IndividualInteractionFragment : Fragment() {
     private var _binding: EditIndividualInteractionBinding? = null
@@ -35,13 +32,25 @@ class IndividualInteractionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as? AppCompatActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
         arguments?.let {
             val id = it.getString(ARGUMENT_INTERACTION_LOG_ID)
             id?.let {
                 viewModel.fetchInteractions(id)
             }
         }
+
+        viewModel.saveQ4(1 ,1, object : IndividualInteractionViewModel.SaveFormListener {
+            override fun onSaveFormSuccess() {
+                // call this fragment individualinteractionfragment
+            }
+
+            override fun onSaveFormFailure(message: String) {
+                // show error toast
+            }
+
+        })
 
         adapter = IndividualInteractionAdapter(requireContext(), emptyList(), listener)
         binding.listViewInteractions.adapter = adapter
@@ -55,10 +64,6 @@ class IndividualInteractionFragment : Fragment() {
             adapter.updateList(list)
         }
 
-        binding.btnClose.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
         binding.btnAddMore.setOnClickListener {
 //            findNavController().navigate(R.id.individualInteractionFragment)
         }
@@ -66,7 +71,7 @@ class IndividualInteractionFragment : Fragment() {
         // Next button
         binding.btnNext.setOnClickListener {
             // Navigate to next screen
-            findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
+//            findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
         }
 
         binding.listViewInteractions.adapter = adapter
@@ -91,4 +96,4 @@ class IndividualInteractionFragment : Fragment() {
 
     companion object {
         private const val ARGUMENT_INTERACTION_LOG_ID = "InteractionLogId"    }
-}
+    }

@@ -55,20 +55,7 @@
     </fragment>
 
     <!-- New fragment for Individual Interaction -->
-    <fragment
-        android:id="@+id/individualInteractionFragment"
-        android:name="org.brightmindenrichment.street_care.ui.interaction.IndividualInteractionFragment"
-        android:label="Individual Interaction"
-        tools:layout="@layout/edit_individual_interaction" >
-
-        <action
-            android:id="@+id/action_nav_visit_to_visitFormFragment2"
-            app:destination="@id/visitFormFragment2" >
-            <argument
-                android:name="interactionLogId"
-                app:argType="string" />
-        </action>
-    </fragment>
+    <include app:graph="@navigation/individual_interaction" />
 
     <fragment
         android:id="@+id/visitFormFragment1"
