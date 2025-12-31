@@ -674,4 +674,8 @@ y enviarlo a nosotros a <a href="mailto:volunteer@streetcare.us">volunteer@stree
     <string name="default_time">11:35 a. m. MDT</string>
     <string name="select_interaction_date">Selecciona la fecha de la interacción</string>
     <string name="select_interaction_time">Selecciona la hora de la interacción</string>
+
+    <!--Interaction Log Question 7 -->
+    <string name="provide_details_prompt">¿Le gustaría proporcionar\ndetalles de cada persona\na la que apoyó?</string>
+
 </resources>

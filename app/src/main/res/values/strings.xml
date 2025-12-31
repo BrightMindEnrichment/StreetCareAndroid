@@ -676,4 +676,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="default_time">11:35 AM MDT</string>
     <string name="select_interaction_date">Select date of interaction</string>
     <string name="select_interaction_time">Select time of interaction</string>
+    <!--Interction Log Question 7 -->
+    <string name="provide_details_prompt">Would you like to provide\ndetails for each person\nyou supported?</string>
+
 </resources>

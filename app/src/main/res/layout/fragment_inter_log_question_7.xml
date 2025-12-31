@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="0dp">
+
+            <TextView
+                android:id="@+id/txt_page_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="25dp"
+                android:text="@string/visit_log_inside"
+                android:textColor="@color/black"
+                android:textSize="32sp"
+                app:fontFamily="@font/poppins_bold_new"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"/>
+
+            <LinearLayout
+                android:id="@+id/layout_progress_pills"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <ProgressBar
+                    android:id="@+id/simpleProgressBar1"
+                    android:layout_width="40dp"
+                    android:layout_height="14dp"
+                    android:max="100"
+                    android:progress="100"
+                    android:layout_marginEnd="6dp"
+                    android:progressDrawable="@drawable/custom_noprogbar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+
+                <ProgressBar
+                    android:id="@+id/simpleProgressBar2"
+                    android:layout_width="40dp"
+                    android:layout_height="14dp"
+                    android:max="100"
+                    android:progress="100"
+                    android:layout_marginEnd="6dp"
+                    android:progressDrawable="@drawable/custom_noprogbar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+
+                <ProgressBar
+                    android:id="@+id/simpleProgressBar3"
+                    android:layout_width="40dp"
+                    android:layout_height="14dp"
+                    android:max="100"
+                    android:progress="100"
+                    android:layout_marginEnd="6dp"
+                    android:progressDrawable="@drawable/custom_noprogbar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+
+                <ProgressBar
+                    android:id="@+id/simpleProgressBar4"
+                    android:layout_width="40dp"
+                    android:layout_height="14dp"
+                    android:max="100"
+                    android:progress="100"
+                    android:layout_marginEnd="6dp"
+                    android:progressDrawable="@drawable/custom_noprogbar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+
+                <ProgressBar
+                    android:id="@+id/simpleProgressBar5"
+                    android:layout_width="40dp"
+                    android:layout_height="14dp"
+                    android:max="100"
+                    android:progress="100"
+                    android:layout_marginEnd="6dp"
+                    android:progressDrawable="@drawable/custom_noprogbar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+
+                <ProgressBar
+                    android:id="@+id/simpleProgressBar6"
+                    android:layout_width="40dp"
+                    android:layout_height="14dp"
+                    android:max="100"
+                    android:progress="100"
+                    android:layout_marginEnd="6dp"
+                    android:progressDrawable="@drawable/custom_noprogbar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+
+
+                <ProgressBar
+                    android:id="@+id/simpleProgressBar7"
+                    android:layout_width="40dp"
+                    android:layout_height="14dp"
+                    android:max="100"
+                    android:progress="100"
+                    android:layout_marginEnd="6dp"
+                    android:progressDrawable="@drawable/custom_progressbar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+            </LinearLayout>
+
+            <!-- CARD (use CardView + inner layout from 1st, but shape/content like 2nd) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_interaction_log"
+                android:layout_width="match_parent"
+                android:layout_height="355dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2dp"
+                app:cardCornerRadius="6dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeColor="@color/gray400"
+                app:strokeWidth="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+
+                    <!-- top row: index + skip -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/txt_question_index"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/additional_7_7"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size14"
+                            android:includeFontPadding="false"
+                            app:fontFamily="Poppins" />
+
+                        <!-- using TextView as button (1st file style) -->
+                        <TextView
+                            android:id="@+id/txt_skip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip"
+                            android:textColor="@color/black"
+                            android:gravity="center"
+                            android:paddingVertical="6dp"
+                            android:background="@drawable/rounded_btn"
+                            android:textSize="@dimen/text_size12"
+                            app:fontFamily="Poppins"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <!-- divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@color/gray300" />
+
+                    <!-- QUESTION TEXT (center, like 2nd) -->
+                    <TextView
+                        android:id="@+id/txt_question"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center"
+                        android:text="@string/provide_details_prompt"
+                        android:textColor="@color/black"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textFontWeight="700"
+                        app:fontFamily="Poppins"
+                        android:lineSpacingExtra="6dp"/>
+
+                    <!-- YES / NO ROW (use TextView buttons like 1st, styled like 2nd) -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="18dp">
+
+                        <TextView
+                            android:id="@+id/txt_yes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/yesbutton"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:text="@string/yes"
+                            android:gravity="center"
+                            android:textColor="@color/accent1"
+                            android:textFontWeight="600"
+                            android:textSize="@dimen/text_size16"
+                            app:fontFamily="Poppins" />
+
+                        <View
+                            android:layout_width="22dp"
+                            android:layout_height="0dp" />
+
+                        <TextView
+                            android:id="@+id/txt_no"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/nobutton"
+                            android:gravity="center"
+                            android:paddingHorizontal="20dp"
+                            android:paddingVertical="8dp"
+                            android:text="@string/no"
+                            android:textColor="@color/gray900"
+                            android:textFontWeight="900"
+                            android:textSize="@dimen/text_size16"
+                            app:fontFamily="Poppins" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/txt_previous5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Previous"
+                        android:textColor="@color/dark_green"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:textFontWeight="600"
+                        android:textSize="@dimen/text_size12"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="20dp"
+                        android:background="@drawable/button_previous"
+                        app:fontFamily="Poppins" />
+
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
