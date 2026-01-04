@@ -10,6 +10,22 @@
     <string name="like">Like</string>
     <string name="share">Share</string>
     <string name="help_needed">Help needed</string>
+    <string name="btn_close_description">Close</string>
+    <string name="header_interaction_log">Interaction Log</string>
+    <string name="title_log_interaction">Log Your Interaction</string>
+    <string name="question_progress_2">Question 3/7</string>
+    <string name="question_progress_3">Question 4/7</string>
+    <string name="action_skip">Skip</string>
+    <string name="label_interaction_location_question">Where was your Interaction?</string>
+    <string name="desc_search_icon">Search</string>
+    <string name="hint_address_example">Search for address</string>
+    <string name="desc_mic_icon">Voice search</string>
+    <string name="hint_city_example">City</string>
+    <string name="hint_state_example">State</string>
+    <string name="hint_zip_example">ZipCode</string>
+    <string name="hint_description">Describe the location/landmark</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
 
 
     <!-- ChapterMembership -->
@@ -602,7 +618,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="account_holder_badge">Account Holder Badge</string>
     <string name="account_holder">Account holder</string>
 
-<!--    visit log details section -->
+    <!--    visit log details section -->
 
     <string name="when_was_your_interaction" translatable="false">When was your Interaction?</string>
     <string name="where_was_your_interaction" translatable="false">Where was your Interaction?</string>
@@ -666,6 +682,8 @@ If needed, you may fill out  one log \n for your entire day.
 
     <string name="please_login_title">Please Log In</string>
     <string name="please_login_message">You need to be logged in to like this event. Would you like to login now?</string>
+
+
 
 
 </resources>
