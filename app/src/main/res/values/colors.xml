@@ -47,5 +47,8 @@
     <color name="checked_color">#a8a3a3</color>
     <color name="gray_outline">#cccaca</color>
     <color name="dark_greener">#193030</color>
+    <color name="icon_color_secondary">#616161</color>
+    <color name="hint_text_color">#757575</color>
+
 
 </resources>

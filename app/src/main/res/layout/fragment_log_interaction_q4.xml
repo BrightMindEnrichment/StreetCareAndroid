@@ -113,13 +113,13 @@
                     android:layout_width="40dp"
                     android:layout_height="15dp"
                     android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_yellow_with_border" />
+                    android:background="@drawable/progress_dot_yellow" />
 
                 <View
                     android:layout_width="40dp"
                     android:layout_height="15dp"
                     android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_yellow" />
+                    android:background="@drawable/progress_dot_yellow_with_border" />
 
                 <View
                     android:layout_width="40dp"
@@ -143,7 +143,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/content_card"
                 android:layout_width="364dp"
-                android:layout_height="512dp"
+                android:layout_height="506dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 app:cardCornerRadius="12dp"
@@ -174,7 +174,7 @@
                             android:layout_toStartOf="@id/skip_btn"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:text="@string/question_progress_2"
+                            android:text="@string/question_progress_3"
                             android:textColor="#000000"
                             android:textSize="14sp" />
 
@@ -208,157 +208,106 @@
                         android:id="@+id/support_question"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:paddingHorizontal="20dp"
-                        android:text="@string/label_interaction_location_question"
+                        android:layout_marginBottom="5dp"
+                        android:text="What kind of support did you provide?"
                         android:textAlignment="center"
                         android:textColor="#000000"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
-                        android:id="@+id/location_input_fields_container"
+                        android:id="@+id/checkbox_list"
                         android:layout_width="match_parent"
-                        android:layout_height="270dp"
+                        android:layout_height="274dp"
                         android:orientation="vertical"
-                        android:paddingHorizontal="20dp">
+                        android:paddingBottom="1dp">
 
-                        <RelativeLayout
+                        <CheckBox
+                            android:id="@+id/food_checkbox"
+                            style="@style/Widget.App.CheckBox"
                             android:layout_width="match_parent"
-                            android:layout_height="41dp"
-                            android:layout_marginBottom="12dp"
-                            android:background="@drawable/search_bar_rounded_background"
-                            android:paddingHorizontal="5dp"
-                            android:paddingVertical="4dp">
+                            android:layout_height="33dp"
+                            android:text="Food &amp; Drinks" />
 
-                            <ImageView
-                                android:id="@+id/icon_search"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:contentDescription="@string/desc_search_icon"
-                                android:src="@drawable/ic_search"
-                                app:tint="#616161" />
-
-                            <AutoCompleteTextView
-                                android:id="@+id/input_address"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_toStartOf="@+id/icon_mic"
-                                android:layout_toEndOf="@id/icon_search"
-                                android:background="@android:color/transparent"
-                                android:completionThreshold="1"
-                                android:focusable="true"
-                                android:focusableInTouchMode="true"
-                                android:hint="Search for address"
-                                android:imeOptions="actionSearch"
-                                android:inputType="textPostalAddress"
-                                android:minHeight="48dp"
-                                android:paddingStart="10dp"
-                                android:textColor="@android:color/black"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:id="@+id/icon_mic"
-                                android:layout_width="64dp"
-                                android:layout_height="64dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:clickable="true"
-                                android:contentDescription="@string/desc_mic_icon"
-                                android:focusable="true"
-                                android:padding="8dp"
-                                android:src="@drawable/ic_mic"
-                                app:tint="#606060" />
-                        </RelativeLayout>
-
-                        <LinearLayout
+                        <CheckBox
+                            android:id="@+id/clothes_checkbox"
+                            style="@style/Widget.App.CheckBox"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:orientation="horizontal">
+                            android:layout_height="33dp"
+                            android:text="Clothes" />
 
-                            <EditText
-                                android:id="@+id/input_city"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="1"
-                                android:autofillHints="personAddressLocality"
-                                android:background="@drawable/edittext_rounded"
-                                android:hint="@string/hint_city_example"
-                                android:inputType="textCapWords"
-                                android:minHeight="48dp"
-                                android:padding="12dp"
-                                android:textAlignment="center"
-                                android:textColor="#000000"
-                                android:textSize="16sp" />
+                        <CheckBox
+                            android:id="@+id/hygiene_checkbox"
+                            style="@style/Widget.App.CheckBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="33dp"
+                            android:text="Hygiene Products" />
 
-                            <EditText
-                                android:id="@+id/input_state"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="1"
-                                android:autofillHints="personAddressRegion"
-                                android:background="@drawable/edittext_rounded"
-                                android:hint="@string/hint_state_example"
-                                android:inputType="textCapCharacters"
-                                android:maxLength="2"
-                                android:minHeight="48dp"
-                                android:padding="8dp"
-                                android:textAlignment="center"
-                                android:textSize="16sp" />
-                        </LinearLayout>
+                        <CheckBox
+                            android:id="@+id/wellness_checkbox"
+                            style="@style/Widget.App.CheckBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="33dp"
+                            android:text="Wellness/Emotional Support" />
+
+                        <CheckBox
+                            android:id="@+id/medical_checkbox"
+                            style="@style/Widget.App.CheckBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="33dp"
+                            android:text="Medical Help/Doctor" />
+
+                        <CheckBox
+                            android:id="@+id/social_worker_checkbox"
+                            style="@style/Widget.App.CheckBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="33dp"
+                            android:text="Social Worker/Psychiatrist" />
+
+                        <CheckBox
+                            android:id="@+id/legal_checkbox"
+                            style="@style/Widget.App.CheckBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="33dp"
+                            android:text="Lawyer/Legal" />
+
+                        <CheckBox
+                            android:id="@+id/other_checkbox"
+                            style="@style/Widget.App.CheckBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="33dp"
+                            android:text="Other" />
 
                         <EditText
-                            android:id="@+id/input_zip"
+                            android:id="@+id/other_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:autofillHints="postalCode"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="8dp"
                             android:background="@drawable/edittext_rounded"
-                            android:hint="@string/hint_zip_example"
-                            android:inputType="number"
-                            android:maxLength="5"
-                            android:minHeight="48dp"
-                            android:padding="12dp"
-                            android:textAlignment="viewStart"
+                            android:hint="If Other, please specify here."
+                            android:padding="14dp"
                             android:textColor="#000000"
-                            android:textSize="16sp" />
-
-                        <EditText
-                            android:id="@+id/input_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="73dp"
-                            android:autofillHints="none"
-                            android:background="@drawable/edittext_rounded"
-                            android:gravity="top|start"
-                            android:hint="@string/hint_description"
-                            android:inputType="textMultiLine"
-                            android:minHeight="125dp"
-                            android:padding="8dp"
-                            android:textColor="#000000"
-                            android:textSize="16sp" />
+                            android:textColorHint="#999999"
+                            android:textSize="16sp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/navigation_buttons"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/btn_previous"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="120dp"
+                            android:layout_width="110dp"
                             android:layout_height="50dp"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/action_previous"
+                            android:layout_marginStart="8dp"
+                            android:text="Previous"
                             android:textColor="@android:color/black"
                             app:cornerRadius="24dp"
                             app:strokeColor="@color/gray_outline" />
@@ -370,16 +319,25 @@
 
                         <Button
                             android:id="@+id/btn_next"
-                            android:layout_width="105dp"
+                            android:layout_width="90dp"
                             android:layout_height="50dp"
                             android:layout_marginEnd="12dp"
                             android:backgroundTint="@color/dark_greener"
-                            android:text="@string/action_next"
+                            android:text="Next"
                             android:textColor="#f0e192"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_horizontal"/>
+
         </LinearLayout>
     </ScrollView>
 
@@ -393,12 +351,12 @@
         app:labelVisibilityMode="labeled"
         app:menu="@menu/activity_main_drawer"
         app:layout_constraintBottom_toBottomOf="parent"
+
         app:itemBackground="@drawable/nav_active_indicator"
+
         app:itemActiveIndicatorStyle="@null" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
 
