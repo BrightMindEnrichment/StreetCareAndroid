@@ -10,6 +10,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.WriteBatch
 import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
+import java.time.LocalDate
+import java.time.LocalTime
 
 class IndividualInteractionViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
@@ -21,11 +23,11 @@ class IndividualInteractionViewModel : ViewModel() {
     private val _currentInteraction = MutableLiveData<IndividualInteraction>()
     val currentInteraction: LiveData<IndividualInteraction> get() = _currentInteraction
 
-    private lateinit var interactionLogId: String
+    private var interactionLogId: String = "test"
 
     private var listenerRegistration: ListenerRegistration? = null
 
-    fun saveQ1(firstName: String, lastName: String?, locationLandmark: String?, timestamp: Timestamp?) {
+    fun saveQ1(firstName: String, lastName: String?, locationLandmark: String?, state: String?, zip: String?, date: LocalDate?, time: LocalTime?) {
 
         // Initialize base instance if none exists
         val base = _currentInteraction.value ?: IndividualInteraction(
@@ -39,13 +41,19 @@ class IndividualInteractionViewModel : ViewModel() {
             firstName = firstName.trim(),
             lastName = lastName?.trim().takeUnless { it.isNullOrBlank() },
             locationLandmark = locationLandmark?.trim().takeUnless { it.isNullOrBlank() },
-            timestampOfInteraction = timestamp,
+            state = state?.trim().takeUnless { it.isNullOrBlank() },
+            zip = zip?.trim().takeUnless { it.isNullOrBlank() },
+            date = date,
+            time = time,
             interactionLogFirstName = firstName.trim(),
-            lastModifiedTimestamp = Timestamp.now()
         )
+
+        saveInteractions(updated)
 
         // Update LiveData
         _currentInteraction.value = updated
+
+
     }
 
     fun saveQ2() {
@@ -69,6 +77,49 @@ class IndividualInteractionViewModel : ViewModel() {
     interface SaveFormListener {
         fun onSaveFormSuccess()
         fun onSaveFormFailure(message: String)
+    }
+
+    fun saveInteractions(interaction: IndividualInteraction) {
+
+        val helpRequestPayload: Map<String, Any?> = mapOf(
+            // --- Required contextual fields ---
+            "interactionLogDocId" to "dummyInteractionLogId123",
+
+            // --- Public / personal info ---
+            "firstName" to "John",
+            //"lastName" to "Doe",
+            "locationLandmark" to "Near Central Park",
+
+            // --- Timestamps (dummy ISO strings or Firestore timestamp string equivalents) ---
+            "timestampOfInteraction" to "2025-01-10T14:32:00Z",
+            "followUpTimestamp" to "2025-01-20T15:00:00Z",
+            "lastModifiedTimestamp" to "2025-01-10T14:35:00Z",
+            "completedTimestamp" to "2025-02-01T10:00:00Z",
+
+            // --- Help categories ---
+            "helpProvidedCategory" to listOf("Food", "Housing Assistance"),
+            "furtherHelpCategory" to listOf("Job Search Support", "Legal Aid"),
+
+            // --- Additional info ---
+            "additionalDetails" to "Provided food and temporary housing referral.",
+            "interactionLogFirstName" to "John",
+            "isPublic" to true,
+
+            // --- Status fields ---
+            "status" to "Approved",               // could be Pending / Approved / Rejected etc.
+            "lastActionPerformed" to "Edited",    // using a placeholder instead of null
+            "isCompleted" to false
+        )
+
+
+
+        db.collection(COLLECTION_INTERACTION_LOG_DEV).document().set(helpRequestPayload).addOnSuccessListener {
+            Log.d(
+                "TAG",
+                "saveInteractions: "
+            )  }.addOnFailureListener { e->
+            Log.d("TAG", "failure: ${e.message}")
+        }
     }
 
     fun fetchInteractions(interactionId: String) {

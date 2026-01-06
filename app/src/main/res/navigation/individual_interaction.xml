@@ -3,8 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/individual_interaction"
-    app:startDestination="@id/individualInteractionFragment">
+    app:startDestination="@id/interactionQ1">
 
+    <fragment
+        android:id="@+id/interactionQ1"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q1"
+        android:label="Interaction Q1"
+        tools:layout="@layout/fragment_individual_interaction_q1" >
+
+        <action
+            android:id="@+id/action_nav_visit_to_individualInteractionFragment"
+            app:destination="@id/individualInteractionFragment" >
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/individualInteractionFragment"
@@ -13,11 +24,8 @@
         tools:layout="@layout/edit_individual_interaction" >
 
         <action
-            android:id="@+id/action_nav_visit_to_visitFormFragment2"
-            app:destination="@id/visitFormFragment2" >
-            <argument
-                android:name="interactionLogId"
-                app:argType="string" />
+            android:id="@+id/action_nav_visit_to_interaction_q1"
+            app:destination="@id/interactionQ1" >
         </action>
     </fragment>
 

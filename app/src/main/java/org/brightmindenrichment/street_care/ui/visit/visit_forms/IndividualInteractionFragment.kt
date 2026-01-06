@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.EditIndividualInteractionBinding
@@ -34,12 +35,7 @@ class IndividualInteractionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as? AppCompatActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
-        arguments?.let {
-            val id = it.getString(ARGUMENT_INTERACTION_LOG_ID)
-            id?.let {
-                viewModel.fetchInteractions(id)
-            }
-        }
+
 
         viewModel.saveQ4(1 ,1, object : IndividualInteractionViewModel.SaveFormListener {
             override fun onSaveFormSuccess() {
@@ -65,7 +61,7 @@ class IndividualInteractionFragment : Fragment() {
         }
 
         binding.btnAddMore.setOnClickListener {
-//            findNavController().navigate(R.id.individualInteractionFragment)
+            findNavController().navigate(R.id.action_nav_visit_to_interaction_q1)
         }
 
         // Next button
@@ -94,6 +90,5 @@ class IndividualInteractionFragment : Fragment() {
 
     }
 
-    companion object {
-        private const val ARGUMENT_INTERACTION_LOG_ID = "InteractionLogId"    }
-    }
+
+}

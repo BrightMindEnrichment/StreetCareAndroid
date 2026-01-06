@@ -262,7 +262,7 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.nav_home,R.id.loginVisitLogFragment,R.id.loginRedirectFragment, R.id.nav_visit, R.id.nav_community, R.id.nav_profile -> {
+                R.id.nav_home,R.id.loginVisitLogFragment,R.id.loginRedirectFragment, R.id.nav_visit, R.id.nav_community, R.id.nav_profile, R.id.individualInteractionFragment -> {
                     bottomNavView.visibility = View.VISIBLE
                 }
                 else -> {

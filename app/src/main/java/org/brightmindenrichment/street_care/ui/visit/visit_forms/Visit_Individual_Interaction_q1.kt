@@ -1,6 +1,5 @@
 package org.brightmindenrichment.street_care.ui.visit.visit_forms
 
-import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -10,11 +9,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -29,6 +28,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.brightmindenrichment.street_care.ui.visit.details.IndividualInteractionViewModel
 import java.time.ZoneOffset
 
 class Visit_Individual_Interaction_q1 : Fragment() {
@@ -39,13 +39,15 @@ class Visit_Individual_Interaction_q1 : Fragment() {
     private val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
     private val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
+    private val viewModel: IndividualInteractionViewModel by navGraphViewModels(R.id.individual_interaction)
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_individual_interaction_q1, container, false)
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -67,6 +69,13 @@ class Visit_Individual_Interaction_q1 : Fragment() {
         val btnPrevious = view.findViewById<TextView>(R.id.txt_previous2)
         val btnNext = view.findViewById<TextView>(R.id.txt_next2)
         val btnSkip = view.findViewById<TextView>(R.id.txt_skip)
+
+        arguments?.let {
+            val id = it.getString(ARGUMENT_INTERACTION_LOG_ID)
+            id?.let {
+                viewModel.fetchInteractions(id)
+            }
+        }
 
         setupStateDropdown(actState)
         etFirstName.doAfterTextChanged { text ->
@@ -158,17 +167,28 @@ class Visit_Individual_Interaction_q1 : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
 
-            findNavController().navigate(R.id.action_visitFormFragment2_to_visitFormFragment3)
+            viewModel.saveQ1(firstName, lastName, location, state, zip, chosenDate, chosenTime)
+            findNavController().navigate(R.id.action_nav_visit_to_individualInteractionFragment)
         }
 
         // Skip
         btnSkip.setOnClickListener {
             val firstName = validateFirstName() ?: return@setOnClickListener
-            findNavController().navigate(R.id.action_visitFormFragment2_to_visitFormFragment3)
+//            findNavController().navigate(R.id.action_visitFormFragment2_to_visitFormFragment3)
         }
         // Previous
         btnPrevious.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        viewModel.currentInteraction.observe(viewLifecycleOwner) { interaction ->
+            etFirstName.setText(interaction.firstName.toString())
+            etLastName.setText(interaction.lastName.toString())
+            etLocation.setText(interaction.locationLandmark.toString())
+            actState.setText(interaction.state.toString())
+            etZip.setText(interaction.zip.toString())
+            selectedDate = interaction.date
+            selectedTime = interaction.time
         }
     }
 
@@ -205,5 +225,9 @@ class Visit_Individual_Interaction_q1 : Fragment() {
         }
 
 
+    }
+
+    companion object {
+        private const val ARGUMENT_INTERACTION_LOG_ID = "InteractionLogId"
     }
 }
