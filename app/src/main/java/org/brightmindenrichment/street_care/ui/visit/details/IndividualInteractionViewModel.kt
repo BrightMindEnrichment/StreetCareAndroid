@@ -113,13 +113,13 @@ class IndividualInteractionViewModel : ViewModel() {
 
 
 
-        db.collection(COLLECTION_INTERACTION_LOG_DEV).document().set(helpRequestPayload).addOnSuccessListener {
-            Log.d(
-                "TAG",
-                "saveInteractions: "
-            )  }.addOnFailureListener { e->
-            Log.d("TAG", "failure: ${e.message}")
-        }
+//        db.collection(COLLECTION_HELP_REQUEST_DEV).document().set(helpRequestPayload).addOnSuccessListener {
+//            Log.d(
+//                "TAG",
+//                "saveInteractions: "
+//            )  }.addOnFailureListener { e->
+//            Log.d("TAG", "failure: ${e.message}")
+//        }
     }
 
     fun fetchInteractions(interactionId: String) {
