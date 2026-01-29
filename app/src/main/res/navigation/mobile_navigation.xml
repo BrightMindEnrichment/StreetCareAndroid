@@ -208,6 +208,25 @@
             app:destination="@id/sharedCommunityVisitLogFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/visitIndividualInteractionQ2"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q2"
+        tools:layout="@layout/individual_interaction_2_q2">
+
+        <action
+            android:id="@+id/action_visitIndividualInteractionQ2_to_visitIndividualInteractionQ3"
+            app:destination="@id/visitIndividualInteractionQ3" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/visitIndividualInteractionQ3"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q3"
+        tools:layout="@layout/individual_interaction_2_q3">
+
+        <action
+            android:id="@+id/action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4"
+            app:destination="@id/visitIndividualInteractionQ3" />
+    </fragment>
 
 
 

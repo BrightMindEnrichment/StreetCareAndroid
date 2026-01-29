@@ -666,5 +666,8 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="please_login_title">Please Log In</string>
     <string name="please_login_message">You need to be logged in to like this event. Would you like to login now?</string>
 
+    <string name="individual_interaction_title_2">Individual Interaction 2</string>
+    <string name="Individual_Interaction_Question_2">Question 2/4</string>
+    <string name="Individual_Interaction_Question_3">Question 3/4</string>
 
 </resources>

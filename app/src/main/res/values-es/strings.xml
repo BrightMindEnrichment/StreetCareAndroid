@@ -664,4 +664,7 @@ y enviarlo a nosotros a <a href="mailto:volunteer@streetcare.us">volunteer@stree
     <string name="please_login_title">Por favor inicia sesión</string>
     <string name="please_login_message">Necesitas iniciar sesión para dar "me gusta" a este evento. ¿Quieres iniciar sesión ahora?</string>
 
+    <string name="individual_interaction_title_2">Interacción Individual 2</string>
+    <string name="Individual_Interaction_Question_2">Pregunta 2/4</string>
+    <string name="Individual_Interaction_Question_3">Pregunta 3/4</string>
 </resources>
