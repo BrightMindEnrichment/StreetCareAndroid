@@ -87,14 +87,14 @@ class Visit_Individual_Interaction_q2 : Fragment() {
             }
 
             findNavController().navigate(
-                R.id.action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4
+                R.id.action_visitIndividualInteractionQ2_to_visitIndividualInteractionQ3
             )
         }
 
         // Skip: no validation
         btnSkip.setOnClickListener {
             findNavController().navigate(
-                R.id.action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4
+                R.id.action_visitIndividualInteractionQ2_to_visitIndividualInteractionQ3
             )
         }
     }
