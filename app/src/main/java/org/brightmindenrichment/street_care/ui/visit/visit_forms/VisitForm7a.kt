@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
+import org.brightmindenrichment.street_care.ui.visit.visit_forms.ConsentFragment
 
 /**
  * Fragment for Visit Form Question 7a with Yes/No options.
@@ -53,8 +54,8 @@ class VisitForm7a : Fragment() {
             // Reset the form after saving
             sharedVisitViewModel.resetVisitLogPage(forceReset = false)
 
-            // Navigate to SurveySubmittedFragment
-            findNavController().navigate(R.id.action_visitForm7a_to_surveySubmittedFragment)
+            // Navigate to ConsentFragment
+            findNavController().navigate(R.id.action_visitForm7a_to_ConsentFragment)
         }
     }
 }

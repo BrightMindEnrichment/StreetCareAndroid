@@ -324,7 +324,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="enter_email">Enter email address</string>
     <string name="contact_number">Contact Number</string>
     <string name="enter_contact_number">Enter contact number</string>
-    <string name="consent_text">By selecting this checkbox, I consent to sharing my contact details and event address publicly on this platform / community space to facilitate participation in the outreach event. I understand that this information will be visible to others and acknowledge the associated privacy considerations. \n</string>
+    <string name="consent_text">By selecting this checkbox,\n I consent to sharing my contact\n details and event address\n publicly on this platform\n community space. I understand\n that this information will be\n visible to others and\n acknowledge the associated\n privacy considerations. \n</string>
     <string name="publish_event">Publish</string>
     <string name="help_request_identification">How can we identify this person?*</string>
     <string name="location_with_star">Location*</string>
