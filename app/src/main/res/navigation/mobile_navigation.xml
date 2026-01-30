@@ -208,15 +208,15 @@
             app:destination="@id/sharedCommunityVisitLogFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/nav_interaction_log"
-        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ1Fragment"
-        android:label="Interaction Log"
-        tools:layout="@layout/fragment_question1">
-        <action
-            android:id="@+id/action_interactionQ1_to_interactionQ2"
-            app:destination="@id/interactionQ2Fragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/nav_interaction_log"-->
+<!--        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ1Fragment"-->
+<!--        android:label="Interaction Log"-->
+<!--        tools:layout="@layout/fragment_question1">-->
+<!--        <action-->
+<!--            android:id="@+id/action_interactionQ1_to_interactionQ2"-->
+<!--            app:destination="@id/interactionQ2Fragment" />-->
+<!--    </fragment>-->
 
     <fragment
         android:id="@+id/interactionQ1Fragment"
@@ -234,8 +234,8 @@
         android:label="Interaction Log"
         tools:layout="@layout/fragment_question2">
         <action
-            android:id="@+id/action_interactionQ2_to_interactionQ3"
-            app:destination="@id/interactionQ3Fragment" />
+            android:id="@+id/action_interactionQ2_to_visitForm3"
+            app:destination="@id/visitFormFragment3" />
     </fragment>
 
     <fragment

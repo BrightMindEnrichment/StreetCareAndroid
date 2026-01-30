@@ -58,7 +58,7 @@ class VisitFormFragment0 : Fragment() {
                     val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
                     if(shouldShowDialog){
                         sharedVisitViewModel.resetVisitLogPage()
-                        findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
+                        findNavController().navigate(R.id.interactionQ1Fragment)
                     }else{
                         showCustomDialogPH()
                     }
@@ -92,7 +92,7 @@ class VisitFormFragment0 : Fragment() {
             .setMessage("Please fill out this form each time you perform an outreach. This helps you track your contributions and allows StreetCare to bring more support and services to help the community!")
             .setPositiveButton("OK") { dialog, _ ->
                 sharedVisitViewModel.resetVisitLogPage()
-                findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment1)
+                findNavController().navigate(R.id.interactionQ1Fragment)
                 dialog.dismiss()
             }
             .create()
@@ -109,7 +109,7 @@ class VisitFormFragment0 : Fragment() {
                     override fun onClick(visitLog:VisitLog) {
                         val bundle = bundleOf("visitLog" to visitLog)
                         findNavController().navigate(
-                            R.id.action_nav_visit_to_visitLogDetailsFragment,bundle
+                            R.id.interactionQ1Fragment,bundle
                         )
                     }
                 })
@@ -194,7 +194,7 @@ class VisitFormFragment0 : Fragment() {
             }
             sharedVisitViewModel.resetVisitLogPage()
 
-            findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
+            findNavController().navigate(R.id.interactionQ1Fragment)
             dialog.dismiss()
 
         }
