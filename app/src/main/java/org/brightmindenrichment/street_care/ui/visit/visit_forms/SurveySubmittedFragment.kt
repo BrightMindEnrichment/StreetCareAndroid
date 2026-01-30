@@ -49,13 +49,13 @@ class SurveySubmittedFragment : Fragment() {
         }
 
 
-        binding.btnShare.setOnClickListener{
-//          showSharePopup()
-            sharedCommunity  =true
-            clicked = false
-            showCustomDialogForSC()
-
-        }
+//        binding.btnShare.setOnClickListener{
+////          showSharePopup()
+//            sharedCommunity  =true
+//            clicked = false
+//            showCustomDialogForSC()
+//
+//        }
         binding.btnReturnHome.setOnClickListener{
             findNavController().navigate(R.id.action_surveySubmittedFragment_to_nav_visit)
         }

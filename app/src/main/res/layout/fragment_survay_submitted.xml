@@ -53,6 +53,7 @@
                     android:textStyle="bold"
                     app:fontFamily="Poppins" />
 
+                <!-- Button: Add Another Interaction -->
                 <Button
                     android:id="@+id/btn_another_visit"
                     android:layout_width="wrap_content"
@@ -62,19 +63,10 @@
                     android:text="@string/another_visit"
                     android:textAllCaps="false"
                     android:textColor="@color/accent1"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:cornerRadius="35dp"/>
 
-                <Button
-                    android:id="@+id/btn_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="4sp"
-                    android:text="@string/Share"
-                    android:textAllCaps="false"
-                    android:textColor="@color/accent1"
-                    android:textSize="14sp" />
-
+                <!-- Button: Back to Interaction Log -->
                 <Button
                     android:id="@+id/btn_return_home"
                     android:layout_width="wrap_content"
@@ -84,7 +76,8 @@
                     android:text="@string/return_home"
                     android:textAllCaps="false"
                     android:textColor="@color/accent1"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:cornerRadius="35dp"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
