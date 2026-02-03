@@ -184,7 +184,7 @@
 
     </fragment>
 
-    <fragment
+   <fragment
         android:id="@+id/surveySubmittedFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SurveySubmittedFragment"
         android:label="@string/visit_log_smallCaps"
@@ -195,8 +195,8 @@
             app:popUpTo="@id/nav_home"
             app:popUpToInclusive="true"/>
         <action
-            android:id="@+id/action_surveySubmittedFragment_to_visitFormFragment2"
-            app:destination="@id/visitFormFragment2" />
+            android:id="@+id/action_surveySubmittedFragment_to_interactionQ1Fragment"
+            app:destination="@id/interactionQ1Fragment" />
         <action
             android:id="@+id/action_surveySubmittedFragment_to_nav_visit"
             app:destination="@id/loginRedirectFragment" />

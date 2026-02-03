@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 class InteractionQ1Fragment : Fragment() {
 
@@ -61,10 +62,23 @@ class InteractionQ1Fragment : Fragment() {
                 .build()
 
             picker.addOnPositiveButtonClickListener { selection ->
-                startCalendar.timeInMillis = selection
+                // Extract Y/M/D in UTC
+                val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                utcCalendar.timeInMillis = selection
+
+                // Rebuild date in LOCAL timezone (no time shift)
+                startCalendar.set(
+                    utcCalendar.get(Calendar.YEAR),
+                    utcCalendar.get(Calendar.MONTH),
+                    utcCalendar.get(Calendar.DAY_OF_MONTH),
+                    0, 0, 0
+                )
+
                 binding.startDate.text = dateFormatter.format(startCalendar.time)
+
                 mergeDateTimeIntoViewModel()
             }
+
 
             picker.show(parentFragmentManager, "START_DATE_PICK")
         }
@@ -97,6 +111,7 @@ class InteractionQ1Fragment : Fragment() {
     private fun setEndDatePicker() {
         binding.datePickerCard1.setOnClickListener {
             val picker = MaterialDatePicker.Builder.datePicker()
+                .setTheme(R.style.MyDatePickerDialogTheme)
                 .setTitleText("Select End Date")
                 .build()
 

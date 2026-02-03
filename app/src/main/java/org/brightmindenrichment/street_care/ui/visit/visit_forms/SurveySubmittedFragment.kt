@@ -45,7 +45,7 @@ class SurveySubmittedFragment : Fragment() {
             sharedCommunity = false
             clicked = false
             sharedVisitViewModel.resetVisitLogPage() // Add this to clear old visit data
-            findNavController().navigate(R.id.action_surveySubmittedFragment_to_visitFormFragment2)
+            findNavController().navigate(R.id.action_surveySubmittedFragment_to_interactionQ1Fragment)
         }
 
 

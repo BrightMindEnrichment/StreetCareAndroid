@@ -26,6 +26,15 @@
     <style name="Theme.StreetCare.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.StreetCare.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorAccent">@color/accent_yellow</item></style>
+<!--    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">-->
+<!--        <item name="android:colorAccent">@color/accent_yellow</item></style>-->
+
+    <style name="MyDatePickerDialogTheme"
+        parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorControlHighlight">@color/accent_yellow</item>
+    </style>
+
+
+
 </resources>
