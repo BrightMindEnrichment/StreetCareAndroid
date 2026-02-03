@@ -11,8 +11,10 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.ktx.Firebase
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -84,7 +86,7 @@ class ProfileBadges : Fragment() {
             setBlackAndWhite(benevolent_donor, true)
 
             //connecting to Firebase to get the current user detail
-            val user = Firebase.auth.currentUser?: return
+            val user = FirebaseAuth.getInstance().currentUser?: return
             Log.d("BME current user", user.uid)
 
 

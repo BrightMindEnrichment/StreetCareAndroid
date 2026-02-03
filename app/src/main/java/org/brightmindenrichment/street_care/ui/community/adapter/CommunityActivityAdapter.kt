@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.FirebaseStorage
+//import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.ktx.Firebase
+//import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.community.model.CommunityActivityObject
@@ -19,7 +21,7 @@ import org.brightmindenrichment.street_care.util.Extensions
 
 class CommunityActivityAdapter(private val controller: VisitDataAdapter, private val context: Context) : RecyclerView.Adapter<CommunityActivityAdapter.ViewHolder>() {
     //private lateinit var activityList: List<CommunityActivityObject>
-    private val storage = Firebase.storage
+    private val storage = FirebaseStorage.getInstance()
     private val storageRef = storage.reference
     private val db = FirebaseFirestore.getInstance()
     inner class ViewHolder(private val binding: CommunityActivityItemBinding) : RecyclerView.ViewHolder(binding.root) {

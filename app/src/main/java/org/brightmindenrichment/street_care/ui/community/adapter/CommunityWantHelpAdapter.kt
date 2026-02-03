@@ -29,7 +29,7 @@ class CommunityWantHelpAdapter(
             //TODO: Need to edit the time text
             binding.timeLog.text = activity.time
 
-//            val db = Firebase.firestore
+//            val db = FirebaseFirestore.getInstance()
 //            val user = //get uid
 //            val userRef = db.collection("users").document(currentUser?.uid ?: "??")
 //            userRef.get().addOnCompleteListener { task ->

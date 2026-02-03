@@ -2,10 +2,12 @@ package org.brightmindenrichment.street_care.ui.visit
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.ui.visit.data.Status
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
 import java.util.*
@@ -42,8 +44,8 @@ class VisitDataAdapter {
     }
 
     fun refreshAll(onComplete: () -> Unit) {
-        val user = Firebase.auth.currentUser ?: return
-        val db = Firebase.firestore
+        val user = FirebaseAuth.getInstance().currentUser ?: return
+        val db = FirebaseFirestore.getInstance()
 
         val allVisits = mutableListOf<VisitLog>()
         totalPeopleCount = 0
@@ -468,9 +470,9 @@ class VisitDataAdapter {
 
     fun getPublicVisitLog(onComplete: () -> Unit) {
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return
         Log.d("BME", user.uid)
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance()
         db.collection("VisitLogBook").whereEqualTo("share", true).get()
             .addOnSuccessListener { result ->
                 // we are going to reload the whole list, remove anything already cached
@@ -500,7 +502,7 @@ class VisitDataAdapter {
 fun addVisit(location: String, hours: Long, visitAgain: String, peopleCount: Long, experience: String, comments: String, date: Date, onComplete: () -> Unit) {
 
     // make sure somebody is logged in
-    val user = Firebase.auth.currentUser ?: return
+    val user = FirebaseAuth.getInstance().currentUser ?: return
 
     // create a map of event data so we can add to firebase
     val visitData = hashMapOf(
@@ -514,7 +516,7 @@ fun addVisit(location: String, hours: Long, visitAgain: String, peopleCount: Lon
     )
 
     // save to firebase
-    val db = Firebase.firestore
+    val db = FirebaseFirestore.getInstance()
     db.collection("surveys").add(visitData).addOnSuccessListener { documentReference ->
         Log.d("BME", "Saved with id ${documentReference.id}")
         onComplete()

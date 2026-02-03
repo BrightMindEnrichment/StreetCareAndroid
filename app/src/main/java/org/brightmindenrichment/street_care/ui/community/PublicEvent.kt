@@ -21,10 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,6 +39,7 @@ import java.util.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PublicEvent : Fragment(), AdapterView.OnItemSelectedListener {
@@ -264,7 +265,7 @@ class PublicEvent : Fragment(), AdapterView.OnItemSelectedListener {
             Log.d("PublicEvent", "Flag clicked for ${visitLog.id}, current isFlagged: ${visitLog.isFlagged}")
 
             // Check authentication
-            val currentUser = Firebase.auth.currentUser
+            val currentUser = FirebaseAuth.getInstance().currentUser
             if (currentUser == null) {
                 Toast.makeText(
                     requireContext(),
@@ -1259,7 +1260,7 @@ class PublicEvent : Fragment(), AdapterView.OnItemSelectedListener {
                 Log.d("PublicEvent", "Flag clicked for ${visitLog.id}, current isFlagged: ${visitLog.isFlagged}")
 
                 // Check authentication
-                val currentUser = Firebase.auth.currentUser
+                val currentUser = FirebaseAuth.getInstance().currentUser
                 if (currentUser == null) {
                     Toast.makeText(
                         holder.itemView.context,

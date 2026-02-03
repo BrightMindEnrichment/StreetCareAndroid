@@ -10,9 +10,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.auth.ktx.auth
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentCommunityPostRequestBinding
 import org.brightmindenrichment.street_care.util.Extensions
@@ -46,7 +48,7 @@ class CommunityPostRequestFragment : Fragment() {
 //        edtTime = binding.edtTime
 
         btnSubmit.setOnClickListener {
-            if (Firebase.auth.currentUser == null) {
+            if (FirebaseAuth.getInstance().currentUser == null) {
                 context?.let { context ->
                     Extensions.showDialog(
                         context,
@@ -88,7 +90,7 @@ class CommunityPostRequestFragment : Fragment() {
         anonymous: Boolean
     ) {
         // make sure somebody is logged in
-        val user = Firebase.auth.currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return
         // create a map of event data so we can add to firebase
         val helpData = hashMapOf(
             "title" to title,
@@ -101,7 +103,7 @@ class CommunityPostRequestFragment : Fragment() {
             "anonymous" to anonymous
         )
         // save to firebase
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance()
         db.collection("communityRequest").add(helpData).addOnSuccessListener { documentReference ->
             Log.d("BME", "Saved with id ${documentReference.id}")
 //            Extensions.showDialog(

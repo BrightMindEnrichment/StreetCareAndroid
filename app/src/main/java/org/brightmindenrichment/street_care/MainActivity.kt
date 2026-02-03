@@ -29,11 +29,13 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.firestore.ktx.firestore
+//import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -73,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var workManager: WorkManager
     private lateinit var dataStoreManager: DataStoreManager
 
-    private val db = Firebase.firestore
+    private val db = FirebaseFirestore.getInstance()
 
     @Inject
     lateinit var eventsDatabase: EventsDatabase
@@ -233,7 +235,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.loginRedirectFragment -> {
-                    if (Firebase.auth.currentUser != null) {
+                    if (FirebaseAuth.getInstance().currentUser != null) {
                         navController.navigate(R.id.nav_visit)
                     } else {
                         navController.navigate(R.id.loginVisitLogFragment)
@@ -380,7 +382,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun shouldInterceptUpNavigation(): Boolean {
-        val isAuthUser = Firebase.auth.currentUser != null
+        val isAuthUser = FirebaseAuth.getInstance().currentUser != null
         val isNavUserOnNavGraph =
             findNavController(R.id.nav_host_fragment_content_main).currentDestination?.id == R.id.nav_profile
         return isAuthUser && isNavUserOnNavGraph

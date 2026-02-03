@@ -1,13 +1,9 @@
 name: Android CI/CD - Build, Sign & Release
 
 on:
-  # Triggers the workflow on push events but only for the main branch
   push:
     branches: [ main ]
-    
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    # NEW: Inputs for manual runs
     inputs:
       bump_type:
         description: 'Type of version bump (default: patch)'
@@ -18,8 +14,11 @@ on:
         description: 'Set a specific version (e.g., 26.0.0). Overrides bump_type.'
         type: string
         required: false
+      specific_version_code:
+        description: 'Set a specific version code (e.g., 42). Overrides automatic increment.'
+        type: string
+        required: false
 
-# NEW: Add permissions for the job to commit version changes back to the repo
 permissions:
   contents: write
 
@@ -32,7 +31,6 @@ jobs:
     steps:
       - name: 1. Checkout repository
         uses: actions/checkout@v4
-        # We need to fetch all history to push changes back
         with:
           fetch-depth: 0 
 
@@ -46,30 +44,20 @@ jobs:
       - name: 3. Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      # NEW STEP 4: Handle Version Bumping
-      # This step runs *before* the build to modify the gradle file.
-      - name: 4. Bump version using specific_version (if provided)
-        # This step only runs if you filled in the 'specific_version' input
-        if: github.event.inputs.specific_version != ''
-        id: version_bump_specific
-        uses: chkfung/android-version-actions@v1.2.3
+      # Uses vamsi-alluri/android-version-actions
+      # The action logic automatically prioritizes 'specific_version' if provided;
+      # otherwise, it falls back to 'SemanticVersioningOptionToIncrement'.
+      - name: 4. Bump Android Version
+        uses: vamsi-alluri/android-version-actions@v0.1.1
         with:
-          # IMPORTANT: Verify this path is correct for your project
-          gradleFilePath: app/build.gradle
+          gradlePath: app/build.gradle
+          versionCode: ${{ github.event.inputs.specific_version_code }}
+          # Always increment the internal version code
+          versionCodeIncrementBy: 1
+          # If specific_version input is set, this takes priority
           versionName: ${{ github.event.inputs.specific_version }}
-          versionCodeIncrement: 1 # Always increment versionCode
-
-      - name: 4. Bump version by type (patch/minor/major)
-        # This step only runs if you did NOT provide a 'specific_version'
-        if: github.event.inputs.specific_version == '' 
-        id: version_bump_auto
-        uses: chkfung/android-version-actions@v1.2.3
-        with:
-          # IMPORTANT: Verify this path is correct for your project
-          gradleFilePath: app/build.gradle
-          # Use the manual 'bump_type' input OR default to 'patch' for push events
-          versionNameIncrementType: ${{ (github.event_name == 'workflow_dispatch') && github.event.inputs.bump_type || 'patch' }}
-          versionCodeIncrement: 1 # Always increment versionCode
+          # If specific_version is empty, this handles the patch/minor/major bump
+          SemanticVersioningOptionToIncrement: ${{ (github.event_name == 'workflow_dispatch') && github.event.inputs.bump_type || 'patch' }}
 
       - name: 5. Inject API Key into local.properties
         run: |
@@ -93,26 +81,18 @@ jobs:
           packageName: com.app.bmeapplication1
           track: internal
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
-          # whatsNewDirectory: app/src/main/play/release-notes/
           
-      # NEW STEP 9: Commit and Push Version Bump
-      # This saves the new version back to your 'main' branch
       - name: 9. Commit and Push Version Bump
         run: |
           # Read the new version name directly from the file
           NEW_VERSION_NAME=$(grep "versionName " app/build.gradle | awk '{print $2}' | tr -d '"')
           
-          # Configure Git
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # Add the modified file
-          # IMPORTANT: Verify this path is correct
           git add app/build.gradle
           
-          # Commit the change
           # [skip ci] prevents this commit from triggering the workflow again
           git commit -m "ci: Bump version to $NEW_VERSION_NAME [skip ci]"
           
-          # Push the change back to the main branch
           git push

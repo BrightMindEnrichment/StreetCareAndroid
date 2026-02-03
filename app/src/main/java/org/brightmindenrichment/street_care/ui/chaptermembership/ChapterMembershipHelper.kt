@@ -1,14 +1,15 @@
 package org.brightmindenrichment.street_care.ui.chaptermembership
 
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.FirebaseFirestore
+// import com.google.firebase.firestore.firestore
 import org.brightmindenrichment.street_care.ui.user.UserType
 
 fun checkUserChapterMembership(
     userId: String,
     onResult: (UserType?) -> Unit
 ) {
-    val userDocRef = Firebase.firestore.collection("users").document(userId)
+    val userDocRef = FirebaseFirestore.getInstance().collection("users").document(userId)
     userDocRef.get()
         .addOnSuccessListener { document ->
             if (document.exists()) {
