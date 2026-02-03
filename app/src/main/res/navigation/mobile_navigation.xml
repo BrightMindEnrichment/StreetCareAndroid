@@ -136,15 +136,15 @@
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment5"
         android:label="@string/visit_log_smallCaps"
         tools:layout="@layout/fragment_visit_form5" >
-<!--        <action-->
-<!--            android:id="@+id/action_visitFormFragment4_to_visitFormFragment5"-->
-<!--            app:destination="@id/surveySubmittedFragment" />-->
+        <!--        <action-->
+        <!--            android:id="@+id/action_visitFormFragment4_to_visitFormFragment5"-->
+        <!--            app:destination="@id/surveySubmittedFragment" />-->
         <action
             android:id="@+id/action_visitFormFragment5_to_visitFormFragment4"
             app:destination="@id/visitFormFragment6" />
-<!--        <action-->
-<!--            android:id="@+id/action_visitFormFragment5_to_visitFormFragment_additional"-->
-<!--            app:destination="@id/additional2" />-->
+        <!--        <action-->
+        <!--            android:id="@+id/action_visitFormFragment5_to_visitFormFragment_additional"-->
+        <!--            app:destination="@id/additional2" />-->
         <action
             android:id="@+id/action_visitFormFragment5_to_visitForm7a"
             app:destination="@id/visitForm7a" />
@@ -211,7 +211,7 @@
 
 
 
-<!--    CommunityPart-->
+    <!--    CommunityPart-->
     <fragment
         android:id="@+id/nav_community"
         android:name="org.brightmindenrichment.street_care.ui.community.CommunityFragment"
@@ -250,18 +250,18 @@
         android:label="@string/add_event"
         tools:layout="@layout/fragment_add_event" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/communityHelpRequestFragment"-->
-<!--        android:name="org.brightmindenrichment.street_care.ui.community.CommunityHelpRequestFragment"-->
-<!--        android:label="{pageTitle}"-->
-<!--        tools:layout="@layout/fragment_community_help_requests" >-->
+    <!--    <fragment-->
+    <!--        android:id="@+id/communityHelpRequestFragment"-->
+    <!--        android:name="org.brightmindenrichment.street_care.ui.community.CommunityHelpRequestFragment"-->
+    <!--        android:label="{pageTitle}"-->
+    <!--        tools:layout="@layout/fragment_community_help_requests" >-->
 
-<!--        <argument-->
-<!--            android:name="pageTitle"-->
-<!--            android:defaultValue="Help Request"-->
-<!--            app:argType="string" />-->
+    <!--        <argument-->
+    <!--            android:name="pageTitle"-->
+    <!--            android:defaultValue="Help Request"-->
+    <!--            app:argType="string" />-->
 
-<!--    </fragment>-->
+    <!--    </fragment>-->
 
     <fragment
         android:id="@+id/publicEvent"
@@ -270,11 +270,11 @@
         tools:layout="@layout/fragment_public_event" />
 
 
-<!--    <fragment-->
-<!--        android:id="@+id/nav_add_help_request"-->
-<!--        android:name="org.brightmindenrichment.street_care.ui.community.AddHelpRequestFragment"-->
-<!--        android:label="@string/add_help_request"-->
-<!--        tools:layout="@layout/fragment_add_help_request" />-->
+    <!--    <fragment-->
+    <!--        android:id="@+id/nav_add_help_request"-->
+    <!--        android:name="org.brightmindenrichment.street_care.ui.community.AddHelpRequestFragment"-->
+    <!--        android:label="@string/add_help_request"-->
+    <!--        tools:layout="@layout/fragment_add_help_request" />-->
 
     <fragment
         android:id="@+id/communityActivityFragment"
@@ -587,7 +587,7 @@
             android:id="@+id/action_additional4_to_nav_visit"
             app:destination="@id/nav_visit" />
     </fragment>
-    
+
     <fragment
         android:id="@+id/visitLogDetailsFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.details.VisitLogDetailsFragment"
