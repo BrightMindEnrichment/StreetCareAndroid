@@ -5,32 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!--    Header bar-->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:paddingHorizontal="16dp">
-        <!--close button-->
-        <ImageView
-            android:id="@+id/btn_close"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical|start"
-            android:background="@drawable/red_round_button"
-            android:contentDescription="@string/close"
-            android:src="@drawable/ic_close"
-            app:tint="@color/white" />
-        <!--header title-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Interaction Log"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:fontFamily="Poppins" />
-    </FrameLayout>
+
     <!--    Big centered screen title-->
     <TextView
         android:layout_width="match_parent"
@@ -42,6 +17,7 @@
         android:textColor="@color/black"
         android:textFontWeight="700"
         android:textSize="30sp"
+        app:fontFamily="@font/poppins_bold"
         android:textStyle="bold" />
 
     <androidx.cardview.widget.CardView

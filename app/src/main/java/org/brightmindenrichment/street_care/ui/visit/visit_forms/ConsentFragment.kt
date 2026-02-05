@@ -1,27 +1,58 @@
-
 package org.brightmindenrichment.street_care.ui.visit.visit_forms
 
-
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import org.brightmindenrichment.street_care.R
-import android.widget.ImageView
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.FieldValue
-import android.widget.Toast
-import com.google.firebase.auth.auth
 import androidx.core.os.bundleOf
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.firestore
+import org.brightmindenrichment.street_care.R
 
 class ConsentFragment : Fragment(R.layout.fragment_consent) {
+
+    // Save previous ActionBar state so we can restore it when leaving this fragment
+    private var prevTitle: CharSequence? = null
+    private var prevHomeAsUpEnabled: Boolean? = null
+    private var prevHomeIndicator: android.graphics.drawable.Drawable? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true) // needed so fragment can receive onOptionsItemSelected
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 1) Show bottom nav (same pattern as their code)
+        requireActivity()
+            .findViewById<BottomNavigationView>(R.id.bottomNav)
+            ?.visibility = View.VISIBLE
+
+        // 2) Configure ActionBar: red close icon + title
+        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
+            // store previous state
+            prevTitle = ab.title
+            prevHomeAsUpEnabled = ab.isShowing // not perfect, but OK; real flag isn't directly readable
+            prevHomeIndicator = ab.themedContext.let { null } // indicator isn't directly readable reliably
+
+            ab.setDisplayHomeAsUpEnabled(true)
+            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+            ab.title = "Interaction Log"
+        }
+
+        // 3) Your existing view wiring
         val cb = view.findViewById<CheckBox>(R.id.cbConsent)
         val submit = view.findViewById<Button>(R.id.btnSubmitConsent)
-        val close = view.findViewById<ImageView>(R.id.btn_close)
+
         // args from nav graph (defaults: interactionId="", mode="create")
         val interactionId = arguments?.getString("interactionId").orEmpty()
         val mode = arguments?.getString("mode") ?: "create"
@@ -30,6 +61,7 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
             submit.isEnabled = b
             submit.alpha = if (b) 1f else 0.5f
         }
+
         setEnabled(cb.isChecked)
         cb.setOnCheckedChangeListener { _, checked -> setEnabled(checked) }
 
@@ -48,22 +80,24 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
                     .update(
                         mapOf(
                             "isPublic" to true,
-                            // keep status Pending if moderation exists; otherwise use Published
                             "status" to "Pending",
                             "lastModifiedTimestamp" to now
                         )
                     )
                     .addOnSuccessListener {
-                        // back to Interaction Log home
                         findNavController().navigate(
                             R.id.action_consentFragment_to_successFragment,
                             bundleOf("interactionId" to interactionId)
-                        )                    }
+                        )
+                    }
                     .addOnFailureListener {
                         submit.isEnabled = true
-                        Toast.makeText(requireContext(), "Failed to share. Please try again.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to share. Please try again.",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-
             } else {
                 // CREATE a new interaction (original flow)
                 val interaction = hashMapOf(
@@ -78,9 +112,6 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
 
                 db.collection("interactions").add(interaction)
                     .addOnSuccessListener { doc ->
-                        // pass id forward so Success/Share screens can use it
-//                        val args = Bundle().apply { putString("interactionId", doc.id) }
-//                        findNavController().navigate(R.id.action_consentFragment_to_successFragment, args)
                         findNavController().navigate(
                             R.id.action_consentFragment_to_successFragment,
                             bundleOf("interactionId" to doc.id)
@@ -88,12 +119,35 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
                     }
                     .addOnFailureListener {
                         submit.isEnabled = true
-                        Toast.makeText(requireContext(), "Failed to save. Please try again.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to save. Please try again.",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
             }
         }
+    }
 
-        close.setOnClickListener { findNavController().popBackStack() }
+    // 4) Handle ActionBar red close click (top-left)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                findNavController().popBackStack()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
+    // 5) Restore ActionBar state so other fragments aren’t affected
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (activity as? AppCompatActivity)?.supportActionBar?.apply {
+            // Restore something reasonable
+            setDisplayHomeAsUpEnabled(false)
+            setHomeAsUpIndicator(null)
+            title = prevTitle
+        }
     }
 }
