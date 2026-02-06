@@ -209,68 +209,61 @@ class MainActivity : AppCompatActivity() {
     private fun initUI() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setSupportActionBar(binding.appBarMain.toolbar)
-        //val navView: NavigationView = binding.navView
+
         val navController = findNavController(R.id.nav_host_fragment_content_main)
 
-        bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNavView = findViewById(R.id.bottomNav)
         bottomNavView.itemIconTintList = null
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.loginRedirectFragment, R.id.nav_community, R.id.nav_user
+                R.id.nav_home,
+                R.id.loginRedirectFragment,
+                R.id.nav_community,
+                R.id.nav_profile
             )
         )
 
-
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-      //  bottomNavView.setupWithNavController(navController)
-        bottomNavView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    navController.navigate(R.id.nav_home)
-                    true
-                }
+        // Let Navigation handle bottom tabs
+        bottomNavView.setupWithNavController(navController)
 
-                R.id.loginRedirectFragment -> {
-                    if (FirebaseAuth.getInstance().currentUser != null) {
-                        navController.navigate(R.id.nav_visit)
-                    } else {
-                        navController.navigate(R.id.loginVisitLogFragment)
-                    }
-                    true
+        // Handle ONLY the auth redirect tab
+        bottomNavView.setOnItemReselectedListener { item ->
+            if (item.itemId == R.id.loginRedirectFragment) {
+                if (FirebaseAuth.getInstance().currentUser != null) {
+                    navController.navigate(R.id.nav_visit)
+                } else {
+                    navController.navigate(R.id.loginVisitLogFragment)
                 }
-
-                R.id.nav_community -> {
-                    navController.navigate(R.id.nav_community)
-                    true
-                }
-
-                R.id.profile -> {
-                    navController.navigate(R.id.profile)
-                    true
-                }
-
-                else -> false
             }
-
         }
-
-
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.nav_home,R.id.loginVisitLogFragment,R.id.loginRedirectFragment, R.id.nav_visit, R.id.nav_community, R.id.nav_profile -> {
-                    bottomNavView.visibility = View.VISIBLE
+            bottomNavView.visibility =
+                if (destination.id in setOf(
+                        R.id.nav_home,
+                        R.id.loginVisitLogFragment,
+                        R.id.loginRedirectFragment,
+                        R.id.nav_visit,
+                        R.id.nav_community,
+                        R.id.nav_profile,
+                        R.id.interactionQ1Fragment,
+                        R.id.interactionQ2Fragment,
+                        R.id.interactionQ3Fragment
+                       // add the screens which require bottom navigation bar
+                    )
+                ) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
                 }
-                else -> {
-                    bottomNavView.visibility = View.GONE
-                }
-            }
         }
     }
+
 
     override fun onStart() {
         super.onStart()

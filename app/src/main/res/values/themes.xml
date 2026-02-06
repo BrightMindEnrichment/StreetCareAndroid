@@ -32,7 +32,7 @@
     <style name="MyDatePickerDialogTheme"
         parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="colorPrimary">@color/dark_green</item>
-        <item name="colorControlHighlight">@color/accent_yellow</item>
+        <item name="colorOnPrimary">@color/accent_yellow</item>
     </style>
 
 

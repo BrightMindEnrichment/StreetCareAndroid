@@ -58,6 +58,7 @@ class InteractionQ1Fragment : Fragment() {
     private fun setStartDatePicker() {
         binding.datePickerCard.setOnClickListener {
             val picker = MaterialDatePicker.Builder.datePicker()
+                .setTheme(R.style.MyDatePickerDialogTheme)
                 .setTitleText("Select Start Date")
                 .build()
 
