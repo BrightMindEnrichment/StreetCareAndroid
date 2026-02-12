@@ -36,7 +36,7 @@
             android:id="@+id/tvTopTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/individual_interaction_title_2"
+            android:text="Individual Interaction"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:includeFontPadding="false"
@@ -54,7 +54,9 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/topBar"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav">
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -88,11 +90,12 @@
                 <!-- Card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_interaction"
-                    android:layout_width="match_parent"
+                    android:layout_width="350dp"
                     android:layout_height="530dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
+                    android:layout_gravity="center"
                     android:maxWidth="360dp"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="4dp"
@@ -100,9 +103,10 @@
                     app:strokeColor="@color/gray700"
                     app:strokeWidth="1.2dp">
 
+                    <!-- IMPORTANT: match_parent so weight pins buttons to bottom -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:paddingBottom="14dp">
 
@@ -113,8 +117,8 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
+                            android:paddingStart="24dp"
+                            android:paddingEnd="24dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="4dp">
 
@@ -123,7 +127,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="@string/Individual_Interaction_Question_2"
+                                android:text="@string/Individual_Interaction_Question_3"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular"/>
@@ -142,6 +146,7 @@
                                 app:fontFamily="@font/poppins_bold_new"/>
                         </LinearLayout>
 
+                        <!-- Divider -->
                         <com.google.android.material.divider.MaterialDivider
                             android:id="@+id/headerDivider"
                             android:layout_width="match_parent"
@@ -150,21 +155,22 @@
                             android:layout_marginEnd="16dp"
                             app:dividerColor="@color/gray700"/>
 
-                        <!-- Content -->
+                        <!-- Content (NOW weighted so buttons pin to bottom like Q4) -->
                         <LinearLayout
                             android:id="@+id/contentInset"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="vertical"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
+                            android:paddingStart="24dp"
+                            android:paddingEnd="24dp"
                             android:paddingTop="10dp">
 
                             <TextView
                                 android:id="@+id/tvQuestion"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="What kind of help was provided?"
+                                android:text="@string/question_3"
                                 android:textColor="@color/black"
                                 android:textSize="16sp"
                                 android:gravity="center"
@@ -180,7 +186,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="34dp"
-                                android:text="Food &amp; Drinks"
+                                android:text="@string/food_drinks"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular" />
@@ -193,7 +199,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="34dp"
-                                android:text="Clothes"
+                                android:text="@string/clothes"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular"/>
@@ -206,7 +212,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="34dp"
-                                android:text="Hygiene Products"
+                                android:text="@string/hygiene"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular"/>
@@ -219,7 +225,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="34dp"
-                                android:text="Wellness/Emotional Support"
+                                android:text="@string/support"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular"/>
@@ -232,7 +238,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="34dp"
-                                android:text="Medical Help/Doctor"
+                                android:text="@string/medical_help"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular"/>
@@ -245,7 +251,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="34dp"
-                                android:text="Social Worker/Psychiatrist"
+                                android:text="@string/social_worker_psychiatrist"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular"/>
@@ -258,7 +264,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="34dp"
-                                android:text="Lawyer/Legal"
+                                android:text="@string/lawyer_legal"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular"/>
@@ -271,7 +277,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="34dp"
-                                android:text="Other"
+                                android:text="@string/other"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
                                 app:fontFamily="@font/poppins_regular"/>
@@ -306,43 +312,46 @@
                                     android:textSize="14sp"/>
                             </com.google.android.material.textfield.TextInputLayout>
 
-                            <!-- Buttons -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_marginTop="16dp">
-
-                                <TextView
-                                    android:id="@+id/txt_previous2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/Previous"
-                                    android:textColor="@color/dark_green"
-                                    android:paddingVertical="6dp"
-                                    android:paddingHorizontal="18dp"
-                                    android:background="@drawable/button_previous"
-                                    android:textStyle="bold"/>
-
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"/>
-
-                                <TextView
-                                    android:id="@+id/txt_next2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/next_button"
-                                    android:textColor="@color/accent1"
-                                    android:textSize="16sp"
-                                    android:paddingVertical="8dp"
-                                    android:paddingHorizontal="22dp"
-                                    android:background="@drawable/button_next"
-                                    android:textStyle="bold"/>
-                            </LinearLayout>
-
                         </LinearLayout>
+
+                        <!-- Buttons (NOW pinned like Q4, and aligned rails) -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="16dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:id="@+id/txt_previous2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Previous"
+                                android:textColor="@color/dark_green"
+                                android:paddingVertical="6dp"
+                                android:paddingHorizontal="18dp"
+                                android:background="@drawable/button_previous"
+                                android:textStyle="bold"/>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"/>
+
+                            <TextView
+                                android:id="@+id/txt_next2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/next_button"
+                                android:textColor="@color/accent1"
+                                android:textSize="16sp"
+                                android:paddingVertical="8dp"
+                                android:paddingHorizontal="22dp"
+                                android:background="@drawable/button_next"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -378,12 +387,12 @@
                 android:src="@drawable/ic_how_to_help_selector"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="How to help"
                 android:textSize="11sp"
                 android:textColor="@color/black"
-                app:fontFamily="@font/poppins_regular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:fontFamily="@font/poppins_regular"/>
         </LinearLayout>
 
         <LinearLayout
@@ -401,12 +410,12 @@
                 android:src="@drawable/ic_visit_log_selector" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Interaction Log"
                 android:textSize="11sp"
                 android:textColor="@color/black"
-                app:fontFamily="@font/poppins_regular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:fontFamily="@font/poppins_regular"/>
         </LinearLayout>
 
         <LinearLayout
@@ -424,12 +433,12 @@
                 android:src="@drawable/ic_community_selector"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Community"
                 android:textSize="11sp"
                 android:textColor="@color/black"
-                app:fontFamily="@font/poppins_regular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:fontFamily="@font/poppins_regular"/>
         </LinearLayout>
 
         <LinearLayout
@@ -447,12 +456,12 @@
                 android:src="@drawable/ic_profile_selector"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Profile"
                 android:textSize="11sp"
                 android:textColor="@color/black"
-                app:fontFamily="@font/poppins_regular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:fontFamily="@font/poppins_regular"/>
         </LinearLayout>
 
     </LinearLayout>

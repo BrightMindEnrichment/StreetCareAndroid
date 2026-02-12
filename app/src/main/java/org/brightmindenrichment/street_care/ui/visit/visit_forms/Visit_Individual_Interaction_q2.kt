@@ -21,7 +21,7 @@ class Visit_Individual_Interaction_q2 : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.individual_interaction_2_q2, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_individual_interaction_q2, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,9 +65,16 @@ class Visit_Individual_Interaction_q2 : Fragment() {
             findNavController().popBackStack(R.id.nav_visit, false)
         }
 
-        // Previous: back to q2
+        // Previous: back to q1
         btnPrevious.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigateUp()
+        }
+
+        // Skip: no validation
+        btnSkip.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_visitIndividualInteractionQ2_to_visitIndividualInteractionQ3
+            )
         }
 
         // Next: must select at least one
@@ -86,13 +93,6 @@ class Visit_Individual_Interaction_q2 : Fragment() {
                 return@setOnClickListener
             }
 
-            findNavController().navigate(
-                R.id.action_visitIndividualInteractionQ2_to_visitIndividualInteractionQ3
-            )
-        }
-
-        // Skip: no validation
-        btnSkip.setOnClickListener {
             findNavController().navigate(
                 R.id.action_visitIndividualInteractionQ2_to_visitIndividualInteractionQ3
             )

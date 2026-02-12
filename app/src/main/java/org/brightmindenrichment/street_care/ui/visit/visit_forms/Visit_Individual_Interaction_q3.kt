@@ -21,7 +21,7 @@ class Visit_Individual_Interaction_q3 : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.individual_interaction_2_q3, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_individual_interaction_q3, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,6 +70,13 @@ class Visit_Individual_Interaction_q3 : Fragment() {
             findNavController().popBackStack()
         }
 
+        // Skip: no validation
+        btnSkip.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4
+            )
+        }
+
         // Next: must select at least one
         btnNext.setOnClickListener {
             val anyChecked = cbFood.isChecked || cbClothes.isChecked || cbHygiene.isChecked ||
@@ -86,13 +93,6 @@ class Visit_Individual_Interaction_q3 : Fragment() {
                 return@setOnClickListener
             }
 
-            findNavController().navigate(
-                R.id.action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4
-            )
-        }
-
-        // Skip: no validation
-        btnSkip.setOnClickListener {
             findNavController().navigate(
                 R.id.action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4
             )

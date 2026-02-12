@@ -140,14 +140,14 @@
 <!--            android:id="@+id/action_visitFormFragment4_to_visitFormFragment5"-->
 <!--            app:destination="@id/surveySubmittedFragment" />-->
         <action
-            android:id="@+id/action_visitFormFragment5_to_visitFormFragment4"
+            android:id="@+id/action_visitFormFragment5_to_visitFormFragment6"
             app:destination="@id/visitFormFragment6" />
 <!--        <action-->
 <!--            android:id="@+id/action_visitFormFragment5_to_visitFormFragment_additional"-->
 <!--            app:destination="@id/additional2" />-->
         <action
-            android:id="@+id/action_visitFormFragment5_to_visitForm7a"
-            app:destination="@id/visitForm7a" />
+            android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment4"
+            app:destination="@id/visitFormFragment4" />
 
     </fragment>
 
@@ -209,9 +209,19 @@
     </fragment>
 
     <fragment
+        android:id="@+id/visitIndividualInteractionQ1"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q1"
+        tools:layout="@layout/fragment_individual_interaction_q1">
+
+        <action
+            android:id="@+id/action_visitIndividualInteractionQ1_to_visitIndividualInteractionQ2"
+            app:destination="@id/visitIndividualInteractionQ2" />
+    </fragment>
+
+    <fragment
         android:id="@+id/visitIndividualInteractionQ2"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q2"
-        tools:layout="@layout/individual_interaction_2_q2">
+        tools:layout="@layout/fragment_individual_interaction_q2">
 
         <action
             android:id="@+id/action_visitIndividualInteractionQ2_to_visitIndividualInteractionQ3"
@@ -221,13 +231,22 @@
     <fragment
         android:id="@+id/visitIndividualInteractionQ3"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q3"
-        tools:layout="@layout/individual_interaction_2_q3">
+        tools:layout="@layout/fragment_individual_interaction_q3">
 
         <action
             android:id="@+id/action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4"
-            app:destination="@id/visitIndividualInteractionQ3" />
+            app:destination="@id/visitIndividualInteractionQ4" />
     </fragment>
 
+    <fragment
+        android:id="@+id/visitIndividualInteractionQ4"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q4"
+        tools:layout="@layout/fragment_individual_interaction_q4">
+
+        <action
+            android:id="@+id/action_visitIndividualInteractionQ4_to_saveInteraction"
+            app:destination="@id/saveInteraction" />
+    </fragment>
 
 
 <!--    CommunityPart-->

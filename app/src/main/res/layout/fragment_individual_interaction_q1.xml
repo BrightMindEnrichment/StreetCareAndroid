@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- Top Bar -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnClose"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/ic_close_red_circle"
+            android:scaleType="center"
+            android:contentDescription="@string/close"
+            android:padding="2dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvTopTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Individual Interaction"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:includeFontPadding="false"
+            app:fontFamily="@font/poppins_bold_new"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Main Content -->
+    <ScrollView
+        android:id="@+id/mainScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Body -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="16dp">
+
+                <!-- Section Header -->
+                <TextView
+                    android:id="@+id/tvHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/individual_interaction_title_2"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="28sp"
+                    android:includeFontPadding="false"
+                    app:fontFamily="@font/poppins_bold_new"/>
+
+                <!-- Card (UNCHANGED) -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_interaction"
+                    android:layout_width="350dp"
+                    android:layout_height="530dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:maxWidth="360dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true"
+                    app:strokeColor="@color/gray700"
+                    app:strokeWidth="1.2dp">
+
+                    <!-- IMPORTANT: match_parent so weight pins buttons to bottom (same as your reference) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingBottom="14dp">
+
+                        <!-- Header -->
+                        <LinearLayout
+                            android:id="@+id/headerRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingStart="24dp"
+                            android:paddingEnd="24dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="4dp">
+
+                            <TextView
+                                android:id="@+id/tvQuestionIndex"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/Individual_Interaction_Question_1"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/txt_skip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/skip"
+                                android:textColor="@color/black"
+                                android:textSize="13sp"
+                                android:paddingHorizontal="14dp"
+                                android:paddingVertical="6dp"
+                                android:background="@drawable/rounded_btn"
+                                android:gravity="center"
+                                app:fontFamily="@font/poppins_bold_new"/>
+                        </LinearLayout>
+
+                        <!-- Divider (NO FrameLayout) -->
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/headerDivider"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            app:dividerColor="@color/gray700"/>
+
+                        <!-- CONTENT AREA takes remaining height (PINNING like your reference) -->
+                        <LinearLayout
+                            android:id="@+id/contentInset"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingStart="24dp"
+                            android:paddingEnd="24dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="14dp">
+
+                            <!-- First Name -->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilFirstName"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="0dp"
+                                app:hintEnabled="false"
+                                app:boxStrokeWidth="1dp"
+                                app:boxStrokeColor="@color/black"
+                                android:imeOptions="actionNext"
+                                app:boxCornerRadiusTopStart="10dp"
+                                app:boxCornerRadiusTopEnd="10dp"
+                                app:boxCornerRadiusBottomStart="10dp"
+                                app:boxCornerRadiusBottomEnd="10dp"
+                                app:boxCollapsedPaddingTop="10dp"
+                                app:fontFamily="Poppins">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etFirstName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                    android:minHeight="42dp"
+                                    android:hint="@string/hint_first_name"
+                                    android:gravity="center_vertical|start"
+                                    android:background="@drawable/rounded_border_field"
+                                    android:includeFontPadding="false"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="textPersonName"
+                                    android:textSize="14sp" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <!-- Last Name -->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilLastName"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:textColorHint="#80000000"
+                                app:hintEnabled="false"
+                                android:imeOptions="actionNext"
+                                app:boxCornerRadiusTopStart="10dp"
+                                app:boxCornerRadiusTopEnd="10dp"
+                                app:boxCornerRadiusBottomStart="10dp"
+                                app:boxCornerRadiusBottomEnd="10dp"
+                                app:fontFamily="Poppins">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etLastName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                    android:minHeight="42dp"
+                                    android:gravity="center_vertical|start"
+                                    android:hint="@string/hint_last_name"
+                                    android:background="@drawable/rounded_border_field"
+                                    android:textSize="14sp"
+                                    android:includeFontPadding="false"
+                                    android:inputType="textPersonName"
+                                    android:imeOptions="actionNext"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <!-- Location -->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilLocation"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                app:hintEnabled="false"
+                                android:textColorHint="#80000000"
+                                android:imeOptions="actionNext"
+                                app:boxCornerRadiusTopStart="10dp"
+                                app:boxCornerRadiusTopEnd="10dp"
+                                app:boxCornerRadiusBottomStart="10dp"
+                                app:boxCornerRadiusBottomEnd="10dp"
+                                app:fontFamily="Poppins">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etLocation"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                    android:hint="@string/hint_location"
+                                    android:minHeight="42dp"
+                                    android:gravity="center_vertical|start"
+                                    android:background="@drawable/rounded_border_field"
+                                    android:includeFontPadding="false"
+                                    android:textSize="14sp"
+                                    android:inputType="textCapWords"
+                                    android:imeOptions="actionNext"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <!-- State + Zip -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="6dp">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/tilState"
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:endIconMode="dropdown_menu"
+                                    app:hintEnabled="false"
+                                    android:textColorHint="#80000000"
+                                    app:boxCornerRadiusTopStart="10dp"
+                                    app:boxCornerRadiusTopEnd="10dp"
+                                    app:boxCornerRadiusBottomStart="10dp"
+                                    app:boxCornerRadiusBottomEnd="10dp"
+                                    app:endIconDrawable="@drawable/ic_down_arrow"
+                                    app:endIconTint="@color/gray700"
+                                    app:fontFamily="Poppins">
+
+                                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                        android:id="@+id/actState"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical|start"
+                                        android:hint="@string/State"
+                                        android:textSize="14sp"
+                                        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                        android:minHeight="42dp"
+                                        android:background="@drawable/rounded_border_field"
+                                        android:includeFontPadding="false" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <View
+                                    android:layout_width="8dp"
+                                    android:layout_height="1dp" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/tilZip"
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:hintEnabled="false"
+                                    android:textColorHint="#80000000"
+                                    android:imeOptions="actionNext"
+                                    app:boxCornerRadiusTopStart="10dp"
+                                    app:boxCornerRadiusTopEnd="10dp"
+                                    app:boxCornerRadiusBottomStart="10dp"
+                                    app:boxCornerRadiusBottomEnd="10dp"
+                                    app:fontFamily="Poppins">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/etZip"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical|start"
+                                        android:hint="@string/Zipcode"
+                                        android:textSize="14sp"
+                                        android:background="@drawable/rounded_border_field"
+                                        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
+                                        android:minHeight="42dp"
+                                        android:includeFontPadding="false"
+                                        android:inputType="number"/>
+                                </com.google.android.material.textfield.TextInputLayout>
+                            </LinearLayout>
+
+                            <!-- Date + Time Row -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="25dp">
+
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/datePickerCard"
+                                    android:layout_width="0dp"
+                                    android:layout_height="47dp"
+                                    android:layout_weight="1"
+                                    android:layout_marginEnd="8dp"
+                                    app:cardCornerRadius="8dp"
+                                    app:strokeWidth="1dp"
+                                    app:strokeColor="@color/black"
+                                    app:fontFamily="Poppins">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:paddingStart="10dp"
+                                        android:paddingEnd="10dp">
+
+                                        <ImageView
+                                            android:id="@+id/ivDate"
+                                            android:layout_width="20dp"
+                                            android:layout_height="20dp"
+                                            android:src="@drawable/baseline_calendar_month_24"
+                                            android:scaleType="centerInside"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                                        <TextView
+                                            android:id="@+id/tvDate"
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="8dp"
+                                            android:includeFontPadding="false"
+                                            android:gravity="center_vertical"
+                                            android:maxLines="1"
+                                            android:ellipsize="end"
+                                            android:text="@string/default_date"
+                                            android:textSize="15sp"
+                                            android:textColor="@color/black"
+                                            app:layout_constraintStart_toEndOf="@id/ivDate"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            app:layout_constraintBottom_toBottomOf="parent"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </com.google.android.material.card.MaterialCardView>
+
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/timePickerCard"
+                                    android:layout_width="0dp"
+                                    android:layout_height="47dp"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="1dp"
+                                    app:cardCornerRadius="8dp"
+                                    app:strokeWidth="1dp"
+                                    app:strokeColor="@color/black"
+                                    app:fontFamily="Poppins">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:paddingStart="10dp"
+                                        android:paddingEnd="10dp">
+
+                                        <ImageView
+                                            android:id="@+id/ivTime"
+                                            android:layout_width="20dp"
+                                            android:layout_height="20dp"
+                                            android:src="@drawable/baseline_access_time_24"
+                                            android:scaleType="centerInside"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                                        <TextView
+                                            android:id="@+id/tvTz"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:includeFontPadding="false"
+                                            android:gravity="center_vertical"
+                                            android:maxLines="1"
+                                            android:textSize="13.9sp"
+                                            android:textColor="@color/black"
+                                            android:visibility="gone"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                                        <TextView
+                                            android:id="@+id/tvTime"
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="3dp"
+                                            android:includeFontPadding="false"
+                                            android:gravity="center_vertical"
+                                            android:maxLines="1"
+                                            android:ellipsize="end"
+                                            android:text="@string/default_time"
+                                            android:textSize="13.9sp"
+                                            android:textColor="@color/black"
+                                            app:layout_constraintStart_toEndOf="@id/ivTime"
+                                            app:layout_constraintEnd_toStartOf="@id/tvTz"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </com.google.android.material.card.MaterialCardView>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!-- BUTTON ROW (PINNED - exact same mechanism as your reference) -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="20dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:id="@+id/txt_previous2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Previous"
+                                android:textColor="@color/dark_green"
+                                android:paddingVertical="6dp"
+                                android:paddingHorizontal="18dp"
+                                android:background="@drawable/button_previous"
+                                android:textStyle="bold"/>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:id="@+id/txt_next2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/next_button"
+                                android:textColor="@color/accent1"
+                                android:textSize="16sp"
+                                android:paddingVertical="8dp"
+                                android:paddingHorizontal="22dp"
+                                android:background="@drawable/button_next"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:elevation="10dp"
+        android:translationZ="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal|bottom"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/ivHowToHelp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_how_to_help_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How to help"
+                android:textSize="11sp"
+                android:textColor="@color/black"
+                app:fontFamily="@font/poppins_regular"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal|bottom"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/ivInteractionLog"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_visit_log_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Interaction Log"
+                android:textSize="11sp"
+                android:textColor="@color/black"
+                app:fontFamily="@font/poppins_regular"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal|bottom"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/ivCommunity"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_community_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Community"
+                android:textSize="11sp"
+                android:textColor="@color/black"
+                app:fontFamily="@font/poppins_regular"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal|bottom"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_profile_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textSize="11sp"
+                android:textColor="@color/black"
+                app:fontFamily="@font/poppins_regular"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
