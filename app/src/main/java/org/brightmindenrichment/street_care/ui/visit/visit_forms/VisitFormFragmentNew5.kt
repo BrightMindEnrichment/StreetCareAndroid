@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentVisitForm5NewBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class VisitFormFragmentNew5 : Fragment() {
 
@@ -31,6 +32,11 @@ class VisitFormFragmentNew5 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
+
+        requireActivity()
+            .findViewById<BottomNavigationView>(R.id.bottomNav)
+            ?.visibility = View.VISIBLE
 
         fun updateUI() {
             binding.tvCountHelped.text = helpedCount.toString()

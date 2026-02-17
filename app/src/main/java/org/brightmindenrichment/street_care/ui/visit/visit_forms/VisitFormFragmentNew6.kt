@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class VisitFormFragmentNew6 : Fragment() {
 
@@ -28,6 +29,11 @@ class VisitFormFragmentNew6 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
+
+        requireActivity()
+            .findViewById<BottomNavigationView>(R.id.bottomNav)
+            ?.visibility = View.VISIBLE
 
         val btnClose = view.findViewById<FrameLayout>(R.id.btn_close)
         val btnSkip = view.findViewById<TextView>(R.id.btn_skip)
