@@ -30,17 +30,19 @@ class InteractionQ2Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Pre-fill fields from ViewModel (important for back navigation)
-        binding.inputFirstName.setText(viewModel.firstName.value.orEmpty())
-        binding.inputLastName.setText(viewModel.lastName.value.orEmpty())
-        binding.inputEmail.setText(viewModel.email.value.orEmpty())
-        binding.inputPhoneNumber.setText(viewModel.phoneNumber.value.orEmpty())
+        val log = viewModel.interactionLog.value
+
+        binding.inputFirstName.setText(log?.firstName.orEmpty())
+        binding.inputLastName.setText(log?.lastName.orEmpty())
+        binding.inputEmail.setText(log?.email.orEmpty())
+        binding.inputPhoneNumber.setText(log?.phoneNumber.orEmpty())
 
         setCloseButton()
         setPreviousButton()
         setNextButton()
         setSkipButton()
     }
+
 
     private fun setCloseButton() {
         binding.btnClose.setOnClickListener {
@@ -88,10 +90,16 @@ class InteractionQ2Fragment : Fragment() {
             }
 
             // ---- Save to ViewModel ----
-            viewModel.firstName.value = firstName
-            viewModel.lastName.value = lastName
-            viewModel.email.value = email
-            viewModel.phoneNumber.value = phone
+            viewModel.updateFirstName(firstName)
+            viewModel.updateLastName(lastName)
+            viewModel.updateEmail(email)
+            viewModel.updatePhone(phone)
+
+            // ---- DEBUG PRINT ----
+            android.util.Log.d(
+                "Q2_DEBUG",
+                "InteractionLog after Q2 save: ${viewModel.interactionLog.value}"
+            )
 
             // ---- Navigate to Q3 ----
             findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)

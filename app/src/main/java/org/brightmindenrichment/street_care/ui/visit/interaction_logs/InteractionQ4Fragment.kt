@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ4Binding
@@ -13,6 +14,9 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
 
     private var _binding: FragmentLogInteractionQ4Binding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: InteractionLogViewModel by activityViewModels()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,15 +52,30 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
             val selectedOptions = getSelectedOptions()
 
             if (selectedOptions.isEmpty()) {
-                Toast.makeText(requireContext(),
+                Toast.makeText(
+                    requireContext(),
                     "Please select at least one option",
                     Toast.LENGTH_SHORT
                 ).show()
-            } else {
-                findNavController().popBackStack(R.id.nav_home, false)
-                // Or navigate somewhere specific if needed
+                return@setOnClickListener
             }
+
+            // 🔥 SAVE INTO VIEWMODEL
+            val current = viewModel.interactionLog.value!!
+            viewModel.interactionLog.value = current.copy(
+                listOfSupportsProvided = selectedOptions
+            )
+
+            // 🔥 DEBUG PRINT
+            android.util.Log.d(
+                "FORM_DEBUG",
+                "After Q4 Save: ${viewModel.interactionLog.value}"
+            )
+
+            // Navigate
+            findNavController().popBackStack(R.id.nav_home, false)
         }
+
 
         // Previous → go back in stack
         binding.btnPrevious.setOnClickListener {

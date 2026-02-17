@@ -22,96 +22,85 @@ class InteractionLogDataAdapter {
     }
 
     fun refreshAll(onComplete: () -> Unit) {
-        val user = Firebase.auth.currentUser ?: return
-        val allInteractions = mutableListOf<InteractionLog>()
 
-        var completedFetches = 0
-
-        fun checkAndFinish() {
-            if (completedFetches == 3) {
-                interactions.clear()
-                interactions.addAll(allInteractions.sortedByDescending { it.interactionDate })
-                onComplete()
-            }
+        val user = Firebase.auth.currentUser
+        if (user == null) {
+            Log.e("InteractionLogDataAdapter", "No authenticated user — cannot fetch.")
+            onComplete()
+            return
         }
+
+        val allInteractions = mutableListOf<InteractionLog>()
 
         db.collection("InteractionLogDev")
             .whereEqualTo("userId", user.uid)
             .get()
             .addOnSuccessListener { result ->
+
+                // Convert Firestore docs → model objects
                 processDocuments(result, allInteractions)
+
+                // Clear old list
                 interactions.clear()
-                interactions.addAll(allInteractions.sortedByDescending { it.interactionDate?.toDate() })
+
+                // Sort newest first using startTimestamp
+                interactions.addAll(
+                    allInteractions.sortedByDescending {
+                        it.startTimestamp?.toDate()
+                    }
+                )
+
+                Log.d(
+                    "InteractionLogDataAdapter",
+                    "Fetched ${interactions.size} logs"
+                )
+
                 onComplete()
             }
             .addOnFailureListener { e ->
-                Log.e("InteractionLogDataAdapter", "Error fetching logs: $e")
+                Log.e(
+                    "InteractionLogDataAdapter",
+                    "Error fetching logs: ${e.message}"
+                )
                 onComplete()
             }
-
-        // First fetch
-//        db.collection("VisitLogBook")
-//            .whereEqualTo("uid", user.uid)
-//            .get()
-//            .addOnSuccessListener { result ->
-//                processOldDocuments(result)
-//                completedFetches++
-//                checkAndFinish()
-//            }
-//            .addOnFailureListener {
-//                Log.w("VisitLog", "Failed to fetch VisitLogBook: $it")
-//                completedFetches++
-//                checkAndFinish()
-//            }
-
-
-        //val user = Firebase.auth.currentUser
-        if (user == null) {
-            Log.e("InteractionLogDev", "No authenticated user — cannot fetch.")
-        } else {
-
-//            db.collection("InteractionLogDev")
-//                .whereEqualTo(FieldPath.documentId(), "AB342F2E-28E5-4D19-B8B5-E68DDAD8D032")
-//                .get()
-//                .addOnSuccessListener { result ->
-//                    Log.d("FetchTest", "Fetch complete. Count = ${result.size()}")
-//
-//                    val allInteractions = mutableListOf<InteractionLog>()
-//                    processDocuments(result, allInteractions)
-//                    interactions.clear()
-//                    interactions.addAll(allInteractions.sortedByDescending { it.interactionDate?.toDate() })
-//
-//                    // Display the details of each fetched interaction
-//                    for ((index, interaction) in allInteractions.withIndex()) {
-//                        Log.d("FetchTest", "[$index] $interaction"
-//                            //"[${index}] ID=${interaction.id}, Email=${interaction.email}, UserId=${interaction.userId}, FirstName=${interaction.firstName}, LastName=${interaction.lastName}, NumPeopleHelped=${interaction.numPeopleHelped}, CarePackages=${interaction.carePackagesDistributed}"
-//                        )
-//                    }
-//                }
-//                .addOnFailureListener { e ->
-//                    Log.e("FetchTest", "Fetch failed: $e")
-//                }
-        }
-
     }
 
 
     fun getPublicInteractionLogs(onComplete: () -> Unit) {
+
         db.collection("InteractionLogDev")
             .whereEqualTo("isPublic", true)
             .get()
             .addOnSuccessListener { result ->
+
                 val publicInteractions = mutableListOf<InteractionLog>()
                 processDocuments(result, publicInteractions)
+
                 interactions.clear()
-                interactions.addAll(publicInteractions.sortedByDescending { it.interactionDate?.toDate() })
+
+                interactions.addAll(
+                    publicInteractions.sortedByDescending {
+                        it.startTimestamp?.toDate()
+                    }
+                )
+
+                Log.d(
+                    "InteractionLogDataAdapter",
+                    "Fetched ${interactions.size} public logs"
+                )
+
                 onComplete()
             }
             .addOnFailureListener { e ->
-                Log.e("InteractionLogDataAdapter", "Error fetching public logs: $e")
+                Log.e(
+                    "InteractionLogDataAdapter",
+                    "Error fetching public logs: ${e.message}"
+                )
                 onComplete()
             }
     }
+
 
     fun fetchByDocumentId(
         documentId: String,
@@ -145,7 +134,6 @@ class InteractionLogDataAdapter {
 
                             startTimestamp = document.getTimestamp("startTimestamp"),
                             endTimestamp = document.getTimestamp("endTimestamp"),
-                            interactionDate = document.getTimestamp("interactionDate"),
                             lastModifiedTimestamp = document.getTimestamp("lastModifiedTimestamp"),
 
                             carePackageContents = document.getString("carePackageContents") ?: "",
@@ -186,9 +174,15 @@ class InteractionLogDataAdapter {
 
 
     /** Convert Firestore documents -> InteractionLog objects */
-    private fun processDocuments(result: QuerySnapshot, targetList: MutableList<InteractionLog>) {
+    private fun processDocuments(
+        result: QuerySnapshot,
+        targetList: MutableList<InteractionLog>
+    ) {
+
         for (document in result) {
+
             try {
+
                 val log = InteractionLog(
                     id = document.id,
 
@@ -209,18 +203,20 @@ class InteractionLogDataAdapter {
 
                     startTimestamp = document.getTimestamp("startTimestamp"),
                     endTimestamp = document.getTimestamp("endTimestamp"),
-                    interactionDate = document.getTimestamp("interactionDate"),
                     lastModifiedTimestamp = document.getTimestamp("lastModifiedTimestamp"),
 
                     carePackageContents = document.getString("carePackageContents") ?: "",
-                    carePackagesDistributed = (document.getLong("carePackagesDistributed") ?: 0L).toInt(),
+                    carePackagesDistributed =
+                        (document.getLong("carePackagesDistributed") ?: 0L).toInt(),
 
-                    helpRequestCount = (document.getLong("helpRequestCount") ?: 0L).toInt(),
-                    helpRequestDocIds = document.get("helpRequestDocIds") as? List<String> ?: emptyList(),
+                    listOfSupportsProvided =
+                        document.get("listOfSupportsProvided") as? List<String> ?: emptyList(),
 
-                    listOfSupportsProvided = document.get("listOfSupportsProvided") as? List<String> ?: emptyList(),
-                    numPeopleHelped = (document.getLong("numPeopleHelped") ?: 0L).toInt(),
-                    numPeopleJoined = (document.getLong("numPeopleJoined") ?: 0L).toInt(),
+                    numPeopleHelped =
+                        (document.getLong("numPeopleHelped") ?: 0L).toInt(),
+
+                    numPeopleJoined =
+                        (document.getLong("numPeopleJoined") ?: 0L).toInt(),
 
                     outreachId = document.getString("outreachId") ?: "",
                     userId = document.getString("userId") ?: "",
@@ -231,9 +227,13 @@ class InteractionLogDataAdapter {
                 targetList.add(log)
 
             } catch (e: Exception) {
-                Log.e("InteractionLogDataAdapter", "Error parsing document ${document.id}: $e")
+                Log.e(
+                    "InteractionLogDataAdapter",
+                    "Error parsing document ${document.id}: ${e.message}"
+                )
             }
         }
     }
+
 }
 

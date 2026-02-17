@@ -27,10 +27,12 @@ import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ3Binding
 import java.util.Locale
+import kotlin.getValue
 
 
 class InteractionQ3Fragment : Fragment() {
@@ -39,6 +41,7 @@ class InteractionQ3Fragment : Fragment() {
     private val binding get() = _binding!!
 
     private var suggestions: List<Address> = emptyList()
+    private val viewModel: InteractionLogViewModel by activityViewModels()
     private val handler = Handler(Looper.getMainLooper())
     private var searchRunnable: Runnable? = null
 
@@ -66,9 +69,19 @@ class InteractionQ3Fragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val log = viewModel.interactionLog.value
+
+        binding.inputAddress.setText(log?.addr1.orEmpty())
+        binding.inputCity.setText(log?.city.orEmpty())
+        binding.inputState.setText(log?.state.orEmpty())
+        binding.inputZip.setText(log?.zipcode.orEmpty())
+
         setupTypeAhead()
         setupClickListeners()
     }
+
 
     private lateinit var addressAdapter: ArrayAdapter<String>
 
@@ -128,8 +141,47 @@ class InteractionQ3Fragment : Fragment() {
         binding.iconMic.setOnClickListener { startVoiceInput() }
 
         binding.btnNext.setOnClickListener {
+
+            val address = binding.inputAddress.text.toString().trim()
+            val city = binding.inputCity.text.toString().trim()
+            val state = binding.inputState.text.toString().trim()
+            val zip = binding.inputZip.text.toString().trim()
+
+            if (address.isEmpty()) {
+                binding.inputAddress.error = "Enter address"
+                binding.inputAddress.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (city.isEmpty()) {
+                binding.inputCity.error = "Enter city"
+                binding.inputCity.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (state.isEmpty()) {
+                binding.inputState.error = "Enter state"
+                binding.inputState.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (zip.isEmpty()) {
+                binding.inputZip.error = "Enter zip"
+                binding.inputZip.requestFocus()
+                return@setOnClickListener
+            }
+
+            // Save to ViewModel
+            viewModel.updateAddress(address)
+            viewModel.updateCity(city)
+            viewModel.updateState(state)
+            viewModel.updateZipcode(zip)
+
+            Log.d("Q3_DEBUG", "After Q3 Save: ${viewModel.interactionLog.value}")
+
             findNavController().navigate(R.id.action_q3_to_q4)
         }
+
 
         binding.btnPrevious.setOnClickListener {
             findNavController().popBackStack()

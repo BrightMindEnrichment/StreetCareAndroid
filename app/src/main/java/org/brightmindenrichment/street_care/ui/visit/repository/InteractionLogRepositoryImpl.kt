@@ -31,7 +31,6 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
 
             "startTimestamp" to interactionLog.startTimestamp,
             "endTimestamp" to interactionLog.endTimestamp,
-            "interactionDate" to interactionLog.interactionDate,
             "lastModifiedTimestamp" to interactionLog.lastModifiedTimestamp,
 
             "carePackageContents" to interactionLog.carePackageContents,
@@ -113,7 +112,6 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
 
                         startTimestamp = document.getTimestamp("startTimestamp"),
                         endTimestamp = document.getTimestamp("endTimestamp"),
-                        interactionDate = document.getTimestamp("interactionDate"),
                         lastModifiedTimestamp = document.getTimestamp("lastModifiedTimestamp"),
 
                         carePackageContents = document.getString("carePackageContents") ?: "",
@@ -160,7 +158,6 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
                         logs.add(
                             InteractionLog(
                                 id = document.id,
-                                interactionDate = document.getTimestamp("interactionDate"),
                                 firstName = document.getString("firstName") ?: "",
                                 lastName = document.getString("lastName") ?: "",
                                 city = document.getString("city") ?: "",
@@ -173,7 +170,7 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
                     }
                 }
 
-                onComplete(logs.sortedByDescending { it.interactionDate })
+                onComplete(logs.sortedByDescending { it.startTimestamp })
             }
             .addOnFailureListener {
                 onComplete(emptyList())

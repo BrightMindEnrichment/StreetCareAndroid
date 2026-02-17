@@ -76,8 +76,6 @@ class InteractionQ1Fragment : Fragment() {
                 )
 
                 binding.startDate.text = dateFormatter.format(startCalendar.time)
-
-                mergeDateTimeIntoViewModel()
             }
 
 
@@ -94,7 +92,6 @@ class InteractionQ1Fragment : Fragment() {
                     startCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     startCalendar.set(Calendar.MINUTE, minute)
                     binding.startTime.text = timeFormatter.format(startCalendar.time)
-                    mergeDateTimeIntoViewModel()
                 },
                 startCalendar.get(Calendar.HOUR_OF_DAY),
                 startCalendar.get(Calendar.MINUTE),
@@ -102,10 +99,6 @@ class InteractionQ1Fragment : Fragment() {
             )
             dialog.show()
         }
-    }
-
-    private fun mergeDateTimeIntoViewModel() {
-        viewModel.interactionDate.value = startCalendar.time
     }
 
     // ---------------- End Date ----------------
@@ -193,6 +186,16 @@ class InteractionQ1Fragment : Fragment() {
 
             binding.dateErrorText.visibility = View.GONE
             binding.timeErrorText.visibility = View.GONE
+
+            // ✅ SAVE INTO MASTER OBJECT
+            viewModel.updateStartDate(startCalendar.time)
+            viewModel.updateEndDate(endCalendar.time)
+
+            // ✅ DEBUG PRINT FULL OBJECT
+            android.util.Log.d(
+                "FORM_DEBUG",
+                "Current InteractionLog: ${viewModel.interactionLog.value}"
+            )
 
             // NAVIGATION
             findNavController().navigate(

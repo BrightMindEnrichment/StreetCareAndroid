@@ -2,97 +2,190 @@ package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
+import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
 import java.util.Date
 
-class InteractionLogViewModel: ViewModel() {
+class InteractionLogViewModel : ViewModel() {
 
-    // -------------------------
-    // Q1 – Person + Location
-    // -------------------------
-    val firstName = MutableLiveData("")
-    val lastName = MutableLiveData("")
-    val email = MutableLiveData("")
-    val phoneNumber = MutableLiveData("")
-    val location = MutableLiveData("")     // addr1
-    val state = MutableLiveData("")
-    val zipcode = MutableLiveData("")
-    val interactionDate = MutableLiveData(Date())  // Contains both date+time
+    // =========================================================
+    // MASTER OBJECT
+    // =========================================================
+    val interactionLog = MutableLiveData(InteractionLog())
 
-    // -------------------------
-    // Q2 – Supports Provided
-    // -------------------------
-    val supportsProvided = MutableLiveData<MutableList<String>>(mutableListOf())
+    // =========================================================
+    // -------------------- Q1 (Session Time) ------------------
+    // =========================================================
 
-    fun toggleSupport(item: String, checked: Boolean) {
-        val list = supportsProvided.value ?: mutableListOf()
-        if (checked) list.add(item) else list.remove(item)
-        supportsProvided.value = list
-    }
-
-    // -------------------------
-    // Q3 – Counts
-    // -------------------------
-    val numPeopleHelped = MutableLiveData(0)
-    val numPeopleJoined = MutableLiveData(0)
-
-    val carePackagesDistributed = MutableLiveData(0)
-    val carePackageContents = MutableLiveData("")
-
-    // -------------------------
-    // Q4 – Need further support?
-    // -------------------------
-    val needFollowup = MutableLiveData(false)
-    val followupNotes = MutableLiveData("")
-
-    // -------------------------
-    // Build Firestore object
-    // -------------------------
-    fun buildInteractionLog(): Map<String, Any?> {
-        return mapOf(
-            "firstName" to firstName.value,
-            "lastName" to lastName.value,
-            "email" to email.value,
-            "phoneNumber" to phoneNumber.value,
-            "addr1" to location.value,
-            "state" to state.value,
-            "zipcode" to zipcode.value,
-            "interactionDate" to interactionDate.value,
-
-            "supportsProvided" to supportsProvided.value,
-
-            "numPeopleHelped" to numPeopleHelped.value,
-            "numPeopleJoined" to numPeopleJoined.value,
-
-            "carePackagesDistributed" to carePackagesDistributed.value,
-            "carePackageContents" to carePackageContents.value,
-
-            "needFollowup" to needFollowup.value,
-            "followupNotes" to followupNotes.value,
-
-            "createdAt" to Date()
+    fun updateStartDate(date: Date) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(
+            startTimestamp = Timestamp(date)
         )
     }
 
-    // -------------------------
-    // Submit to Firestore
-    // -------------------------
+    fun updateEndDate(date: Date) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(
+            endTimestamp = Timestamp(date)
+        )
+    }
+    // =========================================================
+    // -------------------- Q2 (User) ----------------------
+    // =========================================================
+    fun updateFirstName(name: String) {
+        val current = interactionLog.value ?: return
+        interactionLog.value = current.copy(firstName = name)
+    }
+
+    fun updateLastName(name: String) {
+        val current = interactionLog.value ?: return
+        interactionLog.value = current.copy(lastName = name)
+    }
+
+    fun updateEmail(email: String) {
+        val current = interactionLog.value ?: return
+        interactionLog.value = current.copy(email = email)
+    }
+
+    fun updatePhone(phone: String) {
+        val current = interactionLog.value ?: return
+        interactionLog.value = current.copy(phoneNumber = phone)
+    }
+
+
+
+    // =========================================================
+    // -------------------- Q3 (Location) ----------------------
+    // =========================================================
+
+    fun updateAddress(addr1: String) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(addr1 = addr1)
+    }
+
+    fun updateCity(city: String) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(city = city)
+    }
+
+    fun updateState(state: String) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(state = state)
+    }
+
+    fun updateZipcode(zip: String) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(zipcode = zip)
+    }
+
+    // =========================================================
+    // -------------------- Q4 (Session Supports) --------------
+    // =========================================================
+
+    fun toggleSupport(item: String, checked: Boolean) {
+        val current = interactionLog.value!!
+        val updated = current.listOfSupportsProvided.toMutableList()
+
+        if (checked) {
+            if (!updated.contains(item)) updated.add(item)
+        } else {
+            updated.remove(item)
+        }
+
+        interactionLog.value = current.copy(
+            listOfSupportsProvided = updated
+        )
+    }
+
+    // =========================================================
+    // -------------------- Q5 (Counts) ------------------------
+    // =========================================================
+
+    fun updatePeopleHelped(count: Int) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(numPeopleHelped = count)
+    }
+
+    fun updatePeopleJoined(count: Int) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(numPeopleJoined = count)
+    }
+
+    // =========================================================
+    // -------------------- Q6 (Care Packages) -----------------
+    // =========================================================
+
+    fun updateCarePackages(count: Int) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(carePackagesDistributed = count)
+    }
+
+    fun updateCarePackageContents(contents: String) {
+        val current = interactionLog.value!!
+        interactionLog.value = current.copy(carePackageContents = contents)
+    }
+
+    // =========================================================
+    // -------------------- NESTED INDIVIDUAL LOGS ------------
+    // =========================================================
+
+    fun addIndividualInteraction(interaction: IndividualInteraction) {
+        val current = interactionLog.value!!
+        val updatedList = current.individualInteractions.toMutableList()
+
+        updatedList.add(interaction)
+
+        interactionLog.value = current.copy(
+            individualInteractions = updatedList
+        )
+    }
+
+    fun removeIndividualInteraction(index: Int) {
+        val current = interactionLog.value!!
+        val updatedList = current.individualInteractions.toMutableList()
+
+        if (index in updatedList.indices) {
+            updatedList.removeAt(index)
+        }
+
+        interactionLog.value = current.copy(
+            individualInteractions = updatedList
+        )
+    }
+
+    // =========================================================
+    // -------------------- SAVE TO FIRESTORE ------------------
+    // =========================================================
+
     fun saveInteractionLog(onComplete: (Boolean) -> Unit) {
-        val data = buildInteractionLog()
+
         val firestore = FirebaseFirestore.getInstance()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "anonymous"
+
+        val log = interactionLog.value!!.copy(
+            userId = userId,
+            lastModifiedTimestamp = Timestamp(Date())
+        )
 
         viewModelScope.launch {
             try {
-                firestore.collection("InteractionLogDev")
-                    .add(data)
+                val docRef = firestore
+                    .collection("InteractionLogDev")
+                    .add(log)
                     .await()
 
+                android.util.Log.d("FIRESTORE", "Saved ID: ${docRef.id}")
                 onComplete(true)
+
             } catch (e: Exception) {
-                e.printStackTrace()
+                android.util.Log.e("FIRESTORE", "Save failed: ${e.message}")
                 onComplete(false)
             }
         }
