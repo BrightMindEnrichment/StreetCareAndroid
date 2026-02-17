@@ -235,7 +235,7 @@
         tools:layout="@layout/fragment_question2">
         <action
             android:id="@+id/action_interactionQ2_to_visitForm3"
-            app:destination="@id/visitFormFragment3" />
+            app:destination="@id/interactionQ3Fragment" />
     </fragment>
 
     <fragment
@@ -243,8 +243,23 @@
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ3Fragment"
         android:label="Interaction Log"
         >
+        <action
+            android:id="@+id/action_q3_to_q4"
+            app:destination="@id/interactionQ4Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ4Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ4Fragment"
+        android:label="Interaction Log"
+        tools:layout="@layout/fragment_log_interaction_q4">
+
+        <action
+            android:id="@+id/action_q4_back_to_q3"
+            app:destination="@id/visitFormFragment6" />
 
     </fragment>
+
 
     <fragment
         android:id="@+id/nav_interaction_log"

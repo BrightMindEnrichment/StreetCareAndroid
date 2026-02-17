@@ -182,7 +182,7 @@
     <string name="outreach_quiz4">What kind of support \n\t\t did you provide?</string>
     <string name="outreach_quiz5">How would you rate your \noutreach experience?</string>
     <string name="description_example">\n Example: Tom, wheelchair user,\n wearing a navy blue shirt or Helped \n 26 people on the South Side.</string>
-    <string name="description_example_q2">E.g, My Aunt Mary helped prepare (mary@gmail.com), and my brothers Bob and Bill went out with me (bob@gmail.com, bill@gmail.com, 702-506-6101).</string>
+    <string name="description_example_q2">E.g, My Aunt Mary helped prepare (mary@gmail.com), and my brothers Bob and Bill went out with me (bob@gmail.com, bill@gmail.com, 702–506–6101).</string>
     <string name="description_example_q3">E.g, Jill — a 15-year-old girl who ran away and was wearing a blue dress.</string>
     <string name="description_example_q6">E.g, Tom has diabetes and prefers no sugary snacks</string>
     <string name="location_description">E.g, 187 Hambridge Street, NY</string>
@@ -334,7 +334,6 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="first_one_to_join">Be the first one to join!</string>
     <string name="public_help_request_title">Public a request to Community Hub</string>
     <string name="public_help_request_content">If this person experiencing homelessness requires further assistance, please provide additional details so we can share with the community and rally support to help them.</string>
-    <string name="help_needed">Help needed</string>
     <string name="help_request_second_title">Help other volunteers to find them</string>
     <string name="help_request_second_content">Please provide as many details as you can to help us locate them</string>
     <string name="help_requests_skills">Select the help they need*</string>

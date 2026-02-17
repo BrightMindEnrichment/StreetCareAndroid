@@ -233,17 +233,22 @@ class MainActivity : AppCompatActivity() {
         // Let Navigation handle bottom tabs
         bottomNavView.setupWithNavController(navController)
 
-        // Handle ONLY the auth redirect tab
-        bottomNavView.setOnItemReselectedListener { item ->
+        bottomNavView.setOnItemSelectedListener { item ->
             if (item.itemId == R.id.loginRedirectFragment) {
                 if (FirebaseAuth.getInstance().currentUser != null) {
                     navController.navigate(R.id.nav_visit)
                 } else {
                     navController.navigate(R.id.loginVisitLogFragment)
                 }
+                true
+            } else {
+                NavigationUI.onNavDestinationSelected(item, navController)
+                true
             }
+        }
 
-            navController.addOnDestinationChangedListener { _, destination, _ ->
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
                 bottomNavView.visibility =
                     if (destination.id in setOf(
                             R.id.nav_home,
@@ -262,7 +267,6 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         View.GONE
                     }
-            }
         }
     }
 
