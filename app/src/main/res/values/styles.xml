@@ -76,6 +76,15 @@
         <item name="cornerSizeBottomLeft">10dp</item>
         <item name="cornerSizeBottomRight">10dp</item>
     </style>
+    <style name="InteractionDialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.5</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="shapeAppearanceMediumComponent">@style/DialogNoCorners</item>
+    </style>
+    <style name="DialogNoCorners" parent="">
+        <item name="cornerSize">0dp</item>
+    </style>
 
 
 </resources>

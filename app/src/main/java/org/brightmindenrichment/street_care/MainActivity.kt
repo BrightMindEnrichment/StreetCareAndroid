@@ -28,6 +28,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -53,6 +54,7 @@ import org.brightmindenrichment.street_care.notification.NotificationWorker
 import org.brightmindenrichment.street_care.ui.community.model.DatabaseEvent
 import org.brightmindenrichment.street_care.ui.user.UserSingleton
 import org.brightmindenrichment.street_care.ui.user.UserRepository
+import org.brightmindenrichment.street_care.ui.visit.InteractionLogDialog
 import org.brightmindenrichment.street_care.util.Constants.NOTIFICATION_WORKER
 import org.brightmindenrichment.street_care.util.DataStoreManager
 import org.brightmindenrichment.street_care.util.Extensions
@@ -240,30 +242,29 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.loginVisitLogFragment)
                 }
             }
-        }
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            bottomNavView.visibility =
-                if (destination.id in setOf(
-                        R.id.nav_home,
-                        R.id.loginVisitLogFragment,
-                        R.id.loginRedirectFragment,
-                        R.id.nav_visit,
-                        R.id.nav_community,
-                        R.id.nav_profile,
-                        R.id.interactionQ1Fragment,
-                        R.id.interactionQ2Fragment,
-                        R.id.interactionQ3Fragment
-                       // add the screens which require bottom navigation bar
-                    )
-                ) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                bottomNavView.visibility =
+                    if (destination.id in setOf(
+                            R.id.nav_home,
+                            R.id.loginVisitLogFragment,
+                            R.id.loginRedirectFragment,
+                            R.id.nav_visit,
+                            R.id.nav_community,
+                            R.id.nav_profile,
+                            R.id.interactionQ1Fragment,
+                            R.id.interactionQ2Fragment,
+                            R.id.interactionQ3Fragment
+                            // add the screens which require bottom navigation bar
+                        )
+                    ) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+            }
         }
     }
-
 
     override fun onStart() {
         super.onStart()
