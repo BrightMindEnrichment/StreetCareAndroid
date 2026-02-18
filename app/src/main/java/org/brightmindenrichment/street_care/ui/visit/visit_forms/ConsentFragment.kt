@@ -32,7 +32,7 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1) Show bottom nav (same pattern as their code)
+        // 1) Show bottom nav
         requireActivity()
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
@@ -41,15 +41,14 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
         (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
             // store previous state
             prevTitle = ab.title
-            prevHomeAsUpEnabled = ab.isShowing // not perfect, but OK; real flag isn't directly readable
-            prevHomeIndicator = ab.themedContext.let { null } // indicator isn't directly readable reliably
+            prevHomeAsUpEnabled = ab.isShowing
+            prevHomeIndicator = ab.themedContext.let { null }
 
             ab.setDisplayHomeAsUpEnabled(true)
             ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
             ab.title = "Interaction Log"
         }
 
-        // 3) Your existing view wiring
         val cb = view.findViewById<CheckBox>(R.id.cbConsent)
         val submit = view.findViewById<Button>(R.id.btnSubmitConsent)
 
@@ -99,7 +98,6 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
                         ).show()
                     }
             } else {
-                // CREATE a new interaction (original flow)
                 val interaction = hashMapOf(
                     "isPublic" to cb.isChecked,
                     "status" to "Pending",
@@ -129,7 +127,6 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
         }
     }
 
-    // 4) Handle ActionBar red close click (top-left)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -140,11 +137,9 @@ class ConsentFragment : Fragment(R.layout.fragment_consent) {
         }
     }
 
-    // 5) Restore ActionBar state so other fragments aren’t affected
     override fun onDestroyView() {
         super.onDestroyView()
         (activity as? AppCompatActivity)?.supportActionBar?.apply {
-            // Restore something reasonable
             setDisplayHomeAsUpEnabled(false)
             setHomeAsUpIndicator(null)
             title = prevTitle
