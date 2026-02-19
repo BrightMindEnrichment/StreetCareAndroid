@@ -2,21 +2,22 @@ package org.brightmindenrichment.street_care.ui.visit.visit_forms
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import org.brightmindenrichment.street_care.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.brightmindenrichment.street_care.R
 
 class VisitFormFragmentNew6 : Fragment() {
 
     private val sharedVisitViewModel: VisitViewModel by activityViewModels()
-
     private var carePackageCount = 0
 
     override fun onCreateView(
@@ -29,13 +30,28 @@ class VisitFormFragmentNew6 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        super.onViewCreated(view, savedInstanceState)
 
+        // -----------------------
+        // 1. Show Bottom Navigation
+        // -----------------------
         requireActivity()
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
 
-        val btnClose = view.findViewById<FrameLayout>(R.id.btn_close)
+        // -----------------------
+        // 2. Configure ActionBar (Red Close + Title)
+        // -----------------------
+        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
+            ab.setDisplayHomeAsUpEnabled(true)
+            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+            ab.title = "Interaction Log"
+        }
+
+        setHasOptionsMenu(true)
+
+        // -----------------------
+        // 3. Initialize Views
+        // -----------------------
         val btnSkip = view.findViewById<TextView>(R.id.btn_skip)
         val btnPrevious = view.findViewById<TextView>(R.id.btn_previous)
         val btnNext = view.findViewById<TextView>(R.id.btn_next)
@@ -46,7 +62,9 @@ class VisitFormFragmentNew6 : Fragment() {
         val tvCount = view.findViewById<TextView>(R.id.tv_count)
         val etNotes = view.findViewById<EditText>(R.id.et_notes)
 
-        // Restore previous value if exists
+        // -----------------------
+        // 4. Restore Previous Values
+        // -----------------------
         carePackageCount = sharedVisitViewModel.visitLog.carePackagesGiven ?: 0
         tvCount.text = carePackageCount.toString()
         etNotes.setText(sharedVisitViewModel.visitLog.carePackageNotes ?: "")
@@ -56,7 +74,7 @@ class VisitFormFragmentNew6 : Fragment() {
         }
 
         // -----------------------
-        // Counter Logic
+        // 5. Counter Logic
         // -----------------------
         btnIncrease.setOnClickListener {
             carePackageCount++
@@ -71,14 +89,7 @@ class VisitFormFragmentNew6 : Fragment() {
         }
 
         // -----------------------
-        // Close Button
-        // -----------------------
-        btnClose.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
-        // -----------------------
-        // Previous Button
+        // 6. Previous Button
         // -----------------------
         btnPrevious.setOnClickListener {
             findNavController().navigate(
@@ -87,14 +98,14 @@ class VisitFormFragmentNew6 : Fragment() {
         }
 
         // -----------------------
-        // Skip Button
+        // 7. Skip Button
         // -----------------------
         btnSkip.setOnClickListener {
             goToNext(etNotes.text.toString())
         }
 
         // -----------------------
-        // Next Button
+        // 8. Next Button
         // -----------------------
         btnNext.setOnClickListener {
             goToNext(etNotes.text.toString())
@@ -103,13 +114,27 @@ class VisitFormFragmentNew6 : Fragment() {
         updateUI()
     }
 
+    // -----------------------
+    // Handle ActionBar Close Click
+    // -----------------------
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    // -----------------------
+    // Save Data + Navigate
+    // -----------------------
     private fun goToNext(notes: String) {
 
-        // Save into ViewModel
         sharedVisitViewModel.visitLog.carePackagesGiven = carePackageCount
         sharedVisitViewModel.visitLog.carePackageNotes = notes
 
-        // Navigate forward
         findNavController().navigate(
             R.id.action_visitFormFragmentNew6_to_visitForm7a
         )

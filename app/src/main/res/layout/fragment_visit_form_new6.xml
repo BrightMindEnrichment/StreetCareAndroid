@@ -17,48 +17,6 @@
         android:paddingTop="18dp"
         android:paddingBottom="24dp">
 
-        <!-- Top bar with red circle behind close -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical">
-
-            <FrameLayout
-                android:id="@+id/btn_close"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true">
-
-                <!-- Smaller red circle: 28dp -->
-                <View
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:background="@drawable/red_circle_bg" />
-
-                <!-- X icon slightly bigger inside smaller circle -->
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_close"
-                    android:tint="#FFFFFF"
-                    android:contentDescription="Close"
-                    tools:ignore="UseAppTint" />
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="Interaction Log"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:fontFamily="Poppins"
-                android:textColor="#071F1E" />
-        </RelativeLayout>
 
         <!-- Big subtitle -->
         <TextView
@@ -109,13 +67,13 @@
                 android:layout_width="36dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_outline"
+                android:src="@drawable/progress_dot_filled"
                 android:contentDescription="Progress step 5"/>
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_dark"
+                android:src="@drawable/progress_dot_outline"
                 android:contentDescription="Progress step 6"/>
             <ImageView
                 android:layout_width="34dp"

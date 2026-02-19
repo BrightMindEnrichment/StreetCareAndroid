@@ -2,58 +2,20 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
     <LinearLayout
+        android:id="@+id/root_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
-
-        <!-- Top bar with red circle behind close -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-
-            <FrameLayout
-                android:id="@+id/btn_close"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true">
-
-                <!-- Smaller red circle: 28dp -->
-                <View
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:background="@drawable/red_circle_bg" />
-
-                <!-- X icon slightly bigger inside smaller circle -->
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_close"
-                    android:tint="#FFFFFF"
-                    android:contentDescription="Close"
-                    tools:ignore="UseAppTint" />
-            </FrameLayout>
-
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Interaction Log"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:fontFamily="Poppins"
-                android:textColor="#000000" />
-        </RelativeLayout>
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="24dp">
 
         <!-- Subtitle -->
         <TextView
