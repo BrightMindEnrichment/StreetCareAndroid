@@ -1,5 +1,6 @@
 package org.brightmindenrichment.street_care.ui.visit.visit_forms
 
+import androidx.fragment.app.activityViewModels
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,8 @@ import org.brightmindenrichment.street_care.R
 
 class Visit_Individual_Interaction_q3 : Fragment() {
 
+    private val sharedVisitViewModel: VisitViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,6 +28,16 @@ class Visit_Individual_Interaction_q3 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
+
+        sharedVisitViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+            tvHeader.text = if (idx <= 1) {
+                getString(R.string.individual_interaction_title_base)  // e.g. "Individual Interaction"
+            } else {
+                getString(R.string.individual_interaction_title_numbered, idx) // e.g. "Individual Interaction 2"
+            }
+        }
 
         (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
 

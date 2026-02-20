@@ -668,10 +668,10 @@ y enviarlo a nosotros a <a href="mailto:volunteer@streetcare.us">volunteer@stree
     <string name="provide_details_prompt">¿Le gustaría proporcionar\ndetalles de cada persona\na la que apoyó?</string>
 
     <!-- Main Title - Interactive Interaction -->
-    <string name="individual_interaction_title_2">Interacción Individual 2</string>
+    <string name="individual_interaction_title_base">Interacción Individual</string>
+    <string name="individual_interaction_title_numbered">Interacción Individual %1$d</string>
 
     <!--Individual Interaction Question 1 -->
-    <string name="individual_interaction_title_1">Interacción Individual 1</string>
     <string name="Individual_Interaction_Question_1">Pregunta 1/4</string>
     <string name="hint_first_name">Nombre(persona con la que interactuó)*</string>
     <string name="hint_last_name">Apellido</string>

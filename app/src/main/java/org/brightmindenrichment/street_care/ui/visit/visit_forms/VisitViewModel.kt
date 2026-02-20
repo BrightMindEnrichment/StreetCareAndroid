@@ -1,6 +1,7 @@
 package org.brightmindenrichment.street_care.ui.visit.visit_forms
 
-
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
 import org.brightmindenrichment.street_care.ui.visit.repository.VisitLogRepository
@@ -10,6 +11,19 @@ import java.util.*
 class VisitViewModel : ViewModel() {
     private val repository: VisitLogRepository = VisitLogRepositoryImp()
     var visitLog: VisitLog = VisitLog()
+
+    // Interaction Number Tracking
+    private val _interactionIndex = MutableLiveData(1)
+    val interactionIndex: LiveData<Int> = _interactionIndex
+
+    fun nextInteraction() {
+        val cur = _interactionIndex.value ?: 1
+        _interactionIndex.value = cur + 1
+    }
+
+    fun resetInteractions() {
+        _interactionIndex.value = 1
+    }
 
     init {
         resetVisitLogPage()

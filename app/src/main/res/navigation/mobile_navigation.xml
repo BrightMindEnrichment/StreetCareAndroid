@@ -244,8 +244,10 @@
         tools:layout="@layout/fragment_individual_interaction_q4">
 
         <action
-            android:id="@+id/action_visitIndividualInteractionQ4_to_saveInteraction"
-            app:destination="@id/saveInteraction" />
+            android:id="@+id/action_visitIndividualInteractionQ4_to_surveySubmittedFragment"
+            app:destination="@id/surveySubmittedFragment"
+            app:popUpTo="@id/visitIndividualInteractionQ1"
+            app:popUpToInclusive="true" />
     </fragment>
 
 

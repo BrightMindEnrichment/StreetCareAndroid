@@ -670,8 +670,8 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="provide_details_prompt">Would you like to provide\ndetails for each person\nyou supported?</string>
 
     <!-- Main Title - Interactive Interaction -->
-    <string name="individual_interaction_title_1">Individual Interaction 1</string>
-    <string name="individual_interaction_title_2">Individual Interaction 2</string>
+    <string name="individual_interaction_title_base">Individual Interaction</string>
+    <string name="individual_interaction_title_numbered">Individual Interaction %1$d</string>
 
     <!--Individual Interaction Question 1 -->
     <string name="Individual_Interaction_Question_1">Question 1/4</string>

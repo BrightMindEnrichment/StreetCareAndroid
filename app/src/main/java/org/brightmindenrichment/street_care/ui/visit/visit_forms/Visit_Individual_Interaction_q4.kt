@@ -1,5 +1,6 @@
 package org.brightmindenrichment.street_care.ui.visit.visit_forms
 
+import androidx.fragment.app.activityViewModels
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,8 @@ class Visit_Individual_Interaction_q4 : Fragment() {
     private val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
     private val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
+    private val sharedVisitViewModel: VisitViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,6 +40,16 @@ class Visit_Individual_Interaction_q4 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
+
+        sharedVisitViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+            tvHeader.text = if (idx <= 1) {
+                getString(R.string.individual_interaction_title_base)  // e.g. "Individual Interaction"
+            } else {
+                getString(R.string.individual_interaction_title_numbered, idx) // e.g. "Individual Interaction 2"
+            }
+        }
 
         // Top-left close (your XML has btnClose)
         view.findViewById<ImageButton>(R.id.btnClose)?.setOnClickListener {
@@ -116,7 +129,7 @@ class Visit_Individual_Interaction_q4 : Fragment() {
 
         // Skip -> go to saveInteraction (no validation)
         btnSkip.setOnClickListener {
-            findNavController().navigate(R.id.action_visitIndividualInteractionQ4_to_saveInteraction)
+            findNavController().navigate(R.id.action_visitIndividualInteractionQ4_to_surveySubmittedFragment)
         }
 
         // Save -> go to saveInteraction (optionally validate date/time)
@@ -136,7 +149,7 @@ class Visit_Individual_Interaction_q4 : Fragment() {
 
             // TODO: persist selectedDate/selectedTime/notes somewhere (ViewModel, shared repo, arguments, etc.)
 
-            findNavController().navigate(R.id.action_visitIndividualInteractionQ4_to_saveInteraction)
+            findNavController().navigate(R.id.action_visitIndividualInteractionQ4_to_surveySubmittedFragment)
         }
     }
 }
