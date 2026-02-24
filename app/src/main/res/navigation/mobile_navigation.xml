@@ -131,7 +131,7 @@
             android:id="@+id/visitFormFragmentNew5"
             android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragmentNew5"
             android:label="@string/visit_log_smallCaps"
-            tools:layout="@layout/fragment_visit_form5_new">
+            tools:layout="@layout/fragment_visit_form_new5">
 
             <action
                 android:id="@+id/action_visitFormFragmentNew5_to_visitFormFragmentNew6"
@@ -475,7 +475,7 @@
             android:id="@+id/action_additional1_to_additional2"
             app:destination="@id/additional2" />
         <action
-            android:id="@+id/action_additional1_to_visitFormFragment5"
+            android:id="@+id/action_additional1_to_visitFormFragmentNew5"
             app:destination="@id/visitFormFragmentNew5" />
     </fragment>
     <fragment

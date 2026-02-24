@@ -19,6 +19,7 @@
 
         <!-- Subtitle -->
         <TextView
+            android:id="@+id/tv_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -33,51 +34,57 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:layout_marginTop="12dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 1"/>
+                android:contentDescription="Progress step 1"
+                android:src="@drawable/progress_dot_filled" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 2"/>
+                android:contentDescription="Progress step 2"
+                android:src="@drawable/progress_dot_filled" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 3"/>
+                android:contentDescription="Progress step 3"
+                android:src="@drawable/progress_dot_filled" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 4"/>
+                android:contentDescription="Progress step 4"
+                android:src="@drawable/progress_dot_filled" />
+
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_outline"
-                android:contentDescription="Progress step 5"/>
+                android:contentDescription="Progress step 5"
+                android:src="@drawable/progress_dot_outline" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_dark"
-                android:contentDescription="Progress step 6"/>
+                android:contentDescription="Progress step 6"
+                android:src="@drawable/progress_dot_dark" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_dark"
-                android:contentDescription="Progress step 7"/>
+                android:contentDescription="Progress step 7"
+                android:src="@drawable/progress_dot_dark" />
         </LinearLayout>
 
         <!-- Card Section -->

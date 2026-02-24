@@ -2,61 +2,24 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
     <LinearLayout
+        android:id="@+id/root_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
-
-        <!-- Top bar with red circle behind close -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-
-            <FrameLayout
-                android:id="@+id/btn_close"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true">
-
-                <!-- Smaller red circle: 28dp -->
-                <View
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:background="@drawable/red_circle_bg" />
-
-                <!-- X icon slightly bigger inside smaller circle -->
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_close"
-                    android:tint="#FFFFFF"
-                    android:contentDescription="Close"
-                    tools:ignore="UseAppTint" />
-            </FrameLayout>
-
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Interaction Log"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:fontFamily="Poppins"
-                android:textColor="#000000" />
-        </RelativeLayout>
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="24dp">
 
         <!-- Subtitle -->
         <TextView
+            android:id="@+id/tv_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -71,51 +34,57 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:layout_marginTop="12dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 1"/>
+                android:contentDescription="Progress step 1"
+                android:src="@drawable/progress_dot_filled" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 2"/>
+                android:contentDescription="Progress step 2"
+                android:src="@drawable/progress_dot_filled" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 3"/>
+                android:contentDescription="Progress step 3"
+                android:src="@drawable/progress_dot_filled" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 4"/>
+                android:contentDescription="Progress step 4"
+                android:src="@drawable/progress_dot_filled" />
+
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_outline"
-                android:contentDescription="Progress step 5"/>
+                android:contentDescription="Progress step 5"
+                android:src="@drawable/progress_dot_outline" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_dark"
-                android:contentDescription="Progress step 6"/>
+                android:contentDescription="Progress step 6"
+                android:src="@drawable/progress_dot_dark" />
+
             <ImageView
                 android:layout_width="34dp"
                 android:layout_height="12dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_dark"
-                android:contentDescription="Progress step 7"/>
+                android:contentDescription="Progress step 7"
+                android:src="@drawable/progress_dot_dark" />
         </LinearLayout>
 
         <!-- Card Section -->

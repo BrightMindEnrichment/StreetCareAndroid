@@ -48,7 +48,7 @@ class VisitFormFragmentNew5 : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
             ab.setDisplayHomeAsUpEnabled(true)
             ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
-
+            ab.title = "Interaction Log"
         }
 
         setHasOptionsMenu(true)
