@@ -173,8 +173,8 @@
     <string name="guest"> Guest</string>
     <string name="warning_new">Warning!</string>
     <string name="login_required">Login Required</string>
-    <string name="provided_help">I provided help!</string>
-    <string name="provided_help_msg">\n Please fill out this form each time you\n perform an outreach. This helps you\n track your contributions and allows\n StreetCare to bring more support \n and services to help the community!</string>
+    <string name="provided_help">Thanks for helping out!</string>
+    <string name="provided_help_msg">Each entry helps us understand\n community needs better. It’s really\n helpful if you can document\n interactions with each homeless\n person you meet—just a quick log per\n person goes a long way in helping us\n better understand community needs.</string>
     <string name="login_enter">Log in to enter an interaction.</string>
     <string name="warning_dialogue">You will be unable to view or edit\n your interaction logs without \nsigning in</string>
     <string name="button_image">Image Button</string>
@@ -324,7 +324,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="enter_email">Enter email address</string>
     <string name="contact_number">Contact Number</string>
     <string name="enter_contact_number">Enter contact number</string>
-    <string name="consent_text">By selecting this checkbox, I consent to sharing my contact details and event address publicly on this platform / community space to facilitate participation in the outreach event. I understand that this information will be visible to others and acknowledge the associated privacy considerations. \n</string>
+    <string name="consent_text">By selecting this checkbox,\n I consent to sharing my contact\n details and event address\n publicly on this platform\n community space. I understand\n that this information will be\n visible to others and\n acknowledge the associated\n privacy considerations. \n</string>
     <string name="publish_event">Publish</string>
     <string name="help_request_identification">How can we identify this person?*</string>
     <string name="location_with_star">Location*</string>

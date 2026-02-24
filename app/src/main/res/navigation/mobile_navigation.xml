@@ -162,8 +162,8 @@
             app:destination="@id/additional2" />
         <!-- Action for No button to Survey Submitted Fragment -->
         <action
-            android:id="@+id/action_visitForm7a_to_surveySubmittedFragment"
-            app:destination="@id/surveySubmittedFragment" />
+        android:id="@+id/action_visitForm7a_to_ConsentFragment"
+        app:destination="@id/consentFragment" />
     </fragment>
     <fragment
         android:id="@+id/sharedCommunityVisitLogFragment"
@@ -752,5 +752,43 @@
         android:label="UserFragment"
         tools:layout="@layout/fragment_profile"/>
 
+    <fragment
+        android:id="@+id/consentFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.ConsentFragment"
+        tools:layout="@layout/fragment_consent">
+        <argument
+            android:name="interactionId"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="create" />
+
+        <action
+            android:id="@+id/action_consentFragment_to_surveySubmittedFragment"
+            app:destination="@id/surveySubmittedFragment"
+            app:popUpTo="@id/consentFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/successFragment">
+
+        <!-- Add Another → Q1/7 -->
+        <action
+            android:id="@+id/action_successFragment_to_visitFormFragment1"
+            app:destination="@id/visitFormFragment1"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="false" />
+
+        <!-- Back to Interaction Log -->
+        <action
+            android:id="@+id/action_successFragment_to_visitLogFragment"
+            app:destination="@id/nav_visit"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>
