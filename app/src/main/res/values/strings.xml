@@ -666,5 +666,41 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="please_login_title">Please Log In</string>
     <string name="please_login_message">You need to be logged in to like this event. Would you like to login now?</string>
 
+    <!--Interaction Log Question 7 -->
+    <string name="provide_details_prompt">Would you like to provide\ndetails for each person\nyou supported?</string>
+
+    <!-- Main Title - Interactive Interaction -->
+    <string name="individual_interaction_title_base">Individual Interaction</string>
+    <string name="individual_interaction_title_numbered">Individual Interaction %1$d</string>
+
+    <!--Individual Interaction Question 1 -->
+    <string name="Individual_Interaction_Question_1">Question 1/4</string>
+    <string name="hint_first_name">First Name(Person You Interacted)*</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_location">Location or Landmark</string>
+
+    <!-- Individual Interaction Question 2 -->
+    <string name="Individual_Interaction_Question_2">Question 2/4</string>
+    <string name="food_drinks">Food &amp; Drinks</string>
+    <string name="clothes">Clothes</string>
+    <string name="hygiene">Hygiene Products</string>
+    <string name="support">Wellness/Emotional Support</string>
+    <string name="medical_help">Medical Help/Doctor</string>
+    <string name="social_worker_psychiatrist">Social Worker/Psychiatrist</string>
+    <string name="lawyer_legal">Lawyer/Legal</string>
+    <string name="other">Other</string>
+    <string name="question_2">What kind of help was provided?</string>
+
+    <!-- Individual Interaction Question 3 -->
+    <string name="Individual_Interaction_Question_3">Question 3/4</string>
+    <string name="question_3">"What kind of further help is needed?</string>
+
+    <!-- Individual Interaction Question 4 -->
+    <string name="Individual_Interaction_Question_4">Question 4/4</string>
+    <string name="default_date">03/30/2025</string>
+    <string name="default_time">11:35 AM MDT</string>
+    <string name="select_interaction_date">Select date of interaction</string>
+    <string name="select_interaction_time">Select time of interaction</string>
+    <string name="question_4">Follow-up Date and Time</string>
 
 </resources>
