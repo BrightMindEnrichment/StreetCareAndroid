@@ -25,7 +25,9 @@ import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentSurvaySubmittedBinding
 
 class SurveySubmittedFragment : Fragment() {
-
+    private var prevTitle: CharSequence? = null
+    private var prevHomeAsUpEnabled: Boolean? = null
+    private var prevHomeIndicator: android.graphics.drawable.Drawable? = null
     private var _binding: FragmentSurvaySubmittedBinding? = null
     private val binding get() = _binding!!
 
@@ -50,19 +52,30 @@ class SurveySubmittedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
+            // store previous state
+            prevTitle = ab.title
+            prevHomeAsUpEnabled = ab.isShowing
+            prevHomeIndicator = ab.themedContext.let { null }
+
+            ab.setDisplayHomeAsUpEnabled(true)
+            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+            ab.title = "Interaction Log"
+        }
+
         requireActivity()
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
 
-        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
-            ab.setDisplayHomeAsUpEnabled(true)
-            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
-
-            val title = SpannableString("Interaction Log").apply {
-                setSpan(StyleSpan(Typeface.BOLD), 0, length, 0)
-            }
-            ab.title = title
-        }
+//        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
+//            ab.setDisplayHomeAsUpEnabled(true)
+//            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+//
+//            val title = SpannableString("Interaction Log").apply {
+//                setSpan(StyleSpan(Typeface.BOLD), 0, length, 0)
+//            }
+//            ab.title = title
+//        }
 
         binding.btnAnotherVisit.setOnClickListener {
             sharedCommunity = false
@@ -142,6 +155,16 @@ class SurveySubmittedFragment : Fragment() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? AppCompatActivity)?.supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+            title = "Interaction Log"
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
 
@@ -153,4 +176,5 @@ class SurveySubmittedFragment : Fragment() {
 
         _binding = null
     }
+
 }

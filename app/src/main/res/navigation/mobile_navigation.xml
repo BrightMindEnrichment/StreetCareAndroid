@@ -767,8 +767,8 @@
             android:defaultValue="create" />
 
         <action
-            android:id="@+id/action_consentFragment_to_successFragment"
-            app:destination="@id/successFragment"
+            android:id="@+id/action_consentFragment_to_surveySubmittedFragment"
+            app:destination="@id/surveySubmittedFragment"
             app:popUpTo="@id/consentFragment"
             app:popUpToInclusive="true"/>
     </fragment>
