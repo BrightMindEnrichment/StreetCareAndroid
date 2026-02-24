@@ -1,12 +1,14 @@
 package org.brightmindenrichment.street_care.ui.visit.visit_forms
 
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
@@ -39,6 +41,13 @@ class Visit_Individual_Interaction_q1 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //(activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        //(activity as? AppCompatActivity)?.supportActionBar
+        //    ?.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+        requireActivity()
+            .findViewById<BottomNavigationView>(R.id.bottomNav)
+            ?.visibility = View.VISIBLE
+
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
         sharedVisitViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
@@ -47,11 +56,6 @@ class Visit_Individual_Interaction_q1 : Fragment() {
             } else {
                 getString(R.string.individual_interaction_title_numbered, idx) // e.g. "Individual Interaction 2"
             }
-        }
-
-        // Top-left close
-        view.findViewById<ImageButton>(R.id.btnClose)?.setOnClickListener {
-            findNavController().navigateUp()
         }
 
         // Inputs
@@ -71,7 +75,7 @@ class Visit_Individual_Interaction_q1 : Fragment() {
         val btnPrevious = view.findViewById<TextView>(R.id.txt_previous2)
         val btnNext     = view.findViewById<TextView>(R.id.txt_next2)
         val btnSkip     = view.findViewById<TextView>(R.id.txt_skip)
-        val btnClose    = view.findViewById<TextView>(R.id.btnClose)
+        val btnClose    = view.findViewById<ImageButton>(R.id.btnClose)
 
         // Optional: state dropdown items (if you have an array)
         // If you already set adapter elsewhere, remove this.

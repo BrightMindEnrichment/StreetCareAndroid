@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
@@ -41,6 +43,11 @@ class Visit_Individual_Interaction_q4 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+        requireActivity()
+            .findViewById<BottomNavigationView>(R.id.bottomNav)
+            ?.visibility = View.VISIBLE
+
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
         sharedVisitViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
@@ -49,11 +56,6 @@ class Visit_Individual_Interaction_q4 : Fragment() {
             } else {
                 getString(R.string.individual_interaction_title_numbered, idx) // e.g. "Individual Interaction 2"
             }
-        }
-
-        // Top-left close (your XML has btnClose)
-        view.findViewById<ImageButton>(R.id.btnClose)?.setOnClickListener {
-            findNavController().navigateUp()
         }
 
         val dateCard = view.findViewById<MaterialCardView>(R.id.datePickerCard)
@@ -65,7 +67,7 @@ class Visit_Individual_Interaction_q4 : Fragment() {
         val btnPrevious = view.findViewById<TextView>(R.id.txt_previous2)
         val btnSave = view.findViewById<TextView>(R.id.txt_next2)
         val btnSkip = view.findViewById<TextView>(R.id.txt_skip)
-        val btnClose = view.findViewById<TextView>(R.id.btnClose)
+        val btnClose = view.findViewById<ImageButton>(R.id.btnClose)
 
         // Date picker
         dateCard.setOnClickListener {
@@ -117,7 +119,7 @@ class Visit_Individual_Interaction_q4 : Fragment() {
             picker.show(parentFragmentManager, "time_picker_q4")
         }
 
-        // Close: exit entire flow
+        // Close - Exit Screen
         btnClose.setOnClickListener {
             findNavController().popBackStack(R.id.nav_visit, false)
         }
@@ -129,15 +131,16 @@ class Visit_Individual_Interaction_q4 : Fragment() {
 
         // Skip -> go to saveInteraction (no validation)
         btnSkip.setOnClickListener {
-            findNavController().navigate(R.id.action_visitIndividualInteractionQ4_to_surveySubmittedFragment)
+            sharedVisitViewModel.nextInteraction()
+            findNavController().navigate(R.id.individualInteractionFragment)
         }
 
-        // Save -> go to saveInteraction (optionally validate date/time)
+        // Save -> go to saveInteraction
         btnSave.setOnClickListener {
             val notes = etNotes.text?.toString()?.trim().orEmpty()
+            tvDate.error = null
+            tvTime.error = null
 
-            // If you want date/time REQUIRED, keep these checks.
-            // If optional, delete this block.
             if (selectedDate == null) {
                 tvDate.error = "Required"
                 return@setOnClickListener
@@ -149,7 +152,8 @@ class Visit_Individual_Interaction_q4 : Fragment() {
 
             // TODO: persist selectedDate/selectedTime/notes somewhere (ViewModel, shared repo, arguments, etc.)
 
-            findNavController().navigate(R.id.action_visitIndividualInteractionQ4_to_surveySubmittedFragment)
+            sharedVisitViewModel.nextInteraction()
+            findNavController().navigate(R.id.individualInteractionFragment)
         }
     }
 }

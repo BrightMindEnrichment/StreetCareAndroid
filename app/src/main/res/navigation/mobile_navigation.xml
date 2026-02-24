@@ -149,6 +149,10 @@
             android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment4"
             app:destination="@id/visitFormFragment4" />
 
+        <action
+            android:id="@+id/action_visitFormFragment5_to_visitIndividualInteractionQ1"
+            app:destination="@id/visitIndividualInteractionQ1" />
+
     </fragment>
 
     <fragment
@@ -243,11 +247,21 @@
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q4"
         tools:layout="@layout/fragment_individual_interaction_q4">
 
+        <!-- Change Fragment-->
         <action
-            android:id="@+id/action_visitIndividualInteractionQ4_to_surveySubmittedFragment"
-            app:destination="@id/surveySubmittedFragment"
-            app:popUpTo="@id/visitIndividualInteractionQ1"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_visitIndividualInteractionQ4_to_individualInteractionFragment"
+            app:destination="@id/individualInteractionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/individualInteractionFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.IndividualInteractionFragment"
+        android:label="Individual Interaction"
+        tools:layout="@layout/edit_individual_interaction">
+
+        <action
+            android:id="@+id/action_individualInteractionFragment_to_visitIndividualInteractionQ1"
+            app:destination="@id/visitIndividualInteractionQ1" />
     </fragment>
 
 

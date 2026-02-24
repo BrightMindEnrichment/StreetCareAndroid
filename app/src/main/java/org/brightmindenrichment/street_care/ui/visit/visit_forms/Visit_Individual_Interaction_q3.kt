@@ -29,6 +29,11 @@ class Visit_Individual_Interaction_q3 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+        requireActivity()
+            .findViewById<BottomNavigationView>(R.id.bottomNav)
+            ?.visibility = View.VISIBLE
+
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
         sharedVisitViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
@@ -41,9 +46,7 @@ class Visit_Individual_Interaction_q3 : Fragment() {
 
         (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            ?.visibility = View.VISIBLE
+        view.findViewById<View>(R.id.bottomNav)?.visibility = View.VISIBLE
 
         // Top bar close
         val btnClose = view.findViewById<ImageButton>(R.id.btnClose)
