@@ -11,11 +11,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentVisitForm5NewBinding
+import org.brightmindenrichment.street_care.databinding.FragmentVisitFormNew5Binding
 
 class VisitFormFragmentNew5 : Fragment() {
 
-    private var _binding: FragmentVisitForm5NewBinding? = null
+    private var _binding: FragmentVisitFormNew5Binding? = null
     private val binding get() = _binding!!
 
     private val sharedVisitViewModel: VisitViewModel by activityViewModels()
@@ -28,7 +28,7 @@ class VisitFormFragmentNew5 : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentVisitForm5NewBinding.inflate(inflater, container, false)
+        _binding = FragmentVisitFormNew5Binding.inflate(inflater, container, false)
         return binding.root
     }
 
