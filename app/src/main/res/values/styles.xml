@@ -77,5 +77,30 @@
         <item name="cornerSizeBottomRight">10dp</item>
     </style>
 
+    <!-- Progress dot styles: small Views styled in layout -->
+    <style name="ProgressDotBase">
+        <item name="android:layout_marginStart">6dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+    </style>
+
+    <style name="ProgressDotFilled" parent="ProgressDotBase">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:background">@drawable/progress_dot_filled_yellow</item>
+    </style>
+
+    <style name="ProgressDotOutline" parent="ProgressDotBase">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:background">@drawable/progress_dot_outline_yellow</item>
+    </style>
+
+    <style name="ProgressDotDark" parent="ProgressDotBase">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:background">@drawable/progress_dot_dark</item>
+    </style>
+
+
 
 </resources>

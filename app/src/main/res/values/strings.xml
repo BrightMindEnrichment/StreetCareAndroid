@@ -601,7 +601,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="account_holder_badge">Account Holder Badge</string>
     <string name="account_holder">Account holder</string>
 
-<!--    visit log details section -->
+    <!--    visit log details section -->
 
     <string name="when_was_your_interaction" translatable="false">When was your Interaction?</string>
     <string name="where_was_your_interaction" translatable="false">Where was your Interaction?</string>

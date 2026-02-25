@@ -107,64 +107,76 @@
             android:id="@+id/action_visitFormFragment3_to_visitFormFragment1"
             app:destination="@id/visitFormFragment1" />
     </fragment>
-    <fragment
-        android:id="@+id/visitFormFragment4"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment4"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form4" >
-        <action
-            android:id="@+id/action_visitFormFragment4_to_action_visitFormFragment5"
-            app:destination="@id/visitFormFragment6" />
-        <action
-            android:id="@+id/action_visitFormFragment4_to_action_visitFormFragment3"
-            app:destination="@id/visitFormFragment3" />
-    </fragment>
-    <fragment
-        android:id="@+id/visitFormFragment6"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment6"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form6" >
-        <action
-            android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment6"
-            app:destination="@id/visitFormFragment5" />
-        <action
-            android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment4"
-            app:destination="@id/visitFormFragment4" />
-    </fragment>
-    <fragment
-        android:id="@+id/visitFormFragment5"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment5"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form5" >
-<!--        <action-->
-<!--            android:id="@+id/action_visitFormFragment4_to_visitFormFragment5"-->
-<!--            app:destination="@id/surveySubmittedFragment" />-->
-        <action
-            android:id="@+id/action_visitFormFragment5_to_visitFormFragment4"
-            app:destination="@id/visitFormFragment6" />
-<!--        <action-->
-<!--            android:id="@+id/action_visitFormFragment5_to_visitFormFragment_additional"-->
-<!--            app:destination="@id/additional2" />-->
-        <action
-            android:id="@+id/action_visitFormFragment5_to_visitForm7a"
-            app:destination="@id/visitForm7a" />
 
-    </fragment>
 
-    <fragment
-        android:id="@+id/visitForm7a"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitForm7a"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form7a" >
-        <!-- Action for Yes button to VisitFormFragment1 -->
-        <action
-            android:id="@+id/action_visitForm7a_to_additional2"
-            app:destination="@id/additional2" />
-        <!-- Action for No button to Survey Submitted Fragment -->
-        <action
-            android:id="@+id/action_visitForm7a_to_surveySubmittedFragment"
-            app:destination="@id/surveySubmittedFragment" />
-    </fragment>
+        <!-- Fragment 4 -->
+        <fragment
+            android:id="@+id/visitFormFragment4"
+            android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment4"
+            android:label="@string/visit_log_smallCaps"
+            tools:layout="@layout/fragment_visit_form4">
+
+            <action
+                android:id="@+id/action_visitFormFragment4_to_visitFormFragmentNew5"
+                app:destination="@id/visitFormFragmentNew5" />
+
+            <action
+                android:id="@+id/action_visitFormFragment4_to_visitFormFragment3"
+                app:destination="@id/visitFormFragment3" />
+        </fragment>
+
+
+        <!-- New Fragment 5 -->
+        <fragment
+            android:id="@+id/visitFormFragmentNew5"
+            android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragmentNew5"
+            android:label="@string/visit_log_smallCaps"
+            tools:layout="@layout/fragment_visit_form_new5">
+
+            <action
+                android:id="@+id/action_visitFormFragmentNew5_to_visitFormFragmentNew6"
+                app:destination="@id/visitFormFragmentNew6" />
+
+            <action
+                android:id="@+id/action_visitFormFragmentNew5_to_visitFormFragment4"
+                app:destination="@id/visitFormFragment4" />
+        </fragment>
+
+
+        <!-- New Fragment 6 -->
+        <fragment
+            android:id="@+id/visitFormFragmentNew6"
+            android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragmentNew6"
+            android:label="@string/visit_log_smallCaps"
+            tools:layout="@layout/fragment_visit_form_new6">
+
+            <action
+                android:id="@+id/action_visitFormFragmentNew6_to_visitForm7a"
+                app:destination="@id/visitForm7a" />
+
+            <action
+                android:id="@+id/action_visitFormFragmentNew6_to_visitFormFragmentNew5"
+                app:destination="@id/visitFormFragmentNew5" />
+        </fragment>
+
+
+        <!-- Fragment 7A -->
+        <fragment
+            android:id="@+id/visitForm7a"
+            android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitForm7a"
+            android:label="@string/visit_log_smallCaps"
+            tools:layout="@layout/fragment_visit_form7a">
+
+            <action
+                android:id="@+id/action_visitForm7a_to_additional2"
+                app:destination="@id/additional2" />
+
+            <action
+                android:id="@+id/action_visitForm7a_to_surveySubmittedFragment"
+                app:destination="@id/surveySubmittedFragment" />
+        </fragment>
+
+
     <fragment
         android:id="@+id/sharedCommunityVisitLogFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SharedCommunityVisitLogFragment"
@@ -211,7 +223,7 @@
 
 
 
-<!--    CommunityPart-->
+    <!--    CommunityPart-->
     <fragment
         android:id="@+id/nav_community"
         android:name="org.brightmindenrichment.street_care.ui.community.CommunityFragment"
@@ -250,18 +262,18 @@
         android:label="@string/add_event"
         tools:layout="@layout/fragment_add_event" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/communityHelpRequestFragment"-->
-<!--        android:name="org.brightmindenrichment.street_care.ui.community.CommunityHelpRequestFragment"-->
-<!--        android:label="{pageTitle}"-->
-<!--        tools:layout="@layout/fragment_community_help_requests" >-->
+    <!--    <fragment-->
+    <!--        android:id="@+id/communityHelpRequestFragment"-->
+    <!--        android:name="org.brightmindenrichment.street_care.ui.community.CommunityHelpRequestFragment"-->
+    <!--        android:label="{pageTitle}"-->
+    <!--        tools:layout="@layout/fragment_community_help_requests" >-->
 
-<!--        <argument-->
-<!--            android:name="pageTitle"-->
-<!--            android:defaultValue="Help Request"-->
-<!--            app:argType="string" />-->
+    <!--        <argument-->
+    <!--            android:name="pageTitle"-->
+    <!--            android:defaultValue="Help Request"-->
+    <!--            app:argType="string" />-->
 
-<!--    </fragment>-->
+    <!--    </fragment>-->
 
     <fragment
         android:id="@+id/publicEvent"
@@ -270,11 +282,11 @@
         tools:layout="@layout/fragment_public_event" />
 
 
-<!--    <fragment-->
-<!--        android:id="@+id/nav_add_help_request"-->
-<!--        android:name="org.brightmindenrichment.street_care.ui.community.AddHelpRequestFragment"-->
-<!--        android:label="@string/add_help_request"-->
-<!--        tools:layout="@layout/fragment_add_help_request" />-->
+    <!--    <fragment-->
+    <!--        android:id="@+id/nav_add_help_request"-->
+    <!--        android:name="org.brightmindenrichment.street_care.ui.community.AddHelpRequestFragment"-->
+    <!--        android:label="@string/add_help_request"-->
+    <!--        tools:layout="@layout/fragment_add_help_request" />-->
 
     <fragment
         android:id="@+id/communityActivityFragment"
@@ -463,8 +475,8 @@
             android:id="@+id/action_additional1_to_additional2"
             app:destination="@id/additional2" />
         <action
-            android:id="@+id/action_additional1_to_visitFormFragment5"
-            app:destination="@id/visitFormFragment5" />
+            android:id="@+id/action_additional1_to_visitFormFragmentNew5"
+            app:destination="@id/visitFormFragmentNew5" />
     </fragment>
     <fragment
         android:id="@+id/additional2"
@@ -587,7 +599,7 @@
             android:id="@+id/action_additional4_to_nav_visit"
             app:destination="@id/nav_visit" />
     </fragment>
-    
+
     <fragment
         android:id="@+id/visitLogDetailsFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.details.VisitLogDetailsFragment"
