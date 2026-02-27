@@ -14,6 +14,10 @@ on:
         description: 'Set a specific version (e.g., 26.0.0). Overrides bump_type.'
         type: string
         required: false
+      specific_version_code:
+        description: 'Set a specific version code (e.g., 42). Overrides automatic increment.'
+        type: string
+        required: false
 
 permissions:
   contents: write
@@ -44,9 +48,10 @@ jobs:
       # The action logic automatically prioritizes 'specific_version' if provided;
       # otherwise, it falls back to 'SemanticVersioningOptionToIncrement'.
       - name: 4. Bump Android Version
-        uses: vamsi-alluri/android-version-actions@v0.1.0
+        uses: vamsi-alluri/android-version-actions@v0.1.1
         with:
           gradlePath: app/build.gradle
+          versionCode: ${{ github.event.inputs.specific_version_code }}
           # Always increment the internal version code
           versionCodeIncrementBy: 1
           # If specific_version input is set, this takes priority

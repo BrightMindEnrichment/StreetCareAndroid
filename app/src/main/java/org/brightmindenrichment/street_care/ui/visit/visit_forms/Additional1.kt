@@ -56,7 +56,7 @@ class Additional1 : Fragment() {
             findNavController().navigate(R.id.action_additional1_to_additional2)
         }
         binding.txtPreviousAdd1.setOnClickListener {
-            findNavController().navigate(R.id.action_additional1_to_visitFormFragment5)
+            findNavController().navigate(R.id.action_additional1_to_visitFormFragmentNew5)
         }
         binding.txtSkipAdd1.setOnClickListener {
             findNavController().navigate(R.id.action_additional1_to_additional2)
