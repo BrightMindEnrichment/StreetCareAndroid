@@ -109,20 +109,20 @@
     </fragment>
 
         <!-- Fragment 7A -->
-        <fragment
-            android:id="@+id/visitForm7a"
-            android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitForm7a"
-            android:label="@string/visit_log_smallCaps"
-            tools:layout="@layout/fragment_visit_form7a">
-
-            <action
-                android:id="@+id/action_visitForm7a_to_additional2"
-                app:destination="@id/additional2" />
-
-            <action
-                android:id="@+id/action_visitForm7a_to_surveySubmittedFragment"
-                app:destination="@id/surveySubmittedFragment" />
-        </fragment>
+    <fragment
+        android:id="@+id/visitForm7a"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitForm7a"
+        android:label="@string/visit_log_smallCaps"
+        tools:layout="@layout/fragment_visit_form7a" >
+        <!-- Action for Yes button to VisitFormFragment1 -->
+        <action
+            android:id="@+id/action_visitForm7a_to_additional2"
+            app:destination="@id/additional2" />
+        <!-- Action for No button to Survey Submitted Fragment -->
+        <action
+            android:id="@+id/action_visitForm7a_to_ConsentFragment"
+            app:destination="@id/consentFragment" />
+    </fragment>
 
 
     <fragment

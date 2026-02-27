@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentVisitBinding
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.DetailsButtonClickListener
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitLogRecyclerAdapter
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitViewModel
@@ -32,7 +33,7 @@ import org.brightmindenrichment.street_care.util.Extensions
 class VisitFormFragment0 : Fragment() {
     private var _binding: FragmentVisitBinding? = null
     val binding get() = _binding!!
-    private val sharedVisitViewModel: VisitViewModel by activityViewModels()
+    private val viewModel: InteractionLogViewModel by activityViewModels()
     private val visitDataAdapter = VisitDataAdapter()
     companion object {
         fun newInstance() = VisitFormFragment0()
@@ -52,16 +53,16 @@ class VisitFormFragment0 : Fragment() {
         binding.btnAddNew.setOnClickListener {
             // if user is submitting multiple visit log together, the view model field should reset
 
-            if(FirebaseAuth.getInstance().currentUser != null) {
-                // showImpactDialog(requireContext())
-                val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
-                if(shouldShowDialog){
-                    sharedVisitViewModel.resetVisitLogPage()
-                    findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
-                }else{
-                    showCustomDialogPH()
-                }
+                if(FirebaseAuth.getInstance().currentUser != null) {
+                    // showImpactDialog(requireContext())
+                    val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
+                    if(shouldShowDialog){
+                        viewModel.resetInteractionLog()
+                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    }else{
+                        showCustomDialogPH()
+                    }
 
 
             } else{
@@ -91,7 +92,7 @@ class VisitFormFragment0 : Fragment() {
             .setTitle("I provided help!")
             .setMessage("Please fill out this form each time you perform an outreach. This helps you track your contributions and allows StreetCare to bring more support and services to help the community!")
             .setPositiveButton("OK") { dialog, _ ->
-                sharedVisitViewModel.resetVisitLogPage()
+                viewModel.resetInteractionLog()
                 findNavController().navigate(R.id.interactionQ1Fragment)
                 dialog.dismiss()
             }
@@ -192,7 +193,7 @@ class VisitFormFragment0 : Fragment() {
 //
 //                prefs.edit().putBoolean("dont_show_again", true).apply()
 //            }
-            sharedVisitViewModel.resetVisitLogPage()
+            viewModel.resetInteractionLog()
 
             findNavController().navigate(R.id.interactionQ1Fragment)
             dialog.dismiss()

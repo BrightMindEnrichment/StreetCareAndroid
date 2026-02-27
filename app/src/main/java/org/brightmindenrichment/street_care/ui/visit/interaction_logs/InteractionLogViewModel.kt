@@ -160,6 +160,12 @@ class InteractionLogViewModel : ViewModel() {
         )
     }
 
+    fun resetInteractionLog(forceReset: Boolean = true) {
+        if (forceReset) {
+            interactionLog.value = InteractionLog()
+        }
+    }
+
     // =========================================================
     // -------------------- SAVE TO FIRESTORE ------------------
     // =========================================================
