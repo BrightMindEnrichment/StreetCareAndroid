@@ -73,7 +73,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
             )
 
             // Navigate
-            findNavController().popBackStack(R.id.nav_home, false)
+            findNavController().navigate(R.id.action_q4_to_q5)
         }
 
 
@@ -81,6 +81,8 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
         binding.btnPrevious.setOnClickListener {
             findNavController().popBackStack()
         }
+
+
 
         binding.skipBtn.setOnClickListener {
             findNavController().popBackStack()

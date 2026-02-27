@@ -88,21 +88,21 @@ class VisitFormFragment4 : Fragment() {
 
             // ✅ Updated Navigation
             findNavController().navigate(
-                R.id.action_visitFormFragment4_to_visitFormFragmentNew5
+                R.id.action_additional1_to_interactionQ5
             )
         }
 
         // Previous Button
         binding.txtPrevious4.setOnClickListener {
             findNavController().navigate(
-                R.id.action_visitFormFragment4_to_visitFormFragment3
+                R.id.action_q4_to_q5
             )
         }
 
         // Skip Button
         binding.txtSkip4.setOnClickListener {
             findNavController().navigate(
-                R.id.action_visitFormFragment4_to_visitFormFragmentNew5
+                R.id.action_q4_back_to_q3
             )
         }
     }

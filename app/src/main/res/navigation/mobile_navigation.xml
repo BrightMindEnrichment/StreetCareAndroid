@@ -102,63 +102,11 @@
         tools:layout="@layout/fragment_visit_form3" >
         <action
             android:id="@+id/action_visitFormFragment3_to_visitFormFragment4"
-            app:destination="@id/visitFormFragment4" />
+            app:destination="@id/interactionQ4Fragment" />
         <action
             android:id="@+id/action_visitFormFragment3_to_visitFormFragment1"
             app:destination="@id/visitFormFragment1" />
     </fragment>
-
-
-        <!-- Fragment 4 -->
-        <fragment
-            android:id="@+id/visitFormFragment4"
-            android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment4"
-            android:label="@string/visit_log_smallCaps"
-            tools:layout="@layout/fragment_visit_form4">
-
-            <action
-                android:id="@+id/action_visitFormFragment4_to_visitFormFragmentNew5"
-                app:destination="@id/visitFormFragmentNew5" />
-
-            <action
-                android:id="@+id/action_visitFormFragment4_to_visitFormFragment3"
-                app:destination="@id/visitFormFragment3" />
-        </fragment>
-
-
-        <!-- New Fragment 5 -->
-        <fragment
-            android:id="@+id/visitFormFragmentNew5"
-            android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragmentNew5"
-            android:label="@string/visit_log_smallCaps"
-            tools:layout="@layout/fragment_visit_form_new5">
-
-            <action
-                android:id="@+id/action_visitFormFragmentNew5_to_visitFormFragmentNew6"
-                app:destination="@id/visitFormFragmentNew6" />
-
-            <action
-                android:id="@+id/action_visitFormFragmentNew5_to_visitFormFragment4"
-                app:destination="@id/visitFormFragment4" />
-        </fragment>
-
-
-        <!-- New Fragment 6 -->
-        <fragment
-            android:id="@+id/visitFormFragmentNew6"
-            android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragmentNew6"
-            android:label="@string/visit_log_smallCaps"
-            tools:layout="@layout/fragment_visit_form_new6">
-
-            <action
-                android:id="@+id/action_visitFormFragmentNew6_to_visitForm7a"
-                app:destination="@id/visitForm7a" />
-
-            <action
-                android:id="@+id/action_visitFormFragmentNew6_to_visitFormFragmentNew5"
-                app:destination="@id/visitFormFragmentNew5" />
-        </fragment>
-
 
         <!-- Fragment 7A -->
         <fragment
@@ -263,13 +211,43 @@
     <fragment
         android:id="@+id/interactionQ4Fragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ4Fragment"
-        android:label="Interaction Log"
-        tools:layout="@layout/fragment_log_interaction_q4">
+        android:label="Interaction Log">
+
+        <action
+            android:id="@+id/action_q4_to_q5"
+            app:destination="@id/interactionQ5Fragment" />
 
         <action
             android:id="@+id/action_q4_back_to_q3"
-            app:destination="@id/visitFormFragment6" />
+            app:destination="@id/interactionQ3Fragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/interactionQ5Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ5Fragment"
+        android:label="Interaction Log">
+
+        <action
+            android:id="@+id/action_q5_to_q6"
+            app:destination="@id/interactionQ6Fragment" />
+
+        <action
+            android:id="@+id/action_q5_back_to_q4"
+            app:destination="@id/interactionQ4Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ6Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ6Fragment"
+        android:label="Interaction Log">
+
+        <action
+            android:id="@+id/action_q6_to_submit"
+            app:destination="@id/surveySubmittedFragment" />
+
+        <action
+            android:id="@+id/action_q6_back_to_q5"
+            app:destination="@id/interactionQ5Fragment" />
     </fragment>
 
 
@@ -534,8 +512,8 @@
             android:id="@+id/action_additional1_to_additional2"
             app:destination="@id/additional2" />
         <action
-            android:id="@+id/action_additional1_to_visitFormFragmentNew5"
-            app:destination="@id/visitFormFragmentNew5" />
+            android:id="@+id/action_additional1_to_interactionQ5"
+            app:destination="@id/interactionQ5Fragment" />
     </fragment>
     <fragment
         android:id="@+id/additional2"
