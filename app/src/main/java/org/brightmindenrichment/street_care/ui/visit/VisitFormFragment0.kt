@@ -49,36 +49,36 @@ class VisitFormFragment0 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            binding.btnAddNew.setOnClickListener {
-                // if user is submitting multiple visit log together, the view model field should reset
+        binding.btnAddNew.setOnClickListener {
+            // if user is submitting multiple visit log together, the view model field should reset
 
-                if(FirebaseAuth.getInstance().currentUser != null) {
-                    // showImpactDialog(requireContext())
-                    val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                    val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
-                    if(shouldShowDialog){
-                        sharedVisitViewModel.resetVisitLogPage()
-                        findNavController().navigate(R.id.interactionQ1Fragment)
-                    }else{
-                        showCustomDialogPH()
-                    }
-
-
-                } else{
-                    /*  Extensions.showDialog(
-                          requireContext(), requireContext().getString(R.string.alert), requireContext().getString(R.string.visit_log_can_be_recorded_by_logged_in_users),
-                          requireContext().getString(R.string.ok),
-                          requireContext().getString(R.string.cancel))*/
-                    showCustomDialog()
+            if(FirebaseAuth.getInstance().currentUser != null) {
+                // showImpactDialog(requireContext())
+                val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
+                if(shouldShowDialog){
+                    sharedVisitViewModel.resetVisitLogPage()
+                    findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
+                }else{
+                    showCustomDialogPH()
                 }
 
+
+            } else{
+                /*  Extensions.showDialog(
+                      requireContext(), requireContext().getString(R.string.alert), requireContext().getString(R.string.visit_log_can_be_recorded_by_logged_in_users),
+                      requireContext().getString(R.string.ok),
+                      requireContext().getString(R.string.cancel))*/
+                showCustomDialog()
             }
-            if (FirebaseAuth.getInstance().currentUser != null) {
-                binding.historyMsg.visibility = View.GONE
-                updateUI()
-            } else {
-                Log.d("BME", "not logged in")
-            }
+
+        }
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            binding.historyMsg.visibility = View.GONE
+            updateUI()
+        } else {
+            Log.d("BME", "not logged in")
+        }
 
 
 
@@ -142,12 +142,12 @@ class VisitFormFragment0 : Fragment() {
             val bundle = Bundle().apply {
                 putString("from", "nav_visit")
             }
-           // findNavController().navigate(R.id.action_nav_visit_to_profile)
+            // findNavController().navigate(R.id.action_nav_visit_to_profile)
             requireActivity()
                 .findViewById<BottomNavigationView>(R.id.bottomNav)
                 .selectedItemId = R.id.profile
 
-           val navOptions = NavOptions.Builder()
+            val navOptions = NavOptions.Builder()
                 .setPopUpTo(R.id.profile, true)
                 .build()
 
@@ -183,15 +183,15 @@ class VisitFormFragment0 : Fragment() {
 
 
         val btnOK = dialogView.findViewById<TextView>(R.id.ok_btn)
-        val checkBox = dialogView.findViewById<CheckBox>(R.id.cbDontShowAgain)
+//        val checkBox = dialogView.findViewById<CheckBox>(R.id.cbDontShowAgain)
 
 
         btnOK.setOnClickListener {
-            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            if (checkBox.isChecked) {
-
-                prefs.edit().putBoolean("dont_show_again", true).apply()
-            }
+//            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+//            if (checkBox.isChecked) {
+//
+//                prefs.edit().putBoolean("dont_show_again", true).apply()
+//            }
             sharedVisitViewModel.resetVisitLogPage()
 
             findNavController().navigate(R.id.interactionQ1Fragment)
