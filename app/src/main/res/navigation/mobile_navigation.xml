@@ -107,6 +107,53 @@
             android:id="@+id/action_visitFormFragment3_to_visitFormFragment1"
             app:destination="@id/visitFormFragment1" />
     </fragment>
+    <fragment
+        android:id="@+id/visitFormFragment4"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment4"
+        android:label="@string/visit_log_smallCaps"
+        tools:layout="@layout/fragment_visit_form4" >
+        <action
+            android:id="@+id/action_visitFormFragment4_to_action_visitFormFragment5"
+            app:destination="@id/visitFormFragment6" />
+        <action
+            android:id="@+id/action_visitFormFragment4_to_action_visitFormFragment3"
+            app:destination="@id/visitFormFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/visitFormFragment6"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment6"
+        android:label="@string/visit_log_smallCaps"
+        tools:layout="@layout/fragment_visit_form6" >
+        <action
+            android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment6"
+            app:destination="@id/visitFormFragment5" />
+        <action
+            android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment4"
+            app:destination="@id/visitFormFragment4" />
+    </fragment>
+    <fragment
+        android:id="@+id/visitFormFragment5"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment5"
+        android:label="@string/visit_log_smallCaps"
+        tools:layout="@layout/fragment_visit_form5" >
+<!--        <action-->
+<!--            android:id="@+id/action_visitFormFragment4_to_visitFormFragment5"-->
+<!--            app:destination="@id/surveySubmittedFragment" />-->
+        <action
+            android:id="@+id/action_visitFormFragment5_to_visitFormFragment6"
+            app:destination="@id/visitFormFragment6" />
+<!--        <action-->
+<!--            android:id="@+id/action_visitFormFragment5_to_visitFormFragment_additional"-->
+<!--            app:destination="@id/additional2" />-->
+        <action
+            android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment4"
+            app:destination="@id/visitFormFragment4" />
+
+        <action
+            android:id="@+id/action_visitFormFragment5_to_visitIndividualInteractionQ1"
+            app:destination="@id/visitIndividualInteractionQ1" />
+
+    </fragment>
 
         <!-- Fragment 7A -->
     <fragment
@@ -257,6 +304,57 @@
         android:label="Interaction Log"
         tools:layout="@layout/fragment_blank" />
 
+    <fragment
+        android:id="@+id/visitIndividualInteractionQ1"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q1"
+        tools:layout="@layout/fragment_individual_interaction_q1">
+
+        <action
+            android:id="@+id/action_visitIndividualInteractionQ1_to_visitIndividualInteractionQ2"
+            app:destination="@id/visitIndividualInteractionQ2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/visitIndividualInteractionQ2"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q2"
+        tools:layout="@layout/fragment_individual_interaction_q2">
+
+        <action
+            android:id="@+id/action_visitIndividualInteractionQ2_to_visitIndividualInteractionQ3"
+            app:destination="@id/visitIndividualInteractionQ3" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/visitIndividualInteractionQ3"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q3"
+        tools:layout="@layout/fragment_individual_interaction_q3">
+
+        <action
+            android:id="@+id/action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4"
+            app:destination="@id/visitIndividualInteractionQ4" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/visitIndividualInteractionQ4"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Visit_Individual_Interaction_q4"
+        tools:layout="@layout/fragment_individual_interaction_q4">
+
+        <!-- Change Fragment-->
+        <action
+            android:id="@+id/action_visitIndividualInteractionQ4_to_individualInteractionFragment"
+            app:destination="@id/individualInteractionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/individualInteractionFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.IndividualInteractionFragment"
+        android:label="Individual Interaction"
+        tools:layout="@layout/edit_individual_interaction">
+
+        <action
+            android:id="@+id/action_individualInteractionFragment_to_visitIndividualInteractionQ1"
+            app:destination="@id/visitIndividualInteractionQ1" />
+    </fragment>
 
 
     <!--    CommunityPart-->

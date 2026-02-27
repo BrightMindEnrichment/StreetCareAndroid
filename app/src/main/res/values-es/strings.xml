@@ -681,4 +681,39 @@ y enviarlo a nosotros a <a href="mailto:volunteer@streetcare.us">volunteer@stree
     <string name="please_login_title">Por favor inicia sesión</string>
     <string name="please_login_message">Necesitas iniciar sesión para dar "me gusta" a este evento. ¿Quieres iniciar sesión ahora?</string>
 
+    <!--Interaction Log Question 7 -->
+    <string name="provide_details_prompt">¿Le gustaría proporcionar\ndetalles de cada persona\na la que apoyó?</string>
+
+    <!-- Main Title - Interactive Interaction -->
+    <string name="individual_interaction_title_base">Interacción Individual</string>
+    <string name="individual_interaction_title_numbered">Interacción Individual %1$d</string>
+
+    <!--Individual Interaction Question 1 -->
+    <string name="Individual_Interaction_Question_1">Pregunta 1/4</string>
+    <string name="hint_first_name">Nombre(persona con la que interactuó)*</string>
+    <string name="hint_last_name">Apellido</string>
+    <string name="hint_location">Ubicación o punto de referencia</string>
+
+    <!-- Individual Interaction Question 2 -->
+    <string name="Individual_Interaction_Question_2">Pregunta 2/4</string>
+    <string name="food_drinks">Comida y bebidas</string>
+    <string name="clothes">Ropa</string>
+    <string name="hygiene">Productos de higiene</string>
+    <string name="support">Bienestar / Apoyo emocional</string>
+    <string name="medical_help">Ayuda médica / Doctor</string>
+    <string name="social_worker_psychiatrist">Trabajador social / Psiquiatra</string>
+    <string name="lawyer_legal">Abogado / Legal</string>
+    <string name="other">Otro</string>
+
+
+    <!-- Individual Interaction Question 3 -->
+    <string name="Individual_Interaction_Question_3">Pregunta 3/4</string>
+
+    <!-- Individual Interaction Question 4 -->
+    <string name="Individual_Interaction_Question_4">Pregunta 4/4</string>
+    <string name="default_date">30/03/2025</string>
+    <string name="default_time">11:35 a. m. MDT</string>
+    <string name="select_interaction_date">Selecciona la fecha de la interacción</string>
+    <string name="select_interaction_time">Selecciona la hora de la interacción</string>
+
 </resources>

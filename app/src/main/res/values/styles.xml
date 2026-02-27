@@ -92,6 +92,14 @@
         <item name="android:layout_marginEnd">6dp</item>
     </style>
 
+    <style name="ThemeOverlay.StreetCare.DatePicker" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+    </style>
+    <style name="ThemeOverlay.StreetCare.TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+    </style>
     <style name="ProgressDotFilled" parent="ProgressDotBase">
         <item name="android:layout_width">28dp</item>
         <item name="android:layout_height">12dp</item>
