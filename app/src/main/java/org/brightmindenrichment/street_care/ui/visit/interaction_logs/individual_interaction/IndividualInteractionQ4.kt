@@ -25,7 +25,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-class Visit_Individual_Interaction_q4 : Fragment() {
+class IndividualInteractionQ4 : Fragment() {
 
     private var selectedDate: LocalDate? = null
     private var selectedTime: LocalTime? = null

@@ -7,21 +7,31 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class IndividualInteraction(
 
-    // ========== PERSON INFO ==========
-    var firstName: String = "",
-    var lastName: String = "",
-    var state: String = "",
-    var zipcode: String = "",
-    var locationOrLandmark: String = "",
+    // --- Firebase metadata ---
+    var helpRequestId: String? = null,
+    var interactionLogDocId: String? = null,
 
-    // ========== HELP PROVIDED ==========
+    // --- Person Info ---
+    var firstName: String = "",
+    var lastName: String? = null,
+    var state: String? = null,
+    var zip: String? = null,
+    var locationLandmark: String? = null,
+
+    // --- Interaction timing ---
+    var date: String? = null,
+    var time: String? = null,
+
+    // --- Help Provided ---
     var supportsProvided: List<String> = emptyList(),
 
-    // ========== FURTHER HELP NEEDED ==========
+    // --- Further Help ---
     var furtherHelpNeeded: List<String> = emptyList(),
 
-    // ========== FOLLOW UP ==========
-    var followUpDate: Timestamp? = null,
-    var additionalDetails: String = ""
+    // --- Additional ---
+    var additionalDetails: String? = null,
+
+    var interactionLogFirstName: String? = null
+
 
 ) : Parcelable

@@ -1,5 +1,6 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,10 +15,26 @@ import java.util.Date
 
 class InteractionLogViewModel : ViewModel() {
 
-    // =========================================================
-    // MASTER OBJECT
-    // =========================================================
-    val interactionLog = MutableLiveData(InteractionLog())
+    // Interaction counter
+    private val _interactionIndex = MutableLiveData(1)
+    val interactionIndex: LiveData<Int> = _interactionIndex
+
+    private val _interactionLog = MutableLiveData(InteractionLog())
+    val interactionLog: LiveData<InteractionLog> = _interactionLog
+
+    fun nextInteraction() {
+        val cur = _interactionIndex.value ?: 1
+        _interactionIndex.value = cur + 1
+    }
+
+    fun resetInteractions() {
+        _interactionIndex.value = 1
+    }
+
+    fun resetInteractionLog() {
+        _interactionLog.value = InteractionLog()
+        resetInteractions()
+    }
 
     // =========================================================
     // -------------------- Q1 (Session Time) ------------------
@@ -25,14 +42,14 @@ class InteractionLogViewModel : ViewModel() {
 
     fun updateStartDate(date: Date) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(
+        _interactionLog.value = current.copy(
             startTimestamp = Timestamp(date)
         )
     }
 
     fun updateEndDate(date: Date) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(
+        _interactionLog.value = current.copy(
             endTimestamp = Timestamp(date)
         )
     }
@@ -41,22 +58,22 @@ class InteractionLogViewModel : ViewModel() {
     // =========================================================
     fun updateFirstName(name: String) {
         val current = interactionLog.value ?: return
-        interactionLog.value = current.copy(firstName = name)
+        _interactionLog.value = current.copy(firstName = name)
     }
 
     fun updateLastName(name: String) {
         val current = interactionLog.value ?: return
-        interactionLog.value = current.copy(lastName = name)
+        _interactionLog.value = current.copy(lastName = name)
     }
 
     fun updateEmail(email: String) {
         val current = interactionLog.value ?: return
-        interactionLog.value = current.copy(email = email)
+        _interactionLog.value = current.copy(email = email)
     }
 
     fun updatePhone(phone: String) {
         val current = interactionLog.value ?: return
-        interactionLog.value = current.copy(phoneNumber = phone)
+        _interactionLog.value = current.copy(phoneNumber = phone)
     }
 
 
@@ -67,22 +84,22 @@ class InteractionLogViewModel : ViewModel() {
 
     fun updateAddress(addr1: String) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(addr1 = addr1)
+        _interactionLog.value = current.copy(addr1 = addr1)
     }
 
     fun updateCity(city: String) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(city = city)
+        _interactionLog.value = current.copy(city = city)
     }
 
     fun updateState(state: String) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(state = state)
+        _interactionLog.value = current.copy(state = state)
     }
 
     fun updateZipcode(zip: String) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(zipcode = zip)
+        _interactionLog.value = current.copy(zipcode = zip)
     }
 
     // =========================================================
@@ -99,7 +116,7 @@ class InteractionLogViewModel : ViewModel() {
             updated.remove(item)
         }
 
-        interactionLog.value = current.copy(
+        _interactionLog.value = current.copy(
             listOfSupportsProvided = updated
         )
     }
@@ -110,12 +127,12 @@ class InteractionLogViewModel : ViewModel() {
 
     fun updatePeopleHelped(count: Int) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(numPeopleHelped = count)
+        _interactionLog.value = current.copy(numPeopleHelped = count)
     }
 
     fun updatePeopleJoined(count: Int) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(numPeopleJoined = count)
+        _interactionLog.value = current.copy(numPeopleJoined = count)
     }
 
     // =========================================================
@@ -124,12 +141,12 @@ class InteractionLogViewModel : ViewModel() {
 
     fun updateCarePackages(count: Int) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(carePackagesDistributed = count)
+        _interactionLog.value = current.copy(carePackagesDistributed = count)
     }
 
     fun updateCarePackageContents(contents: String) {
         val current = interactionLog.value!!
-        interactionLog.value = current.copy(carePackageContents = contents)
+        _interactionLog.value = current.copy(carePackageContents = contents)
     }
 
     // =========================================================
@@ -142,7 +159,7 @@ class InteractionLogViewModel : ViewModel() {
 
         updatedList.add(interaction)
 
-        interactionLog.value = current.copy(
+        _interactionLog.value = current.copy(
             individualInteractions = updatedList
         )
     }
@@ -155,14 +172,14 @@ class InteractionLogViewModel : ViewModel() {
             updatedList.removeAt(index)
         }
 
-        interactionLog.value = current.copy(
+        _interactionLog.value = current.copy(
             individualInteractions = updatedList
         )
     }
 
     fun resetInteractionLog(forceReset: Boolean = true) {
         if (forceReset) {
-            interactionLog.value = InteractionLog()
+            _interactionLog.value = InteractionLog()
         }
     }
 
@@ -195,5 +212,28 @@ class InteractionLogViewModel : ViewModel() {
                 onComplete(false)
             }
         }
+    }
+
+    fun setSupportsProvided(supports: List<String>) {
+        val current = _interactionLog.value ?: return
+        _interactionLog.value = current.copy(
+            listOfSupportsProvided = supports
+        )
+    }
+
+    fun updateCounts(helped: Int, joined: Int) {
+        val current = _interactionLog.value ?: return
+        _interactionLog.value = current.copy(
+            numPeopleHelped = helped,
+            numPeopleJoined = joined
+        )
+    }
+
+    fun updateCarePackage(count: Int, notes: String) {
+        val current = _interactionLog.value ?: return
+        _interactionLog.value = current.copy(
+            carePackagesDistributed = count,
+            carePackageContents = notes
+        )
     }
 }

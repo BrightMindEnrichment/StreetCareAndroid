@@ -25,7 +25,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-class Visit_Individual_Interaction_q1 : Fragment() {
+class IndividualInteractionQ1 : Fragment() {
 
     private var selectedDate: LocalDate? = null
     private var selectedTime: LocalTime? = null
@@ -154,7 +154,7 @@ class Visit_Individual_Interaction_q1 : Fragment() {
         // Skip -> go to Q2 (no validation)
         btnSkip.setOnClickListener {
             findNavController().navigate(
-                R.id.action_visitIndividualInteractionQ1_to_visitIndividualInteractionQ2
+                R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
             )
         }
 
@@ -207,7 +207,7 @@ class Visit_Individual_Interaction_q1 : Fragment() {
             // TODO: persist Q1 data somewhere (NavGraph ViewModel recommended)
 
             findNavController().navigate(
-                R.id.action_visitIndividualInteractionQ1_to_visitIndividualInteractionQ2
+                R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
             )
         }
     }

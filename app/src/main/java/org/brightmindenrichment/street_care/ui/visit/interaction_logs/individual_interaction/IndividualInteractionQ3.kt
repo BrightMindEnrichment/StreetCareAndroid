@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 
-class Visit_Individual_Interaction_q3 : Fragment() {
+class IndividualInteractionQ3 : Fragment() {
 
     private val viewModel: InteractionLogViewModel by activityViewModels()
 
@@ -90,7 +90,7 @@ class Visit_Individual_Interaction_q3 : Fragment() {
         // Skip: no validation
         btnSkip.setOnClickListener {
             findNavController().navigate(
-                R.id.action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4
+                R.id.action_individualInteractionQ3_to_individualInteractionQ4
             )
         }
 
@@ -111,7 +111,7 @@ class Visit_Individual_Interaction_q3 : Fragment() {
             }
 
             findNavController().navigate(
-                R.id.action_visitIndividualInteractionQ3_to_visitIndividualInteractionQ4
+                R.id.action_individualInteractionQ3_to_individualInteractionQ4
             )
         }
     }

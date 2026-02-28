@@ -60,11 +60,8 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
                 return@setOnClickListener
             }
 
-            // 🔥 SAVE INTO VIEWMODEL
-            val current = viewModel.interactionLog.value!!
-            viewModel.interactionLog.value = current.copy(
-                listOfSupportsProvided = selectedOptions
-            )
+            // Save into ViewModel
+            viewModel.setSupportsProvided(selectedOptions)
 
             // 🔥 DEBUG PRINT
             android.util.Log.d(

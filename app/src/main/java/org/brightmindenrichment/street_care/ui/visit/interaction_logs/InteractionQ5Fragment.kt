@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.brightmindenrichment.street_care.R
@@ -128,12 +130,7 @@ class InteractionQ5Fragment : Fragment() {
 
     private fun navigateNext() {
 
-        val current = viewModel.interactionLog.value ?: InteractionLog()
-
-        viewModel.interactionLog.value = current.copy(
-            numPeopleHelped = helpedCount,
-            numPeopleJoined = joinedCount
-        )
+        viewModel.updateCounts(helpedCount, joinedCount)
 
         findNavController().navigate(
             R.id.action_q5_to_q6

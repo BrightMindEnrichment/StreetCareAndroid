@@ -136,12 +136,7 @@ class InteractionQ6Fragment : Fragment() {
     // -----------------------
     private fun goToNext(notes: String) {
 
-        val current = viewModel.interactionLog.value ?: InteractionLog()
-
-        viewModel.interactionLog.value = current.copy(
-            carePackagesDistributed = carePackageCount,
-            carePackageContents = notes
-        )
+        viewModel.updateCarePackage(carePackageCount, notes)
 
         findNavController().navigate(
             R.id.action_q6_to_submit
