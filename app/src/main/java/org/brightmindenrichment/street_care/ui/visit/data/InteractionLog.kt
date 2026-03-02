@@ -53,6 +53,8 @@ data class InteractionLog(
 
     // ================= SYSTEM =================
     var createdAt: Timestamp? = null,
-    var lastModifiedTimestamp: Timestamp? = null
+    var lastModifiedTimestamp: Timestamp? = null,
+
+    var wantsToProvideDetails: Boolean? = null
 
 ) : Parcelable

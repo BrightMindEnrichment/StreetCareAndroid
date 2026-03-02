@@ -236,4 +236,11 @@ class InteractionLogViewModel : ViewModel() {
             carePackageContents = notes
         )
     }
+
+    fun updateQ7Answer(answer: Boolean?) {
+        val current = interactionLog.value ?: InteractionLog()
+        _interactionLog.value = current.copy(
+            wantsToProvideDetails = answer
+        )
+    }
 }

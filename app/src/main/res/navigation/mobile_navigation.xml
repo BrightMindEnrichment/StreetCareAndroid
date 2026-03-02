@@ -184,15 +184,32 @@
     <fragment
         android:id="@+id/interactionQ6Fragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ6Fragment"
-        android:label="Interaction Log">
+        android:label="Interaction Log"
+        tools:layout="@layout/fragment_visit_form6">
 
         <action
-            android:id="@+id/action_q6_to_submit"
-            app:destination="@id/surveySubmittedFragment" />
+            android:id="@+id/action_q6_to_q7"
+            app:destination="@id/interactionQ7Fragment" />
 
         <action
             android:id="@+id/action_q6_back_to_q5"
             app:destination="@id/interactionQ5Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ7Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ7Fragment"
+        android:label="Interaction Q7"
+        tools:layout="@layout/fragment_visit_form7a">
+
+        <action
+            android:id="@+id/action_q7_yes_to_individualInteraction1"
+            app:destination="@id/individualInteractionQ1" />
+
+        <action
+            android:id="@+id/action_q7_no_to_consentPage"
+            app:destination="@id/consentFragment" />
+
     </fragment>
 
 

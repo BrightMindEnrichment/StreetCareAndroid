@@ -97,7 +97,7 @@ class InteractionQ6Fragment : Fragment() {
         // -----------------------
         btnPrevious.setOnClickListener {
             findNavController().navigate(
-                R.id.action_q6_to_submit
+                R.id.action_q6_back_to_q5
             )
         }
 
@@ -139,7 +139,7 @@ class InteractionQ6Fragment : Fragment() {
         viewModel.updateCarePackage(carePackageCount, notes)
 
         findNavController().navigate(
-            R.id.action_q6_to_submit
+            R.id.action_q6_to_q7
         )
     }
 }
