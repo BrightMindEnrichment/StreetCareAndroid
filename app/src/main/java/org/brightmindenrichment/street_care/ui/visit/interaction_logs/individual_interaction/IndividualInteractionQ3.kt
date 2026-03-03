@@ -30,10 +30,15 @@ class IndividualInteractionQ3 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as? AppCompatActivity)?.supportActionBar?.hide()
         requireActivity()
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
+
+        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
+            ab.setDisplayHomeAsUpEnabled(true)
+            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+            ab.title = "Individual Interaction"
+        }
 
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
@@ -45,12 +50,8 @@ class IndividualInteractionQ3 : Fragment() {
             }
         }
 
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-
-        view.findViewById<View>(R.id.bottomNav)?.visibility = View.VISIBLE
-
         // Top bar close
-        val btnClose = view.findViewById<ImageButton>(R.id.btnClose)
+        //val btnClose = view.findViewById<ImageButton>(R.id.btnClose)
 
         // Buttons
         val btnPrevious = view.findViewById<TextView>(R.id.txt_previous2)
@@ -78,9 +79,9 @@ class IndividualInteractionQ3 : Fragment() {
         refreshOtherEnabled()
 
         // Close: exit entire flow
-        btnClose.setOnClickListener {
-            findNavController().popBackStack(R.id.nav_visit, false)
-        }
+        //btnClose.setOnClickListener {
+        //    findNavController().popBackStack(R.id.nav_visit, false)
+        //}
 
         // Previous: back to q2
         btnPrevious.setOnClickListener {

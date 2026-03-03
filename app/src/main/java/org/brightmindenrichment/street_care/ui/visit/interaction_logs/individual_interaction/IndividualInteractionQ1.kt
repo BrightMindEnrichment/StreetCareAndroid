@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
@@ -51,6 +52,12 @@ class IndividualInteractionQ1 : Fragment() {
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
 
+        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
+            ab.setDisplayHomeAsUpEnabled(true)
+            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+            ab.title = "Individual Interaction"
+        }
+
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
         viewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
@@ -78,7 +85,7 @@ class IndividualInteractionQ1 : Fragment() {
         val btnPrevious = view.findViewById<TextView>(R.id.txt_previous2)
         val btnNext     = view.findViewById<TextView>(R.id.txt_next2)
         val btnSkip     = view.findViewById<TextView>(R.id.txt_skip)
-        val btnClose    = view.findViewById<ImageButton>(R.id.btnClose)
+        //val btnClose    = view.findViewById<ImageButton>(R.id.btnClose)
 
         // Optional: state dropdown items (if you have an array)
         // If you already set adapter elsewhere, remove this.
@@ -142,9 +149,9 @@ class IndividualInteractionQ1 : Fragment() {
         }
 
         // Close: exit entire flow
-        btnClose.setOnClickListener {
-            findNavController().popBackStack(R.id.nav_visit, false)
-        }
+        //btnClose.setOnClickListener {
+        //    findNavController().popBackStack(R.id.nav_visit, false)
+        //}
 
         // Previous -> back stack
         btnPrevious.setOnClickListener {

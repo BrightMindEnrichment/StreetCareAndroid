@@ -6,55 +6,16 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!-- Top Bar -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topBar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/white"
-        android:elevation="4dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageButton
-            android:id="@+id/btnClose"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/ic_close_red_circle"
-            android:scaleType="center"
-            android:contentDescription="@string/close"
-            android:padding="2dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/tvTopTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/individual_interaction_title_base"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:includeFontPadding="false"
-            app:fontFamily="@font/poppins_bold_new"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <!-- Main Content -->
     <ScrollView
         android:id="@+id/mainScroll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/topBar"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        android:fitsSystemWindows="true"
+        android:paddingTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -91,7 +52,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_interaction"
                     android:layout_width="350dp"
-                    android:layout_height="530dp"
+                    android:layout_height="610dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
@@ -172,7 +133,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/question_2"
                                 android:textColor="@color/black"
-                                android:textSize="16sp"
+                                android:textSize="18sp"
                                 android:gravity="center"
                                 android:layout_marginBottom="8dp"
                                 app:fontFamily="@font/poppins_bold_new"/>
@@ -185,10 +146,10 @@
                                 android:button="@null"
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
-                                android:minHeight="34dp"
+                                android:minHeight="36dp"
                                 android:text="@string/food_drinks"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular" />
 
                             <androidx.appcompat.widget.AppCompatCheckBox
@@ -198,10 +159,10 @@
                                 android:button="@null"
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
-                                android:minHeight="34dp"
+                                android:minHeight="36dp"
                                 android:text="@string/clothes"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular"/>
 
                             <androidx.appcompat.widget.AppCompatCheckBox
@@ -211,10 +172,10 @@
                                 android:button="@null"
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
-                                android:minHeight="34dp"
+                                android:minHeight="36dp"
                                 android:text="@string/hygiene"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular"/>
 
                             <androidx.appcompat.widget.AppCompatCheckBox
@@ -224,10 +185,10 @@
                                 android:button="@null"
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
-                                android:minHeight="34dp"
+                                android:minHeight="36dp"
                                 android:text="@string/support"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular"/>
 
                             <androidx.appcompat.widget.AppCompatCheckBox
@@ -237,10 +198,10 @@
                                 android:button="@null"
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
-                                android:minHeight="34dp"
+                                android:minHeight="36dp"
                                 android:text="@string/medical_help"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular"/>
 
                             <androidx.appcompat.widget.AppCompatCheckBox
@@ -250,10 +211,10 @@
                                 android:button="@null"
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
-                                android:minHeight="34dp"
+                                android:minHeight="36dp"
                                 android:text="@string/social_worker_psychiatrist"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular"/>
 
                             <androidx.appcompat.widget.AppCompatCheckBox
@@ -263,10 +224,10 @@
                                 android:button="@null"
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
-                                android:minHeight="34dp"
+                                android:minHeight="36dp"
                                 android:text="@string/lawyer_legal"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular"/>
 
                             <androidx.appcompat.widget.AppCompatCheckBox
@@ -276,10 +237,10 @@
                                 android:button="@null"
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
-                                android:minHeight="34dp"
+                                android:minHeight="36dp"
                                 android:text="@string/other"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular"/>
 
                             <!-- Other Input -->
@@ -301,15 +262,15 @@
                                     android:id="@+id/etOther"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:minHeight="50dp"
+                                    android:minHeight="60dp"
                                     android:hint="If Other, please specify here."
                                     android:gravity="start"
-                                    android:paddingTop="6dp"
+                                    android:paddingTop="8dp"
                                     android:paddingBottom="10dp"
                                     android:background="@drawable/rounded_border_field"
                                     android:includeFontPadding="false"
                                     android:inputType="textCapSentences"
-                                    android:textSize="14sp"/>
+                                    android:textSize="16sp"/>
                             </com.google.android.material.textfield.TextInputLayout>
 
                         </LinearLayout>

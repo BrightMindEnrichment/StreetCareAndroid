@@ -44,10 +44,15 @@ class IndividualInteractionQ4 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as? AppCompatActivity)?.supportActionBar?.hide()
         requireActivity()
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
+
+        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
+            ab.setDisplayHomeAsUpEnabled(true)
+            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
+            ab.title = "Individual Interaction"
+        }
 
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
@@ -68,7 +73,7 @@ class IndividualInteractionQ4 : Fragment() {
         val btnPrevious = view.findViewById<TextView>(R.id.txt_previous2)
         val btnSave = view.findViewById<TextView>(R.id.txt_next2)
         val btnSkip = view.findViewById<TextView>(R.id.txt_skip)
-        val btnClose = view.findViewById<ImageButton>(R.id.btnClose)
+        //val btnClose = view.findViewById<ImageButton>(R.id.btnClose)
 
         // Date picker
         dateCard.setOnClickListener {
@@ -121,9 +126,9 @@ class IndividualInteractionQ4 : Fragment() {
         }
 
         // Close - Exit Screen
-        btnClose.setOnClickListener {
-            findNavController().popBackStack(R.id.nav_visit, false)
-        }
+        //btnClose.setOnClickListener {
+        //    findNavController().popBackStack(R.id.nav_visit, false)
+        //}
 
         // Previous -> back to Q3 (back stack)
         btnPrevious.setOnClickListener {

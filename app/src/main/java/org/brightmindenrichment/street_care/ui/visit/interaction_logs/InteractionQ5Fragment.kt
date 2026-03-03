@@ -94,7 +94,7 @@ class InteractionQ5Fragment : Fragment() {
             // -----------------------
             binding.btnPrevious.setOnClickListener {
                 findNavController().navigate(
-                    R.id.action_q5_to_q6
+                    R.id.action_q5_back_to_q4
                 )
             }
 

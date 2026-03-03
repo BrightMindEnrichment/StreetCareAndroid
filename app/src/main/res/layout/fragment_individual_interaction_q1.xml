@@ -6,54 +6,17 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!-- Top Bar -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topBar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/white"
-        android:elevation="4dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnClose"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/ic_close_red_circle"
-            android:scaleType="center"
-            android:contentDescription="@string/close"
-            android:padding="2dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/tvTopTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/individual_interaction_title_base"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:includeFontPadding="false"
-            app:fontFamily="@font/poppins_bold_new"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Main Content -->
     <ScrollView
         android:id="@+id/mainScroll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/topBar"
+        android:fitsSystemWindows="true"
+        android:paddingTop="?attr/actionBarSize"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -87,11 +50,11 @@
                     android:includeFontPadding="false"
                     app:fontFamily="@font/poppins_bold_new"/>
 
-                <!-- Card (UNCHANGED) -->
+                <!-- Card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_interaction"
                     android:layout_width="350dp"
-                    android:layout_height="530dp"
+                    android:layout_height="650dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="2dp"
                     android:layout_marginStart="5dp"
@@ -103,7 +66,7 @@
                     app:strokeColor="@color/gray700"
                     app:strokeWidth="1.2dp">
 
-                    <!-- IMPORTANT: match_parent so weight pins buttons to bottom (same as your reference) -->
+                    <!-- IMPORTANT: match_parent so weight pins buttons to bottom -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
