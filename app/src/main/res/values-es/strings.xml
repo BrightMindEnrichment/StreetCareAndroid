@@ -5,6 +5,22 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Encabezado de navegación</string>
     <string name="action_settings">Configuración</string>
+    <string name="btn_close_description">Close</string>
+    <string name="header_interaction_log">Interaction Log</string>
+    <string name="title_log_interaction">Log Your Interaction</string>
+    <string name="question_progress_2">Question 3/7</string>
+    <string name="question_progress_3">Question 4/7</string>
+    <string name="action_skip">Skip</string>
+    <string name="label_interaction_location_question">Where was your Interaction?</string>
+    <string name="desc_search_icon">Search</string>
+    <string name="hint_address_example">Search for Address</string>
+    <string name="desc_mic_icon">Voice search</string>
+    <string name="hint_city_example">City</string>
+    <string name="hint_state_example">State</string>
+    <string name="hint_zip_example">ZipCode</string>
+    <string name="hint_description">Describe the location/landmark</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
 
     <!-- ChapterMembership -->
     <string name="donation_details">Para poder seguir ofreciendo membresías de capítulos sin cobrar (como lo hacemos) y ayudar a tantas personas como sea posible, necesitamos el apoyo de todos los que puedan donar.
@@ -336,6 +352,7 @@ a la comunidad.</string>
     <string name="title_with_star">Título*</string>
     <string name="enter_email">Introduzca su dirección de correo electrónico</string>
     <string name="contact_number">Número de contacto</string>
+    <string name="phone_number">número de teléfono</string>
     <string name="enter_contact_number">Introduzca el número de contacto</string>
     <string name="consent_text">Al seleccionar esta casilla, doy mi consentimiento para compartir públicamente mis datos de contacto y la dirección del evento en esta plataforma/espacio comunitario para facilitar la participación en el evento de divulgación. Entiendo que esta información será visible para otros y acepto las consideraciones de privacidad asociadas. \n</string>
     <string name="publish_event">Publicar</string>
@@ -663,5 +680,40 @@ y enviarlo a nosotros a <a href="mailto:volunteer@streetcare.us">volunteer@stree
 
     <string name="please_login_title">Por favor inicia sesión</string>
     <string name="please_login_message">Necesitas iniciar sesión para dar "me gusta" a este evento. ¿Quieres iniciar sesión ahora?</string>
+
+    <!--Interaction Log Question 7 -->
+    <string name="provide_details_prompt">¿Le gustaría proporcionar\ndetalles de cada persona\na la que apoyó?</string>
+
+    <!-- Main Title - Interactive Interaction -->
+    <string name="individual_interaction_title_base">Interacción Individual</string>
+    <string name="individual_interaction_title_numbered">Interacción Individual %1$d</string>
+
+    <!--Individual Interaction Question 1 -->
+    <string name="Individual_Interaction_Question_1">Pregunta 1/4</string>
+    <string name="hint_first_name">Nombre(persona con la que interactuó)*</string>
+    <string name="hint_last_name">Apellido</string>
+    <string name="hint_location">Ubicación o punto de referencia</string>
+
+    <!-- Individual Interaction Question 2 -->
+    <string name="Individual_Interaction_Question_2">Pregunta 2/4</string>
+    <string name="food_drinks">Comida y bebidas</string>
+    <string name="clothes">Ropa</string>
+    <string name="hygiene">Productos de higiene</string>
+    <string name="support">Bienestar / Apoyo emocional</string>
+    <string name="medical_help">Ayuda médica / Doctor</string>
+    <string name="social_worker_psychiatrist">Trabajador social / Psiquiatra</string>
+    <string name="lawyer_legal">Abogado / Legal</string>
+    <string name="other">Otro</string>
+
+
+    <!-- Individual Interaction Question 3 -->
+    <string name="Individual_Interaction_Question_3">Pregunta 3/4</string>
+
+    <!-- Individual Interaction Question 4 -->
+    <string name="Individual_Interaction_Question_4">Pregunta 4/4</string>
+    <string name="default_date">30/03/2025</string>
+    <string name="default_time">11:35 a. m. MDT</string>
+    <string name="select_interaction_date">Selecciona la fecha de la interacción</string>
+    <string name="select_interaction_time">Selecciona la hora de la interacción</string>
 
 </resources>

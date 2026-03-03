@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- Main Content -->
+    <ScrollView
+        android:id="@+id/mainScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true"
+        android:paddingTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Body -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+                <!-- Section Header -->
+                <TextView
+                    android:id="@+id/tvHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/individual_interaction_title_base"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="28sp"
+                    android:includeFontPadding="false"
+                    app:fontFamily="@font/poppins_bold_new"/>
+
+                <!-- Card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_interaction"
+                    android:layout_width="350dp"
+                    android:layout_height="610dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_gravity="center"
+                    android:maxWidth="360dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true"
+                    app:strokeColor="@color/gray700"
+                    app:strokeWidth="1.2dp">
+
+                    <!-- IMPORTANT: match_parent so weight pins buttons to bottom -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingBottom="14dp">
+
+                        <!-- Header Row -->
+                        <LinearLayout
+                            android:id="@+id/headerRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingStart="24dp"
+                            android:paddingEnd="24dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="4dp">
+
+                            <TextView
+                                android:id="@+id/tvQuestionIndex"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/Individual_Interaction_Question_3"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <TextView
+                                android:id="@+id/txt_skip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/skip"
+                                android:textColor="@color/black"
+                                android:textSize="13sp"
+                                android:paddingHorizontal="14dp"
+                                android:paddingVertical="6dp"
+                                android:background="@drawable/rounded_btn"
+                                android:gravity="center"
+                                app:fontFamily="@font/poppins_bold_new"/>
+                        </LinearLayout>
+
+                        <!-- Divider -->
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/headerDivider"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            app:dividerColor="@color/gray700"/>
+
+                        <!-- Content (NOW weighted so buttons pin to bottom like Q4) -->
+                        <LinearLayout
+                            android:id="@+id/contentInset"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingStart="24dp"
+                            android:paddingEnd="24dp"
+                            android:paddingTop="10dp">
+
+                            <TextView
+                                android:id="@+id/tvQuestion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/question_3"
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginBottom="8dp"
+                                app:fontFamily="@font/poppins_bold_new"/>
+
+                            <!-- Checkboxes -->
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cb_food"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/food_drinks"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular" />
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cb_clothes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/clothes"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cb_hygiene"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/hygiene"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cb_wellness"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/support"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cb_medical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/medical_help"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cb_social_worker"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/social_worker_psychiatrist"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cb_legal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/lawyer_legal"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/cb_other"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/other"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <!-- Other Input -->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilOther"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                app:hintEnabled="false"
+                                app:boxStrokeWidth="1dp"
+                                app:boxStrokeColor="@color/gray700"
+                                app:boxCornerRadiusTopStart="10dp"
+                                app:boxCornerRadiusTopEnd="10dp"
+                                app:boxCornerRadiusBottomStart="10dp"
+                                app:boxCornerRadiusBottomEnd="10dp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etOther"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:minHeight="60dp"
+                                    android:hint="If Other, please specify here."
+                                    android:gravity="start"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="10dp"
+                                    android:background="@drawable/rounded_border_field"
+                                    android:includeFontPadding="false"
+                                    android:inputType="textCapSentences"
+                                    android:textSize="16sp"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <!-- Buttons (NOW pinned like Q4, and aligned rails) -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="16dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <TextView
+                                android:id="@+id/txt_previous2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Previous"
+                                android:textColor="@color/dark_green"
+                                android:paddingVertical="6dp"
+                                android:paddingHorizontal="18dp"
+                                android:background="@drawable/button_previous"
+                                android:textStyle="bold"/>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"/>
+
+                            <TextView
+                                android:id="@+id/txt_next2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/next_button"
+                                android:textColor="@color/accent1"
+                                android:textSize="16sp"
+                                android:paddingVertical="8dp"
+                                android:paddingHorizontal="22dp"
+                                android:background="@drawable/button_next"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

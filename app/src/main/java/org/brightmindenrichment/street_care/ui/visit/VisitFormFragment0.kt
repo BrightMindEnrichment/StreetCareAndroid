@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentVisitBinding
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.DetailsButtonClickListener
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitLogRecyclerAdapter
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitViewModel
@@ -32,7 +33,7 @@ import org.brightmindenrichment.street_care.util.Extensions
 class VisitFormFragment0 : Fragment() {
     private var _binding: FragmentVisitBinding? = null
     val binding get() = _binding!!
-    private val sharedVisitViewModel: VisitViewModel by activityViewModels()
+    private val viewModel: InteractionLogViewModel by activityViewModels()
     private val visitDataAdapter = VisitDataAdapter()
     companion object {
         fun newInstance() = VisitFormFragment0()
@@ -49,36 +50,36 @@ class VisitFormFragment0 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            binding.btnAddNew.setOnClickListener {
-                // if user is submitting multiple visit log together, the view model field should reset
+        binding.btnAddNew.setOnClickListener {
+            // if user is submitting multiple visit log together, the view model field should reset
 
                 if(FirebaseAuth.getInstance().currentUser != null) {
                     // showImpactDialog(requireContext())
                     val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                     val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
                     if(shouldShowDialog){
-                        sharedVisitViewModel.resetVisitLogPage()
-                        findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
+                        viewModel.resetInteractionLog()
+                        findNavController().navigate(R.id.interactionQ1Fragment)
                     }else{
                         showCustomDialogPH()
                     }
 
 
-                } else{
-                    /*  Extensions.showDialog(
-                          requireContext(), requireContext().getString(R.string.alert), requireContext().getString(R.string.visit_log_can_be_recorded_by_logged_in_users),
-                          requireContext().getString(R.string.ok),
-                          requireContext().getString(R.string.cancel))*/
-                    showCustomDialog()
-                }
+            } else{
+                /*  Extensions.showDialog(
+                      requireContext(), requireContext().getString(R.string.alert), requireContext().getString(R.string.visit_log_can_be_recorded_by_logged_in_users),
+                      requireContext().getString(R.string.ok),
+                      requireContext().getString(R.string.cancel))*/
+                showCustomDialog()
+            }
 
-            }
-            if (FirebaseAuth.getInstance().currentUser != null) {
-                binding.historyMsg.visibility = View.GONE
-                updateUI()
-            } else {
-                Log.d("BME", "not logged in")
-            }
+        }
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            binding.historyMsg.visibility = View.GONE
+            updateUI()
+        } else {
+            Log.d("BME", "not logged in")
+        }
 
 
 
@@ -91,8 +92,8 @@ class VisitFormFragment0 : Fragment() {
             .setTitle("I provided help!")
             .setMessage("Please fill out this form each time you perform an outreach. This helps you track your contributions and allows StreetCare to bring more support and services to help the community!")
             .setPositiveButton("OK") { dialog, _ ->
-                sharedVisitViewModel.resetVisitLogPage()
-                findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment1)
+                viewModel.resetInteractionLog()
+                findNavController().navigate(R.id.interactionQ1Fragment)
                 dialog.dismiss()
             }
             .create()
@@ -109,7 +110,7 @@ class VisitFormFragment0 : Fragment() {
                     override fun onClick(visitLog:VisitLog) {
                         val bundle = bundleOf("visitLog" to visitLog)
                         findNavController().navigate(
-                            R.id.action_nav_visit_to_visitLogDetailsFragment,bundle
+                            R.id.interactionQ1Fragment,bundle
                         )
                     }
                 })
@@ -142,12 +143,12 @@ class VisitFormFragment0 : Fragment() {
             val bundle = Bundle().apply {
                 putString("from", "nav_visit")
             }
-           // findNavController().navigate(R.id.action_nav_visit_to_profile)
+            // findNavController().navigate(R.id.action_nav_visit_to_profile)
             requireActivity()
                 .findViewById<BottomNavigationView>(R.id.bottomNav)
                 .selectedItemId = R.id.profile
 
-           val navOptions = NavOptions.Builder()
+            val navOptions = NavOptions.Builder()
                 .setPopUpTo(R.id.profile, true)
                 .build()
 
@@ -183,18 +184,18 @@ class VisitFormFragment0 : Fragment() {
 
 
         val btnOK = dialogView.findViewById<TextView>(R.id.ok_btn)
-        val checkBox = dialogView.findViewById<CheckBox>(R.id.cbDontShowAgain)
+//        val checkBox = dialogView.findViewById<CheckBox>(R.id.cbDontShowAgain)
 
 
         btnOK.setOnClickListener {
-            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            if (checkBox.isChecked) {
+//            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+//            if (checkBox.isChecked) {
+//
+//                prefs.edit().putBoolean("dont_show_again", true).apply()
+//            }
+            viewModel.resetInteractionLog()
 
-                prefs.edit().putBoolean("dont_show_again", true).apply()
-            }
-            sharedVisitViewModel.resetVisitLogPage()
-
-            findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
+            findNavController().navigate(R.id.interactionQ1Fragment)
             dialog.dismiss()
 
         }

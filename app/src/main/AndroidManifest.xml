@@ -4,61 +4,69 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/streetcare_logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/streetcare_logo"
-        android:name=".MyApplication"
         android:supportsRtl="true"
         android:theme="@style/Theme.StreetCare"
         tools:targetApi="28">
 
         <activity
+            android:name=".ui.visit.visit_forms.InteractionLogActivityq4"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
+        <activity
+            android:name=".ui.visit.visit_forms.InteractionLogActivityq3"
+            android:exported="true"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan" />
+        <activity
             android:name=".MainActivity"
-            android:exported="false"
             android:configChanges="locale|layoutDirection"
+            android:exported="false"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.StreetCare.NoActionBar"/>
+            android:theme="@style/Theme.StreetCare.NoActionBar" />
+
         <activity
             android:name=".SplashScreen"
             android:exported="true"
             android:theme="@style/Theme.StreetCare.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.user.ChapterMembershipFormOneAcitivity" />
         <activity android:name=".ui.user.ChapterMembershipFormTwoAcitivity" />
-        <activity android:name=".ui.user.ChapterMembershipFormThreeAcitivity" />
-        
+        <activity android:name=".ui.user.ChapterMembershipFormThreeAcitivity" /> <!-- If you want to disable android.startup completely. -->
 
-        <!-- If you want to disable android.startup completely. -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
-        </provider>
-
+            tools:node="remove" />
 
         <service
             android:name=".notification.MyFirebaseMessagingService"

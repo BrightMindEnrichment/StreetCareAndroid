@@ -18,25 +18,21 @@
         android:textStyle="bold"
         />
 
-
-        <TextView
-            android:id="@+id/tvProvidedHelpMsg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/provided_help_msg"
-            android:textSize="14sp"
-            android:layout_marginTop="15dp"
-            android:paddingBottom="16dp"
-            android:textFontWeight="400"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
-            android:lineHeight="28dp"
-            android:textColor="@color/light_primary"
-            />
-
-
-
-
+    <TextView
+        android:id="@+id/tvProvidedHelpMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/provided_help_msg"
+        android:textSize="14sp"
+        android:layout_marginTop="15dp"
+        android:paddingBottom="16dp"
+        android:textFontWeight="400"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
+        android:lineHeight="28dp"
+        android:textAlignment="center"
+        android:textColor="@color/light_primary"
+        />
 
     <View
         android:layout_width="match_parent"
@@ -47,48 +43,19 @@
     <!-- Push buttons to bottom -->
 
 
-        <TextView
-            android:id="@+id/ok_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/ok"
-            android:textFontWeight="500"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:textColor="@color/forget_blue"
-            android:layout_marginTop="5dp"
-            />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="15dp"
-        android:gravity="center">
-
-        <CheckBox
-            android:id="@+id/cbDontShowAgain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/light_primary"
-            />
-
-        <TextView
-            android:id="@+id/tvDontShowAgain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/do_not_show_again"
-            android:textSize="14sp"
-            android:textColor="@color/light_primary"/>
-    </LinearLayout>
-
-
-
-
+    <TextView
+        android:id="@+id/ok_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/ok"
+        android:textFontWeight="500"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textColor="@color/forget_blue"
+        android:layout_marginTop="5dp"
+        />
 
 </LinearLayout>

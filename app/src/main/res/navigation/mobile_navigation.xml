@@ -41,10 +41,10 @@
         tools:layout="@layout/fragment_visit" >
         <action
             android:id="@+id/action_nav_visit_to_visitFormFragment1"
-            app:destination="@id/visitFormFragment1" />
+            app:destination="@id/interactionQ1Fragment" />
         <action
             android:id="@+id/action_nav_visit_to_visitFormFragment2"
-            app:destination="@id/visitFormFragment2" />
+            app:destination="@id/individualInteractionQ2" />
         <action
             android:id="@+id/action_nav_visit_to_visitLogDetailsFragment"
             app:destination="@id/visitLogDetailsFragment"/>
@@ -53,104 +53,7 @@
             app:destination="@id/profile" />
 
     </fragment>
-
-    <fragment
-        android:id="@+id/visitFormFragment1"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment1"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form1" >
-        <action
-            android:id="@+id/action_visitFormFragment1_to_mapSelectorFragment"
-            app:destination="@id/mapSelectorFragment" />
-
-        <action
-            android:id="@+id/action_visitFormFragment1_to_visitFormFragment2"
-            app:destination="@id/visitFormFragment2" />
-        <action
-            android:id="@+id/action_visitFormFragment1_to_visitFormFragment3"
-            app:destination="@id/visitFormFragment3" />
-        <action
-            android:id="@+id/action_visitFormFragment1_to_nav_visit"
-            app:destination="@id/nav_visit"
-            app:popUpTo="@id/nav_visit"
-            app:popUpToInclusive="true"/>
-
-    </fragment>
-    <fragment
-        android:id="@+id/visitFormFragment2"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment2"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form2" >
-
-        <action
-            android:id="@+id/action_visitFormFragment2_to_visitFormFragment3"
-            app:destination="@id/visitFormFragment3" />
-        <action
-            android:id="@+id/action_visitFormFragment2_to_visitFormFragment1"
-            app:destination="@id/visitFormFragment1" />
-        <action
-            android:id="@+id/action_visitFormFragment2_to_nav_visit"
-            app:destination="@id/nav_visit"
-            app:popUpTo="@id/nav_visit"
-            app:popUpToInclusive="true"/>
-
-    </fragment>
-    <fragment
-        android:id="@+id/visitFormFragment3"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment3"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form3" >
-        <action
-            android:id="@+id/action_visitFormFragment3_to_visitFormFragment4"
-            app:destination="@id/visitFormFragment4" />
-        <action
-            android:id="@+id/action_visitFormFragment3_to_visitFormFragment1"
-            app:destination="@id/visitFormFragment1" />
-    </fragment>
-    <fragment
-        android:id="@+id/visitFormFragment4"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment4"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form4" >
-        <action
-            android:id="@+id/action_visitFormFragment4_to_action_visitFormFragment5"
-            app:destination="@id/visitFormFragment6" />
-        <action
-            android:id="@+id/action_visitFormFragment4_to_action_visitFormFragment3"
-            app:destination="@id/visitFormFragment3" />
-    </fragment>
-    <fragment
-        android:id="@+id/visitFormFragment6"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment6"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form6" >
-        <action
-            android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment6"
-            app:destination="@id/visitFormFragment5" />
-        <action
-            android:id="@+id/action_visitFormFragment5_to_action_visitFormFragment4"
-            app:destination="@id/visitFormFragment4" />
-    </fragment>
-    <fragment
-        android:id="@+id/visitFormFragment5"
-        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitFormFragment5"
-        android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form5" >
-<!--        <action-->
-<!--            android:id="@+id/action_visitFormFragment4_to_visitFormFragment5"-->
-<!--            app:destination="@id/surveySubmittedFragment" />-->
-        <action
-            android:id="@+id/action_visitFormFragment5_to_visitFormFragment4"
-            app:destination="@id/visitFormFragment6" />
-<!--        <action-->
-<!--            android:id="@+id/action_visitFormFragment5_to_visitFormFragment_additional"-->
-<!--            app:destination="@id/additional2" />-->
-        <action
-            android:id="@+id/action_visitFormFragment5_to_visitForm7a"
-            app:destination="@id/visitForm7a" />
-
-    </fragment>
-
+        <!-- Fragment 7A -->
     <fragment
         android:id="@+id/visitForm7a"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitForm7a"
@@ -162,9 +65,11 @@
             app:destination="@id/additional2" />
         <!-- Action for No button to Survey Submitted Fragment -->
         <action
-            android:id="@+id/action_visitForm7a_to_surveySubmittedFragment"
-            app:destination="@id/surveySubmittedFragment" />
+            android:id="@+id/action_visitForm7a_to_ConsentFragment"
+            app:destination="@id/consentFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/sharedCommunityVisitLogFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SharedCommunityVisitLogFragment"
@@ -180,11 +85,11 @@
 
         <action
             android:id="@+id/action_sharedCommunityVisitLogFragment_to_visit_form2"
-            app:destination="@id/visitFormFragment2" />
+            app:destination="@id/interactionQ1Fragment" />
 
     </fragment>
 
-    <fragment
+   <fragment
         android:id="@+id/surveySubmittedFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.SurveySubmittedFragment"
         android:label="@string/visit_log_smallCaps"
@@ -195,8 +100,8 @@
             app:popUpTo="@id/nav_home"
             app:popUpToInclusive="true"/>
         <action
-            android:id="@+id/action_surveySubmittedFragment_to_visitFormFragment2"
-            app:destination="@id/visitFormFragment2" />
+            android:id="@+id/action_surveySubmittedFragment_to_interactionQ1Fragment"
+            app:destination="@id/interactionQ1Fragment" />
         <action
             android:id="@+id/action_surveySubmittedFragment_to_nav_visit"
             app:destination="@id/loginRedirectFragment" />
@@ -208,10 +113,166 @@
             app:destination="@id/sharedCommunityVisitLogFragment" />
     </fragment>
 
+<!--    <fragment-->
+<!--        android:id="@+id/nav_interaction_log"-->
+<!--        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ1Fragment"-->
+<!--        android:label="Interaction Log"-->
+<!--        tools:layout="@layout/fragment_question1">-->
+<!--        <action-->
+<!--            android:id="@+id/action_interactionQ1_to_interactionQ2"-->
+<!--            app:destination="@id/interactionQ2Fragment" />-->
+<!--    </fragment>-->
+
+    <fragment
+        android:id="@+id/interactionQ1Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ1Fragment"
+        android:label="Interaction Log"
+        tools:layout="@layout/fragment_question1">
+        <action
+            android:id="@+id/action_interactionQ1_to_interactionQ2"
+            app:destination="@id/interactionQ2Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ2Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ2Fragment"
+        android:label="Interaction Log"
+        tools:layout="@layout/fragment_question2">
+        <action
+            android:id="@+id/action_interactionQ2_to_visitForm3"
+            app:destination="@id/interactionQ3Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ3Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ3Fragment"
+        android:label="Interaction Log"
+        >
+        <action
+            android:id="@+id/action_q3_to_q4"
+            app:destination="@id/interactionQ4Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ4Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ4Fragment"
+        android:label="Interaction Log">
+
+        <action
+            android:id="@+id/action_q4_to_q5"
+            app:destination="@id/interactionQ5Fragment" />
+
+        <action
+            android:id="@+id/action_q4_back_to_q3"
+            app:destination="@id/interactionQ3Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ5Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ5Fragment"
+        android:label="Interaction Log">
+
+        <action
+            android:id="@+id/action_q5_to_q6"
+            app:destination="@id/interactionQ6Fragment" />
+
+        <action
+            android:id="@+id/action_q5_back_to_q4"
+            app:destination="@id/interactionQ4Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ6Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ6Fragment"
+        android:label="Interaction Log"
+        tools:layout="@layout/fragment_visit_form6">
+
+        <action
+            android:id="@+id/action_q6_to_q7"
+            app:destination="@id/interactionQ7Fragment" />
+
+        <action
+            android:id="@+id/action_q6_back_to_q5"
+            app:destination="@id/interactionQ5Fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/interactionQ7Fragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ7Fragment"
+        android:label="Interaction Q7"
+        tools:layout="@layout/fragment_visit_form7a">
+
+        <action
+            android:id="@+id/action_q7_yes_to_individualInteraction1"
+            app:destination="@id/individualInteractionQ1" />
+
+        <action
+            android:id="@+id/action_q7_no_to_consentPage"
+            app:destination="@id/consentFragment" />
+
+    </fragment>
 
 
+    <fragment
+        android:id="@+id/nav_interaction_log"
+        android:name="org.brightmindenrichment.street_care.ui.visit.BlankInteractionLogFragment"
+        android:label="Interaction Log"
+        tools:layout="@layout/fragment_blank" />
 
-<!--    CommunityPart-->
+    <fragment
+        android:id="@+id/individualInteractionQ1"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionQ1"
+        tools:layout="@layout/fragment_individual_interaction_q1">
+
+        <action
+            android:id="@+id/action_individualInteractionQ1_to_visitIndividualInteractionQ2"
+            app:destination="@id/individualInteractionQ2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/individualInteractionQ2"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionQ2"
+        tools:layout="@layout/fragment_individual_interaction_q2">
+
+        <action
+            android:id="@+id/action_individualInteractionQ2_to_individualInteractionQ3"
+            app:destination="@id/individualInteractionQ3" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/individualInteractionQ3"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionQ3"
+        tools:layout="@layout/fragment_individual_interaction_q3">
+
+        <action
+            android:id="@+id/action_individualInteractionQ3_to_individualInteractionQ4"
+            app:destination="@id/individualInteractionQ4" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/individualInteractionQ4"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionQ4"
+        tools:layout="@layout/fragment_individual_interaction_q4">
+
+        <!-- Change Fragment-->
+        <action
+            android:id="@+id/action_individualInteractionQ4_to_individualInteractionFragment"
+            app:destination="@id/individualInteractionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/individualInteractionFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionFragment"
+        android:label="Individual Interaction"
+        tools:layout="@layout/edit_individual_interaction">
+
+        <action
+            android:id="@+id/action_individualInteractionFragment_to_individualInteractionQ1"
+            app:destination="@id/individualInteractionQ1" />
+    </fragment>
+
+
+    <!--    CommunityPart-->
     <fragment
         android:id="@+id/nav_community"
         android:name="org.brightmindenrichment.street_care.ui.community.CommunityFragment"
@@ -250,18 +311,18 @@
         android:label="@string/add_event"
         tools:layout="@layout/fragment_add_event" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/communityHelpRequestFragment"-->
-<!--        android:name="org.brightmindenrichment.street_care.ui.community.CommunityHelpRequestFragment"-->
-<!--        android:label="{pageTitle}"-->
-<!--        tools:layout="@layout/fragment_community_help_requests" >-->
+    <!--    <fragment-->
+    <!--        android:id="@+id/communityHelpRequestFragment"-->
+    <!--        android:name="org.brightmindenrichment.street_care.ui.community.CommunityHelpRequestFragment"-->
+    <!--        android:label="{pageTitle}"-->
+    <!--        tools:layout="@layout/fragment_community_help_requests" >-->
 
-<!--        <argument-->
-<!--            android:name="pageTitle"-->
-<!--            android:defaultValue="Help Request"-->
-<!--            app:argType="string" />-->
+    <!--        <argument-->
+    <!--            android:name="pageTitle"-->
+    <!--            android:defaultValue="Help Request"-->
+    <!--            app:argType="string" />-->
 
-<!--    </fragment>-->
+    <!--    </fragment>-->
 
     <fragment
         android:id="@+id/publicEvent"
@@ -270,11 +331,11 @@
         tools:layout="@layout/fragment_public_event" />
 
 
-<!--    <fragment-->
-<!--        android:id="@+id/nav_add_help_request"-->
-<!--        android:name="org.brightmindenrichment.street_care.ui.community.AddHelpRequestFragment"-->
-<!--        android:label="@string/add_help_request"-->
-<!--        tools:layout="@layout/fragment_add_help_request" />-->
+    <!--    <fragment-->
+    <!--        android:id="@+id/nav_add_help_request"-->
+    <!--        android:name="org.brightmindenrichment.street_care.ui.community.AddHelpRequestFragment"-->
+    <!--        android:label="@string/add_help_request"-->
+    <!--        tools:layout="@layout/fragment_add_help_request" />-->
 
     <fragment
         android:id="@+id/communityActivityFragment"
@@ -370,7 +431,7 @@
         tools:layout="@layout/fragment_after" >
         <action
             android:id="@+id/action_afterFragment_to_visitFormFragment1"
-            app:destination="@id/visitFormFragment1" />
+            app:destination="@id/interactionQ1Fragment" />
     </fragment>
 
     <fragment
@@ -454,6 +515,7 @@
         tools:layout="@layout/fragment_what_to_give" />
 
 
+
     <fragment
         android:id="@+id/additional1"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Additional1"
@@ -463,14 +525,14 @@
             android:id="@+id/action_additional1_to_additional2"
             app:destination="@id/additional2" />
         <action
-            android:id="@+id/action_additional1_to_visitFormFragment5"
-            app:destination="@id/visitFormFragment5" />
+            android:id="@+id/action_additional1_to_interactionQ5"
+            app:destination="@id/interactionQ5Fragment" />
     </fragment>
     <fragment
         android:id="@+id/additional2"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Additional2"
         android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_additional2">
+        tools:layout="@layout/fragment_question1">
         <action
             android:id="@+id/action_additional2_to_visitForm7a"
             app:destination="@id/visitForm7a" />
@@ -568,7 +630,7 @@
         android:id="@+id/additional10"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Additional10"
         android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_additional10">
+        tools:layout="@layout/fragment_question2">
         <action
             android:id="@+id/action_additional10_to_additional9"
             app:destination="@id/additional9" />
@@ -587,7 +649,7 @@
             android:id="@+id/action_additional4_to_nav_visit"
             app:destination="@id/nav_visit" />
     </fragment>
-    
+
     <fragment
         android:id="@+id/visitLogDetailsFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.details.VisitLogDetailsFragment"
@@ -752,5 +814,43 @@
         android:label="UserFragment"
         tools:layout="@layout/fragment_profile"/>
 
+    <fragment
+        android:id="@+id/consentFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.ConsentFragment"
+        tools:layout="@layout/fragment_consent">
+        <argument
+            android:name="interactionId"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="create" />
+
+        <action
+            android:id="@+id/action_consentFragment_to_surveySubmittedFragment"
+            app:destination="@id/surveySubmittedFragment"
+            app:popUpTo="@id/consentFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/successFragment">
+
+        <!-- Add Another → Q1/7 -->
+        <action
+            android:id="@+id/action_successFragment_to_visitFormFragment1"
+            app:destination="@id/interactionQ1Fragment"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="false" />
+
+        <!-- Back to Interaction Log -->
+        <action
+            android:id="@+id/action_successFragment_to_visitLogFragment"
+            app:destination="@id/nav_visit"
+            app:popUpTo="@id/nav_visit"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>

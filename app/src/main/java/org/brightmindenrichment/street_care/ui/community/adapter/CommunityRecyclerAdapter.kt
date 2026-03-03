@@ -437,7 +437,7 @@ class CommunityRecyclerAdapter(
                 )
                 btnLike.tag = if (liked) "liked" else "unliked"
                 textViewlikeCount.text = event.likeCount.toString()
-
+                
                 /*
                 if(approved) {
                     linearLayoutVerified.visibility = View.VISIBLE
