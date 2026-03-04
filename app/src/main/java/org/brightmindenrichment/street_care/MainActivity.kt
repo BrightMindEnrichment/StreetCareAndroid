@@ -225,6 +225,8 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home,
+                R.id.nav_visit,
+                R.id.loginVisitLogFragment,
                 R.id.loginRedirectFragment,
                 R.id.nav_community,
                 R.id.nav_profile
@@ -281,10 +283,15 @@ class MainActivity : AppCompatActivity() {
                     .show()
                 false
             } else if (item.itemId == R.id.loginRedirectFragment) {
+                val visitNavOptions = NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .setPopUpTo(navController.graph.startDestinationId, false, true)
+                    .build()
                 if (FirebaseAuth.getInstance().currentUser != null) {
-                    navController.navigate(R.id.nav_visit)
+                    navController.navigate(R.id.nav_visit, null, visitNavOptions)
                 } else {
-                    navController.navigate(R.id.loginVisitLogFragment)
+                    navController.navigate(R.id.loginVisitLogFragment, null, visitNavOptions)
                 }
                 true
             } else {

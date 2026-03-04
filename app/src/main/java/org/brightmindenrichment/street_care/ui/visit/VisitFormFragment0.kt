@@ -9,10 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +44,6 @@ class VisitFormFragment0 : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         binding.btnAddNew.setOnClickListener {
             // if user is submitting multiple visit log together, the view model field should reset
 
@@ -104,10 +101,10 @@ class VisitFormFragment0 : Fragment() {
                 requireContext(),
                 visitDataAdapter,
                 object : DetailsButtonClickListener {
-                    override fun onClick(visitLog:VisitLog) {
-                        val bundle = bundleOf("visitLog" to visitLog)
+                    override fun onClick(visitLog: VisitLog) {
+                        val bundle = bundleOf("visitlogId" to visitLog)
                         findNavController().navigate(
-                            R.id.interactionQ1Fragment,bundle
+                            R.id.action_nav_visit_to_visitLogDetailsFragment, bundle
                         )
                     }
                 })
@@ -137,22 +134,9 @@ class VisitFormFragment0 : Fragment() {
         val btnCancel = dialogView.findViewById<TextView>(R.id.cancel_btn)
 
         btnOK.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("from", "nav_visit")
-            }
-            // findNavController().navigate(R.id.action_nav_visit_to_profile)
             requireActivity()
                 .findViewById<BottomNavigationView>(R.id.bottomNav)
                 .selectedItemId = R.id.profile
-
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.profile, true)
-                .build()
-
-
-            findNavController().navigate(R.id.action_nav_user_to_nav_login,bundle,navOptions)
-
-
             dialog.dismiss()
         }
 
