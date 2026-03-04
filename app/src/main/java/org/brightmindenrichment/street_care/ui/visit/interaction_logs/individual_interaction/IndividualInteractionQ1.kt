@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -188,6 +189,7 @@ class IndividualInteractionQ1 : Fragment() {
 
         // Next -> validate -> go to Q2
         btnNext.setOnClickListener {
+
             // clear old errors (we only have EditTexts, so just validate with messages)
             tvDate.error = null
             tvTime.error = null
@@ -238,5 +240,17 @@ class IndividualInteractionQ1 : Fragment() {
                 R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        @Suppress("DEPRECATION")
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        @Suppress("DEPRECATION")
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
     }
 }

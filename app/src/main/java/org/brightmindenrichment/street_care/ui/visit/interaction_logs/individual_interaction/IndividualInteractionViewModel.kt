@@ -25,7 +25,7 @@ class IndividualInteractionViewModel : ViewModel() {
     private val _committedInteractions = MutableLiveData<List<IndividualInteraction>>(emptyList())
     val committedInteractions: LiveData<List<IndividualInteraction>> get() = _committedInteractions
 
-    private var interactionLogId: String = "test"
+    private var interactionLogId: String? = null
 
     private var listenerRegistration: ListenerRegistration? = null
 
@@ -154,21 +154,26 @@ class IndividualInteractionViewModel : ViewModel() {
 
         interaction.helpRequestId ?: return
 
-        val interactionLogRef =
-            db.collection(COLLECTION_INTERACTION_LOG_DEV).document(interactionLogId)
-        batch.update(
-            interactionLogRef, FIELD_HELP_REQUEST_DOC_IDS,
-            FieldValue.arrayRemove(interaction.helpRequestId)
-        )
+        if (interactionLogId != null){
+            val interactionLogRef =
+                db.collection(COLLECTION_INTERACTION_LOG_DEV).document(interactionLogId!!)
+            batch.update(
+                interactionLogRef, FIELD_HELP_REQUEST_DOC_IDS,
+                FieldValue.arrayRemove(interaction.helpRequestId)
+            )
 
-        val helpRequestRef =
-            db.collection(COLLECTION_HELP_REQUEST_DEV).document(interaction.helpRequestId!!)
-        batch.delete(helpRequestRef)
 
-        batch.commit()
-            .addOnFailureListener { e ->
-                Log.w("BME", "Error deleting document: $e")
-            }
+            val helpRequestRef =
+                db.collection(COLLECTION_HELP_REQUEST_DEV).document(interaction.helpRequestId!!)
+            batch.delete(helpRequestRef)
+
+
+            batch.commit()
+                .addOnFailureListener { e ->
+                    Log.w("BME", "Error deleting document: $e")
+                }
+        }
+        Log.w("BME", "Error InteractionLog Doc Id is missing.")
     }
 
     override fun onCleared() {

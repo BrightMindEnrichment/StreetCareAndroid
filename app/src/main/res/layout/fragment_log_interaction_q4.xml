@@ -1,286 +1,372 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Main scrollable content -->
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize"
-    android:paddingBottom="32dp">
+    android:background="@android:color/white">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/mainScroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="0dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/visit_log_inside"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textFontWeight="700"
-            app:fontFamily="Poppins" />
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="40dp"
-                android:layout_height="15dp"
-                android:layout_marginHorizontal="3dp"
-                android:background="@drawable/progress_dot_yellow" />
-
-            <View
-                android:layout_width="40dp"
-                android:layout_height="15dp"
-                android:layout_marginHorizontal="3dp"
-                android:background="@drawable/progress_dot_yellow" />
-
-            <View
-                android:layout_width="40dp"
-                android:layout_height="15dp"
-                android:layout_marginHorizontal="3dp"
-                android:background="@drawable/progress_dot_yellow" />
-
-            <View
-                android:layout_width="40dp"
-                android:layout_height="15dp"
-                android:layout_marginHorizontal="3dp"
-                android:background="@drawable/progress_dot_yellow_with_border" />
-
-            <View
-                android:layout_width="40dp"
-                android:layout_height="15dp"
-                android:layout_marginHorizontal="3dp"
-                android:background="@drawable/progress_dot_green_dark" />
-
-            <View
-                android:layout_width="40dp"
-                android:layout_height="15dp"
-                android:layout_marginHorizontal="3dp"
-                android:background="@drawable/progress_dot_green_dark" />
-
-            <View
-                android:layout_width="40dp"
-                android:layout_height="15dp"
-                android:layout_marginHorizontal="3dp"
-                android:background="@drawable/progress_dot_green_dark" />
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/content_card"
-            android:layout_width="364dp"
-            android:layout_height="506dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:cardUseCompatPadding="true">
-
-            <LinearLayout
-                android:id="@+id/question_container"
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvHeader"
                 android:layout_width="match_parent"
-                android:layout_height="506dp"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/visit_log_inside"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:includeFontPadding="false"
+                app:fontFamily="@font/poppins_bold_new"/>
 
-                <!-- Question label + skip -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="20dp">
-
-                    <TextView
-                        android:id="@+id/question_label"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_toStartOf="@id/skip_btn_q4"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="@string/question_progress_3"
-                        android:textColor="#000000"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/skip_btn_q4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/skip_button_border"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:paddingStart="12dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="12dp"
-                        android:paddingBottom="4dp"
-                        android:text="@string/action_skip"
-                        android:textColor="#000000"
-                        android:textSize="14sp" />
-                </RelativeLayout>
+            <!-- Progress dots -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="#E0E0E0" />
+                    android:layout_width="40dp"
+                    android:layout_height="15dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:background="@drawable/progress_dot_yellow" />
 
-                <TextView
-                    android:id="@+id/support_question"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="What kind of support did you provide?"
-                    android:textAlignment="center"
-                    android:textColor="#000000"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="15dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:background="@drawable/progress_dot_yellow" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="15dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:background="@drawable/progress_dot_yellow" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="15dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:background="@drawable/progress_dot_yellow_with_border" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="15dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:background="@drawable/progress_dot_green_dark" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="15dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:background="@drawable/progress_dot_green_dark" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="15dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:background="@drawable/progress_dot_green_dark" />
+            </LinearLayout>
+
+            <!-- Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/content_card"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_gravity="center"
+                android:maxWidth="360dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true"
+                app:strokeColor="@color/gray700"
+                app:strokeWidth="1.2dp">
 
                 <LinearLayout
-                    android:id="@+id/checkbox_list"
                     android:layout_width="match_parent"
-                    android:layout_height="274dp"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="1dp">
+                    android:paddingBottom="14dp">
 
-                    <CheckBox
-                        android:id="@+id/food_checkbox"
-                        style="@style/Widget.App.CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:text="Food &amp; Drinks" />
-
-                    <CheckBox
-                        android:id="@+id/clothes_checkbox"
-                        style="@style/Widget.App.CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:text="Clothes" />
-
-                    <CheckBox
-                        android:id="@+id/hygiene_checkbox"
-                        style="@style/Widget.App.CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:text="Hygiene Products" />
-
-                    <CheckBox
-                        android:id="@+id/wellness_checkbox"
-                        style="@style/Widget.App.CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:text="Wellness/Emotional Support" />
-
-                    <CheckBox
-                        android:id="@+id/medical_checkbox"
-                        style="@style/Widget.App.CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:text="Medical Help/Doctor" />
-
-                    <CheckBox
-                        android:id="@+id/social_worker_checkbox"
-                        style="@style/Widget.App.CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:text="Social Worker/Psychiatrist" />
-
-                    <CheckBox
-                        android:id="@+id/legal_checkbox"
-                        style="@style/Widget.App.CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:text="Lawyer/Legal" />
-
-                    <CheckBox
-                        android:id="@+id/other_checkbox"
-                        style="@style/Widget.App.CheckBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:text="Other" />
-
-                    <EditText
-                        android:id="@+id/other_input"
+                    <!-- Header Row -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="4dp">
+
+                        <TextView
+                            android:id="@+id/question_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/question_progress_3"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/poppins_regular"/>
+
+                        <TextView
+                            android:id="@+id/skip_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/action_skip"
+                            android:textColor="@color/black"
+                            android:textSize="13sp"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="6dp"
+                            android:background="@drawable/rounded_btn"
+                            android:gravity="center"
+                            app:fontFamily="@font/poppins_bold_new"/>
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="0.7dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/edittext_rounded"
-                        android:hint="If Other, please specify here."
-                        android:padding="14dp"
-                        android:textColor="#000000"
-                        android:textColorHint="#999999"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
+                        app:dividerColor="@color/gray700"/>
+
+                    <!-- Content -->
+                    <LinearLayout
+                        android:id="@+id/contentInset"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:id="@+id/support_question"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/what_support_you_provided"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:layout_marginBottom="8dp"
+                            app:fontFamily="@font/poppins_bold_new"/>
+
+                        <!-- Checkboxes -->
+                        <LinearLayout
+                            android:id="@+id/checkbox_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/food_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/food_drinks"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/clothes_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/clothes"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/hygiene_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/hygiene"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/wellness_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/wellness_emotional_support"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/medical_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/medical_help"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/social_worker_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/social_worker_psychiatrist"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/legal_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/lawyer_legal"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <androidx.appcompat.widget.AppCompatCheckBox
+                                android:id="@+id/other_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:drawableStart="@drawable/cb_square_green"
+                                android:drawablePadding="9dp"
+                                android:minHeight="36dp"
+                                android:text="@string/other"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:fontFamily="@font/poppins_regular"/>
+
+                            <!-- Other Input -->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilOther"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:visibility="gone"
+                                app:hintEnabled="false"
+                                app:boxStrokeWidth="1dp"
+                                app:boxStrokeColor="@color/gray700"
+                                app:boxCornerRadiusTopStart="10dp"
+                                app:boxCornerRadiusTopEnd="10dp"
+                                app:boxCornerRadiusBottomStart="10dp"
+                                app:boxCornerRadiusBottomEnd="10dp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/other_input"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:minHeight="60dp"
+                                    android:hint="@string/if_other_please_specify_here"
+                                    android:gravity="start"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="10dp"
+                                    android:background="@drawable/rounded_border_field"
+                                    android:includeFontPadding="false"
+                                    android:inputType="textCapSentences"
+                                    android:textSize="16sp"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <TextView
+                            android:id="@+id/btn_previous"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/Previous"
+                            android:textColor="@color/dark_green"
+                            android:paddingVertical="6dp"
+                            android:paddingHorizontal="18dp"
+                            android:background="@drawable/button_previous"
+                            android:textStyle="bold"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:id="@+id/btn_next"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/next_button"
+                            android:textColor="@color/accent1"
+                            android:textSize="16sp"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="22dp"
+                            android:background="@drawable/button_next"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <LinearLayout
-                    android:id="@+id/navigation_buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+        </LinearLayout>
+    </ScrollView>
 
-                    <Button
-                        android:id="@+id/btn_previous"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="110dp"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="8dp"
-                        android:text="Previous"
-                        android:textColor="@android:color/black"
-                        app:cornerRadius="24dp"
-                        app:strokeColor="@color/gray_outline" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/btn_next"
-                        android:layout_width="90dp"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="12dp"
-                        android:backgroundTint="@color/dark_greener"
-                        android:text="Next"
-                        android:textColor="#f0e192"
-                        app:cornerRadius="24dp" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_gravity="center_horizontal"/>
-
-    </LinearLayout>
-</ScrollView>
-
-
-
-
+</androidx.constraintlayout.widget.ConstraintLayout>

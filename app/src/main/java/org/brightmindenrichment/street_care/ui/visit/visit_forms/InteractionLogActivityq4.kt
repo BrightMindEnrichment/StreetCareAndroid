@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputLayout
 import org.brightmindenrichment.street_care.R
 
 class InteractionLogActivityq4 : AppCompatActivity() {
 
     private lateinit var otherCheckBox: CheckBox
     private lateinit var otherInput: EditText
-    private lateinit var btnNext: Button
-    private lateinit var btnPrevious: Button
+    private lateinit var tilOther: TextInputLayout
+    private lateinit var btnNext: TextView
+    private lateinit var btnPrevious: TextView
     private lateinit var skipBtn: TextView
     private lateinit var checkboxContainer: LinearLayout
 
@@ -26,34 +27,23 @@ class InteractionLogActivityq4 : AppCompatActivity() {
 
         // 2. Set up Button Listeners (Next, Previous, Skip, Close)
         setupClickListeners()
-
-        // 3. Set up Static Bottom Navigation (Visual only)
-//        setupStaticBottomNavigation()
     }
 
     private fun initializeViews() {
         otherCheckBox = findViewById(R.id.other_checkbox)
         otherInput = findViewById(R.id.other_input)
+        tilOther = findViewById(R.id.tilOther)
         btnNext = findViewById(R.id.btn_next)
         btnPrevious = findViewById(R.id.btn_previous)
         skipBtn = findViewById(R.id.skip_btn)
         checkboxContainer = findViewById(R.id.checkbox_list)
-
-        // Remove default Material tint for all checkboxes so custom vector colors show
-        for (i in 0 until checkboxContainer.childCount) {
-            val child = checkboxContainer.getChildAt(i)
-            if (child is CheckBox) {
-                // Remove tint applied by Material/AppCompat themes
-                child.buttonTintList = null
-            }
-        }
     }
 
 
     private fun setupClickListeners() {
         // Toggle visibility for "Other" input field
         otherCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            otherInput.visibility = if (isChecked) View.VISIBLE else View.GONE
+            tilOther.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
         // Navigation: Next Question
@@ -78,19 +68,6 @@ class InteractionLogActivityq4 : AppCompatActivity() {
             Toast.makeText(this, "Question skipped", Toast.LENGTH_SHORT).show()
         }
     }
-
-//    private fun setupStaticBottomNavigation() {
-//        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-//
-//        // Set the active state to "Interaction Log" so the green line shows
-//        bottomNav.selectedItemId = R.id.loginRedirectFragment
-//
-//        // REMOVED: setOnItemSelectedListener (all navigation logic deleted)
-//
-//        // Optional: Disable touch interaction so it doesn't ripple or react to clicks
-//        bottomNav.isClickable = false
-//        bottomNav.isFocusable = false
-//    }
 
     /**
      * Logic to extract selected answers from the checkbox container

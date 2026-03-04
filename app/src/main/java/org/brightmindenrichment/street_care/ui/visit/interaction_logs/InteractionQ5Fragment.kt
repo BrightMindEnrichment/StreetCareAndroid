@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -41,11 +42,11 @@ class InteractionQ5Fragment : Fragment() {
 
         updateUI()
 
-        binding.btnIncreaseHelped.setOnClickListener { helpedCount++; updateUI() }
-        binding.btnDecreaseHelped.setOnClickListener { if (helpedCount > 0) { helpedCount--; updateUI() } }
+        binding.btnIncreaseHelped.setOnClickListener { syncFromInput(); helpedCount++; updateUI() }
+        binding.btnDecreaseHelped.setOnClickListener { syncFromInput(); if (helpedCount > 0) { helpedCount--; updateUI() } }
 
-        binding.btnIncreaseJoined.setOnClickListener { joinedCount++; updateUI() }
-        binding.btnDecreaseJoined.setOnClickListener { if (joinedCount > 0) { joinedCount--; updateUI() } }
+        binding.btnIncreaseJoined.setOnClickListener { syncFromInput(); joinedCount++; updateUI() }
+        binding.btnDecreaseJoined.setOnClickListener { syncFromInput(); if (joinedCount > 0) { joinedCount--; updateUI() } }
 
         binding.btnPrevious.setOnClickListener {
             findNavController().popBackStack()
@@ -55,14 +56,32 @@ class InteractionQ5Fragment : Fragment() {
         binding.btnNext.setOnClickListener { navigateNext() }
     }
 
+    private fun syncFromInput() {
+        helpedCount = binding.tvCountHelped.text.toString().toIntOrNull() ?: helpedCount
+        joinedCount = binding.tvCountJoined.text.toString().toIntOrNull() ?: joinedCount
+    }
+
     private fun updateUI() {
-        binding.tvCountHelped.text = helpedCount.toString()
-        binding.tvCountJoined.text = joinedCount.toString()
+        binding.tvCountHelped.setText(helpedCount.toString())
+        binding.tvCountJoined.setText(joinedCount.toString())
     }
 
     private fun navigateNext() {
+        syncFromInput()
         viewModel.updateCounts(helpedCount, joinedCount)
         findNavController().navigate(R.id.action_q5_to_q6)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        @Suppress("DEPRECATION")
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        @Suppress("DEPRECATION")
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
     }
 
     override fun onDestroyView() {

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -267,7 +268,13 @@ class MainActivity : AppCompatActivity() {
                                 navController.navigate(R.id.loginVisitLogFragment)
                             }
                         } else {
-                            NavigationUI.onNavDestinationSelected(item, navController)
+                            navController.navigate(
+                                item.itemId, null,
+                                NavOptions.Builder()
+                                    .setLaunchSingleTop(true)
+                                    .setPopUpTo(R.id.nav_home, false)
+                                    .build()
+                            )
                         }
                     }
                     .setNegativeButton("Keep editing", null)

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Main scrollable content -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:paddingTop="?attr/actionBarSize">
+    android:paddingTop="?attr/actionBarSize"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/root_ll"
@@ -170,7 +170,7 @@
                             tools:ignore="UseAppTint" />
                     </FrameLayout>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/tv_count_helped"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -180,7 +180,12 @@
                         android:textSize="26sp"
                         android:textStyle="bold"
                         app:fontFamily="Poppins"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:inputType="number"
+                        android:gravity="center"
+                        android:minWidth="48dp"
+                        android:selectAllOnFocus="true"
+                        android:background="@android:color/transparent" />
 
                     <FrameLayout
                         android:id="@+id/btn_increase_helped"
@@ -240,7 +245,7 @@
                             tools:ignore="UseAppTint" />
                     </FrameLayout>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/tv_count_joined"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -250,7 +255,12 @@
                         android:textSize="26sp"
                         android:textStyle="bold"
                         app:fontFamily="Poppins"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:inputType="number"
+                        android:gravity="center"
+                        android:minWidth="48dp"
+                        android:selectAllOnFocus="true"
+                        android:background="@android:color/transparent" />
 
                     <FrameLayout
                         android:id="@+id/btn_increase_joined"
@@ -312,5 +322,5 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>
 

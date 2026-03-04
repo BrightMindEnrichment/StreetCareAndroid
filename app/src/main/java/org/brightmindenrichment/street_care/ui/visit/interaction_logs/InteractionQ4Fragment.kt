@@ -43,7 +43,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
 
         // Show/hide Other input
         binding.otherCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            binding.otherInput.visibility =
+            binding.tilOther.visibility =
                 if (isChecked) View.VISIBLE else View.GONE
         }
 
@@ -80,7 +80,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
             findNavController().popBackStack()
         }
 
-        binding.skipBtnQ4.setOnClickListener {
+        binding.skipBtn.setOnClickListener {
             findNavController().navigate(R.id.action_q4_to_q5)
         }
     }
@@ -104,12 +104,12 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
                 when {
                     customOther != null -> {
                         child.isChecked = true
-                        binding.otherInput.visibility = View.VISIBLE
+                        binding.tilOther.visibility = View.VISIBLE
                         binding.otherInput.setText(customOther)
                     }
                     "Other" in saved -> {
                         child.isChecked = true
-                        binding.otherInput.visibility = View.VISIBLE
+                        binding.tilOther.visibility = View.VISIBLE
                     }
                 }
             } else {
