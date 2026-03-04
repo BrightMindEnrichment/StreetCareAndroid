@@ -191,7 +191,7 @@
     <string name="warning_new">Warning!</string>
     <string name="login_required">Login Required</string>
     <string name="provided_help">Thanks for helping out!</string>
-    <string name="provided_help_msg">Each entry helps us understand\n community needs better. It’s really\n helpful if you can document\n interactions with each homeless\n person you meet—just a quick log per\n person goes a long way in helping us\n better understand community needs.</string>
+    <string name="provided_help_msg">Each entry helps us understand community needs better. It’s really helpful if you can document interactions with each homeless person you meet—just a quick log per person goes a long way in helping us better understand community needs.</string>
     <string name="login_enter">Log in to enter an interaction.</string>
     <string name="warning_dialogue">You will be unable to view or edit\n your interaction logs without \nsigning in</string>
     <string name="button_image">Image Button</string>
@@ -571,6 +571,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="first_name">First Name *</string>
     <string name="last_name">Last Name *</string>
     <string name="phoneField">Phone</string>
+    <string name="interaction_log_question_1">About you</string>
     <string name="address">Address</string>
     <string name="address_line_1">Address Line 1 *</string>
     <string name="address_line_2">Address Line 2</string>
@@ -720,7 +721,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="select_interaction_date">Select date of interaction</string>
     <string name="select_interaction_time">Select time of interaction</string>
     <string name="question_4">Follow-up Date and Time</string>
-
+    <string name="search_for_address">Search for address</string>
 
 
 </resources>

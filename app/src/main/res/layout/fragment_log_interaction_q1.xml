@@ -7,31 +7,24 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <!-- Top placeholder/status bar -->
+    <View
+        android:id="@+id/status_bar_placeholder"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:paddingHorizontal="16dp">
+        android:layout_height="1dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/btn_close"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical|start"
-            android:src="@drawable/ic_close"
-            android:background="@drawable/red_circular_button"
-            android:contentDescription="@string/close"
-            app:tint="@color/white" />
+    <!-- App bar -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"  android:layout_height="55dp"
+        android:background="@android:color/white"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"  app:layout_constraintEnd_toEndOf="parent"      tools:layout_editor_absoluteX="0dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Interaction Log"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:fontFamily="Poppins" />
-    </FrameLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,97 +39,54 @@
         app:fontFamily="Poppins" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="30dp"
-        android:paddingHorizontal="24dp">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="100"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_yellow_with_border" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar2"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar3"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar4"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar5"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar6"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar7"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
-
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
     </LinearLayout>
 
     <LinearLayout

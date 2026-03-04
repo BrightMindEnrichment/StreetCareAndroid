@@ -3,34 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:paddingHorizontal="16dp">
-
-        <ImageView
-            android:id="@+id/btn_close"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical|start"
-            android:src="@drawable/ic_close"
-            android:background="@drawable/red_circular_button"
-            android:contentDescription="@string/close"
-            app:tint="@color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Interaction Log"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:fontFamily="Poppins" />
-    </FrameLayout>
+    android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -46,104 +21,55 @@
         app:fontFamily="Poppins" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:paddingHorizontal="24dp"
-        android:layout_marginHorizontal="30dp">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="100"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_yellow" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar2"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="100"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_yellow_with_border" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar3"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar4"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar5"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar6"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar7"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="40dp"
             android:layout_height="15dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="0"
-            android:layout_marginEnd="5dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            android:layout_marginHorizontal="3dp"
+            android:background="@drawable/progress_dot_green_dark" />
     </LinearLayout>
-
-<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-
-<!--    android:layout_height="match_parent">-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -217,6 +143,21 @@
                     android:layout_marginEnd="19dp"
                     android:background="@color/gray300"/>
 
+
+                <TextView
+                    android:id="@+id/support_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/interaction_log_question_1"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:fontFamily="Poppins" />
+
                 <LinearLayout
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
@@ -228,7 +169,8 @@
                         android:id="@+id/input_first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_input_border"
+                        android:autofillHints="name"
+                        android:background="@drawable/edittext_rounded"
                         android:hint="@string/first_name"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
@@ -243,7 +185,8 @@
                         android:id="@+id/input_last_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_input_border"
+                        android:importantForAutofill="no"
+                        android:background="@drawable/edittext_rounded"
                         android:hint="@string/last_name"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
@@ -259,7 +202,8 @@
                         style="@style/Widget.AppCompat.EditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_input_border"
+                        android:autofillHints="emailAddress"
+                        android:background="@drawable/edittext_rounded"
                         android:hint="@string/email"
                         android:padding="12dp"
                         android:textColor="@color/black"
@@ -273,7 +217,8 @@
                         style="@style/Widget.AppCompat.EditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_input_border"
+                        android:autofillHints="phone"
+                        android:background="@drawable/edittext_rounded"
                         android:hint="@string/phone_number"
                         android:padding="12dp"
                         android:textColor="@color/black"
@@ -337,4 +282,3 @@
 
 
 </LinearLayout>
-<!--</LinearLayout>-->

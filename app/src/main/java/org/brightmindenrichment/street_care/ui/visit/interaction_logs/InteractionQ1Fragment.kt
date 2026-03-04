@@ -78,7 +78,6 @@ class InteractionQ1Fragment : Fragment() {
         setEndDatePicker()
         setEndTimePicker()
         setTimezonePicker()
-        setCloseButton()
         setNextButton()
     }
 
@@ -278,13 +277,6 @@ class InteractionQ1Fragment : Fragment() {
         val minutes = (absMs % 3_600_000) / 60_000
         val city = tz.id.substringAfterLast('/').replace('_', ' ')
         return "(UTC$sign${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}) $city"
-    }
-
-    // ---------------- Close ----------------
-    private fun setCloseButton() {
-        binding.btnClose.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
     }
 
     // ---------------- Next ----------------

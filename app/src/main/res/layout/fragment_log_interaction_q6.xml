@@ -5,6 +5,7 @@
     android:id="@+id/scroll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize"
     android:background="#FFFFFF">
 
     <LinearLayout
@@ -14,73 +15,70 @@
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="18dp"
         android:paddingBottom="24dp">
 
-
-        <!-- Big subtitle -->
         <TextView
-            android:id="@+id/tv_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="Log Your Interaction"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/visit_log_inside"
+            android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold"
-            app:fontFamily="Poppins"
-            android:textColor="#071F1E"
-            android:gravity="center" />
+            android:textFontWeight="700"
+            app:fontFamily="Poppins" />
 
-        <!-- Progress indicators -->
         <LinearLayout
-            android:id="@+id/progress_row"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="12dp">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="34dp"
-                android:layout_height="12dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 1"/>
-            <ImageView
-                android:layout_width="34dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 2"/>
-            <ImageView
-                android:layout_width="34dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 3"/>
-            <ImageView
-                android:layout_width="34dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 4"/>
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_filled"
-                android:contentDescription="Progress step 5"/>
-            <ImageView
-                android:layout_width="34dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_outline"
-                android:contentDescription="Progress step 6"/>
-            <ImageView
-                android:layout_width="34dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/progress_dot_dark"
-                android:contentDescription="Progress step 7"/>
+            <View
+                android:layout_width="40dp"
+                android:layout_height="15dp"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/progress_dot_yellow" />
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="15dp"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/progress_dot_yellow" />
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="15dp"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/progress_dot_yellow" />
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="15dp"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/progress_dot_yellow" />
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="15dp"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/progress_dot_yellow" />
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="15dp"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/progress_dot_yellow_with_border" />
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="15dp"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/progress_dot_green_dark" />
         </LinearLayout>
 
         <!-- Card -->

@@ -63,17 +63,9 @@ class InteractionQ2Fragment : Fragment() {
             binding.inputPhoneNumber.setText(log?.phoneNumber.orEmpty())
         }
 
-        setCloseButton()
         setPreviousButton()
         setNextButton()
         setSkipButton()
-    }
-
-
-    private fun setCloseButton() {
-        binding.btnClose.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
     }
 
     private fun setPreviousButton() {

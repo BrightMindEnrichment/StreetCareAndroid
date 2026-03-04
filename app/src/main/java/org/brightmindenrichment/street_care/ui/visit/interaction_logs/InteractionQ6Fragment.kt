@@ -41,17 +41,6 @@ class InteractionQ6Fragment : Fragment() {
             ?.visibility = View.VISIBLE
 
         // -----------------------
-        // 2. Configure ActionBar (Red Close + Title)
-        // -----------------------
-        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
-            ab.setDisplayHomeAsUpEnabled(true)
-            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
-            ab.title = "Interaction Log"
-        }
-
-        setHasOptionsMenu(true)
-
-        // -----------------------
         // 3. Initialize Views
         // -----------------------
         val btnSkip = view.findViewById<TextView>(R.id.btn_skip)
@@ -114,19 +103,6 @@ class InteractionQ6Fragment : Fragment() {
         }
 
         updateUI()
-    }
-
-    // -----------------------
-    // Handle ActionBar Close Click
-    // -----------------------
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     // -----------------------

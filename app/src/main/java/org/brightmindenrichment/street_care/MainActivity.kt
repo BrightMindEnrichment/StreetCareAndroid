@@ -251,15 +251,23 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
                 bottomNavView.visibility =
                     if (destination.id in setOf(
-                            R.id.nav_home,
-                            R.id.loginVisitLogFragment,
-                            R.id.loginRedirectFragment,
-                            R.id.nav_visit,
-                            R.id.nav_community,
-                            R.id.nav_profile,
-                            R.id.interactionQ1Fragment,
-                            R.id.interactionQ2Fragment,
-                            R.id.interactionQ3Fragment
+                        R.id.nav_home,
+                        R.id.loginVisitLogFragment,
+                        R.id.loginRedirectFragment,
+                        R.id.nav_visit,
+                        R.id.nav_community,
+                        R.id.nav_profile,
+                        R.id.interactionQ1Fragment,
+                        R.id.interactionQ2Fragment,
+                        R.id.interactionQ3Fragment,
+                        R.id.interactionQ4Fragment,
+                        R.id.interactionQ5Fragment,
+                        R.id.interactionQ6Fragment,
+                        R.id.interactionQ7Fragment,
+                        R.id.individualInteractionQ1,
+                        R.id.individualInteractionQ2,
+                        R.id.individualInteractionQ3,
+                        R.id.individualInteractionQ4
                             // add the screens which require bottom navigation bar
                         )
                     ) {

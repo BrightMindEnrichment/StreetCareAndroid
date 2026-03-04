@@ -39,17 +39,6 @@ class InteractionQ7Fragment : Fragment() {
             ?.visibility = View.VISIBLE
 
         // -----------------------
-        // 2. Configure ActionBar
-        // -----------------------
-        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
-            ab.setDisplayHomeAsUpEnabled(true)
-            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
-            ab.title = "Interaction Log"
-        }
-
-        setHasOptionsMenu(true)
-
-        // -----------------------
         // 3. Initialize Views
         // -----------------------
         val btnYes = view.findViewById<TextView>(R.id.txt_yes)
@@ -100,19 +89,6 @@ class InteractionQ7Fragment : Fragment() {
         }
 
         updateUI()
-    }
-
-    // -----------------------
-    // Handle ActionBar Close
-    // -----------------------
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     // -----------------------
