@@ -25,7 +25,7 @@ class InteractionQ7Fragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_visit_form7a, container, false)
+        return inflater.inflate(R.layout.fragment_log_interaction_q7, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

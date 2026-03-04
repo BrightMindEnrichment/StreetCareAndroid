@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -27,8 +26,6 @@ import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.DetailsButtonClickListener
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitLogRecyclerAdapter
-import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitViewModel
-import org.brightmindenrichment.street_care.util.Extensions
 
 class VisitFormFragment0 : Fragment() {
     private var _binding: FragmentVisitBinding? = null
@@ -174,7 +171,7 @@ class VisitFormFragment0 : Fragment() {
     }
 
     fun showCustomDialogPH() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_provided_help, null)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_log_interaction_thanks, null)
         val dialog = android.app.AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()

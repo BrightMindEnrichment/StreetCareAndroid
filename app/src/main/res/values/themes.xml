@@ -49,6 +49,12 @@
         parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="colorPrimary">@color/dark_green</item>
         <item name="colorOnPrimary">@color/accent_yellow</item>
+        <item name="materialButtonStyle">@style/DatePickerTextButton</item>
+    </style>
+
+    <style name="DatePickerTextButton"
+        parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
+        <item name="android:textColor">@color/date_picker_button_text</item>
     </style>
 
 </resources>

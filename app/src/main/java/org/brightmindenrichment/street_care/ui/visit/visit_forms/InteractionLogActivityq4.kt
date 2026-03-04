@@ -15,7 +15,6 @@ class InteractionLogActivityq4 : AppCompatActivity() {
     private lateinit var btnNext: Button
     private lateinit var btnPrevious: Button
     private lateinit var skipBtn: TextView
-    private lateinit var closeBtn: View
     private lateinit var checkboxContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +28,7 @@ class InteractionLogActivityq4 : AppCompatActivity() {
         setupClickListeners()
 
         // 3. Set up Static Bottom Navigation (Visual only)
-        setupStaticBottomNavigation()
+//        setupStaticBottomNavigation()
     }
 
     private fun initializeViews() {
@@ -38,7 +37,6 @@ class InteractionLogActivityq4 : AppCompatActivity() {
         btnNext = findViewById(R.id.btn_next)
         btnPrevious = findViewById(R.id.btn_previous)
         skipBtn = findViewById(R.id.skip_btn)
-        closeBtn = findViewById(R.id.btn_close_container)
         checkboxContainer = findViewById(R.id.checkbox_list)
 
         // Remove default Material tint for all checkboxes so custom vector colors show
@@ -79,25 +77,20 @@ class InteractionLogActivityq4 : AppCompatActivity() {
         skipBtn.setOnClickListener {
             Toast.makeText(this, "Question skipped", Toast.LENGTH_SHORT).show()
         }
-
-        // Close/Exit current flow
-        closeBtn.setOnClickListener {
-            finish()
-        }
     }
 
-    private fun setupStaticBottomNavigation() {
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
-        // Set the active state to "Interaction Log" so the green line shows
-        bottomNav.selectedItemId = R.id.loginRedirectFragment
-
-        // REMOVED: setOnItemSelectedListener (all navigation logic deleted)
-
-        // Optional: Disable touch interaction so it doesn't ripple or react to clicks
-        bottomNav.isClickable = false
-        bottomNav.isFocusable = false
-    }
+//    private fun setupStaticBottomNavigation() {
+//        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+//
+//        // Set the active state to "Interaction Log" so the green line shows
+//        bottomNav.selectedItemId = R.id.loginRedirectFragment
+//
+//        // REMOVED: setOnItemSelectedListener (all navigation logic deleted)
+//
+//        // Optional: Disable touch interaction so it doesn't ripple or react to clicks
+//        bottomNav.isClickable = false
+//        bottomNav.isFocusable = false
+//    }
 
     /**
      * Logic to extract selected answers from the checkbox container

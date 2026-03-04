@@ -76,7 +76,6 @@ class InteractionLogActivityq3 : AppCompatActivity() {
         iconMic = findViewById(R.id.icon_mic)
         btnNext = findViewById(R.id.btn_next)
         btnPrevious = findViewById(R.id.btn_previous)
-        btnClose = findViewById(R.id.btn_close_container)
         skipBtn = findViewById(R.id.skip_btn)
     }
 

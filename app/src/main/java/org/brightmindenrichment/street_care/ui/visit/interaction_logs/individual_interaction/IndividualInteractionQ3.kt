@@ -16,10 +16,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 
 class IndividualInteractionQ3 : Fragment() {
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
+    private val viewModel: IndividualInteractionViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,11 +44,11 @@ class IndividualInteractionQ3 : Fragment() {
 
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
-        viewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+        interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
             tvHeader.text = if (idx <= 1) {
-                getString(R.string.individual_interaction_title_base)  // e.g. "Individual Interaction"
+                getString(R.string.individual_interaction_title_base)
             } else {
-                getString(R.string.individual_interaction_title_numbered, idx) // e.g. "Individual Interaction 2"
+                getString(R.string.individual_interaction_title_numbered, idx)
             }
         }
 
@@ -78,18 +80,44 @@ class IndividualInteractionQ3 : Fragment() {
         cbOther.setOnCheckedChangeListener { _, _ -> refreshOtherEnabled() }
         refreshOtherEnabled()
 
-        // Close: exit entire flow
-        //btnClose.setOnClickListener {
-        //    findNavController().popBackStack(R.id.nav_visit, false)
-        //}
+        // Restore previously selected further-help items when navigating back
+        viewModel.currentInteraction.value?.furtherHelpNeeded?.forEach { item ->
+            when (item) {
+                "Food" -> cbFood.isChecked = true
+                "Clothes" -> cbClothes.isChecked = true
+                "Hygiene" -> cbHygiene.isChecked = true
+                "Wellness" -> cbWellness.isChecked = true
+                "Medical" -> cbMedical.isChecked = true
+                "Social Worker" -> cbSocialWorker.isChecked = true
+                "Legal" -> cbLegal.isChecked = true
+                else -> { cbOther.isChecked = true; etOther.setText(item) }
+            }
+        }
+        refreshOtherEnabled()
+
+        // Helper to build the selected list
+        fun collectFurtherHelp(): List<String> {
+            val list = mutableListOf<String>()
+            if (cbFood.isChecked) list.add("Food")
+            if (cbClothes.isChecked) list.add("Clothes")
+            if (cbHygiene.isChecked) list.add("Hygiene")
+            if (cbWellness.isChecked) list.add("Wellness")
+            if (cbMedical.isChecked) list.add("Medical")
+            if (cbSocialWorker.isChecked) list.add("Social Worker")
+            if (cbLegal.isChecked) list.add("Legal")
+            if (cbOther.isChecked) etOther.text?.toString()?.trim()
+                ?.takeUnless { it.isEmpty() }?.let { list.add(it) }
+            return list
+        }
 
         // Previous: back to q2
         btnPrevious.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        // Skip: no validation
+        // Skip: save empty and proceed
         btnSkip.setOnClickListener {
+            viewModel.saveQ3(emptyList())
             findNavController().navigate(
                 R.id.action_individualInteractionQ3_to_individualInteractionQ4
             )
@@ -111,6 +139,7 @@ class IndividualInteractionQ3 : Fragment() {
                 return@setOnClickListener
             }
 
+            viewModel.saveQ3(collectFurtherHelp())
             findNavController().navigate(
                 R.id.action_individualInteractionQ3_to_individualInteractionQ4
             )

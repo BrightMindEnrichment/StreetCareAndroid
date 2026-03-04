@@ -27,7 +27,7 @@ class InteractionQ6Fragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_visit_form_new6, container, false)
+        return inflater.inflate(R.layout.fragment_log_interaction_q6, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,9 +96,7 @@ class InteractionQ6Fragment : Fragment() {
         // 6. Previous Button
         // -----------------------
         btnPrevious.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_q6_back_to_q5
-            )
+            findNavController().popBackStack()
         }
 
         // -----------------------

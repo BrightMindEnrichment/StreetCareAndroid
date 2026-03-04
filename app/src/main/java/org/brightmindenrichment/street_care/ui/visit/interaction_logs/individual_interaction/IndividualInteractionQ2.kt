@@ -16,10 +16,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 
 class IndividualInteractionQ2 : Fragment() {
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
+    private val viewModel: IndividualInteractionViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,11 +44,11 @@ class IndividualInteractionQ2 : Fragment() {
 
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
-        viewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+        interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
             tvHeader.text = if (idx <= 1) {
-                getString(R.string.individual_interaction_title_base)  // e.g. "Individual Interaction"
+                getString(R.string.individual_interaction_title_base)
             } else {
-                getString(R.string.individual_interaction_title_numbered, idx) // e.g. "Individual Interaction 2"
+                getString(R.string.individual_interaction_title_numbered, idx)
             }
         }
 
@@ -82,6 +84,36 @@ class IndividualInteractionQ2 : Fragment() {
         cbOther.setOnCheckedChangeListener { _, _ -> refreshOtherEnabled() }
         refreshOtherEnabled()
 
+        // Restore previously selected supports when navigating back
+        viewModel.currentInteraction.value?.supportsProvided?.forEach { support ->
+            when (support) {
+                "Food" -> cbFood.isChecked = true
+                "Clothes" -> cbClothes.isChecked = true
+                "Hygiene" -> cbHygiene.isChecked = true
+                "Wellness" -> cbWellness.isChecked = true
+                "Medical" -> cbMedical.isChecked = true
+                "Social Worker" -> cbSocialWorker.isChecked = true
+                "Legal" -> cbLegal.isChecked = true
+                else -> { cbOther.isChecked = true; etOther.setText(support) }
+            }
+        }
+        refreshOtherEnabled()
+
+        // Helper to build the selected list
+        fun collectSupports(): List<String> {
+            val list = mutableListOf<String>()
+            if (cbFood.isChecked) list.add("Food")
+            if (cbClothes.isChecked) list.add("Clothes")
+            if (cbHygiene.isChecked) list.add("Hygiene")
+            if (cbWellness.isChecked) list.add("Wellness")
+            if (cbMedical.isChecked) list.add("Medical")
+            if (cbSocialWorker.isChecked) list.add("Social Worker")
+            if (cbLegal.isChecked) list.add("Legal")
+            if (cbOther.isChecked) etOther.text?.toString()?.trim()
+                ?.takeUnless { it.isEmpty() }?.let { list.add(it) }
+            return list
+        }
+
         // Close: exit entire flow
         //btnClose.setOnClickListener {
         //    findNavController().popBackStack(R.id.nav_visit, false)
@@ -92,8 +124,9 @@ class IndividualInteractionQ2 : Fragment() {
             findNavController().navigateUp()
         }
 
-        // Skip: no validation
+        // Skip: save empty and proceed
         btnSkip.setOnClickListener {
+            viewModel.saveQ2(emptyList())
             findNavController().navigate(
                 R.id.action_individualInteractionQ2_to_individualInteractionQ3
             )
@@ -115,6 +148,7 @@ class IndividualInteractionQ2 : Fragment() {
                 return@setOnClickListener
             }
 
+            viewModel.saveQ2(collectSupports())
             findNavController().navigate(
                 R.id.action_individualInteractionQ2_to_individualInteractionQ3
             )

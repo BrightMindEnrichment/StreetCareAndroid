@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import org.brightmindenrichment.street_care.R
 
-class ConsentFragment : Fragment(R.layout.fragment_consent) {
+class ConsentFragment : Fragment(R.layout.fragment_log_interaction_consent) {
 
     // Save previous ActionBar state so we can restore it when leaving this fragment
     private var prevTitle: CharSequence? = null

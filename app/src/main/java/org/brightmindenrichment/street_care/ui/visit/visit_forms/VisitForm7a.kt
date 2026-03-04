@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.ui.visit.visit_forms.ConsentFragment
 
 /**
  * Fragment for Visit Form Question 7a with Yes/No options.
@@ -25,7 +24,7 @@ class VisitForm7a : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_visit_form7a, container, false)
+        return inflater.inflate(R.layout.fragment_log_interaction_q7, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

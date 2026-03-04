@@ -1,63 +1,105 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
+import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.LocationServices
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.brightmindenrichment.street_care.BuildConfig
 import org.brightmindenrichment.street_care.R
-import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.inputmethod.InputMethodManager
-import android.widget.Filter
-import android.widget.Filterable
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ3Binding
 import java.util.Locale
-import kotlin.getValue
-
 
 class InteractionQ3Fragment : Fragment() {
 
     private var _binding: FragmentLogInteractionQ3Binding? = null
     private val binding get() = _binding!!
 
-    private var suggestions: List<Address> = emptyList()
     private val viewModel: InteractionLogViewModel by activityViewModels()
-    private val handler = Handler(Looper.getMainLooper())
-    private var searchRunnable: Runnable? = null
 
+    // ---- Places Autocomplete launcher ----
+    private val placesLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        when (result.resultCode) {
+            Activity.RESULT_OK -> {
+                result.data?.let {
+                    val place = Autocomplete.getPlaceFromIntent(it)
+                    val street = place.address?.split(',')?.firstOrNull()?.trim().orEmpty()
+
+                    var city: String? = null
+                    var state: String? = null
+                    var zipCode: String? = null
+
+                    place.addressComponents?.asList()?.forEach { comp ->
+                        when {
+                            comp.types.contains("locality") -> city = comp.name
+                            comp.types.contains("sublocality") && city == null -> city = comp.name
+                            comp.types.contains("postal_town") && city == null -> city = comp.name
+                            comp.types.contains("administrative_area_level_2") && city == null -> city = comp.name
+                            comp.types.contains("administrative_area_level_1") -> state = comp.name
+                            comp.types.contains("postal_code") -> zipCode = comp.name
+                        }
+                    }
+
+                    binding.inputAddress.setText(street)
+                    binding.inputCity.setText(city.orEmpty())
+                    binding.inputState.setText(state.orEmpty())
+                    binding.inputZip.setText(zipCode.orEmpty())
+                }
+            }
+            AutocompleteActivity.RESULT_ERROR -> {
+                val status = Autocomplete.getStatusFromIntent(result.data!!)
+                Log.e("Q3_Places", "Autocomplete error: ${status.statusMessage}")
+            }
+            Activity.RESULT_CANCELED -> Log.d("Q3_Places", "Autocomplete cancelled")
+        }
+    }
+
+    // ---- Voice input launcher ----
     private val voiceLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val spokenText = result.data
                     ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     ?.firstOrNull()
-
-                spokenText?.let {
-                    binding.inputAddress.setText(it)
-                    fetchSuggestions(it)
+                if (!spokenText.isNullOrBlank()) {
+                    binding.inputAddress.setText(spokenText)
+                    launchPlacesAutocomplete(spokenText)
                 }
             }
         }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (!Places.isInitialized()) {
+            Places.initialize(requireContext(), BuildConfig.API_KEY_PLACES)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,237 +114,137 @@ class InteractionQ3Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val log = viewModel.interactionLog.value
-
         binding.inputAddress.setText(log?.addr1.orEmpty())
         binding.inputCity.setText(log?.city.orEmpty())
         binding.inputState.setText(log?.state.orEmpty())
         binding.inputZip.setText(log?.zipcode.orEmpty())
 
-        setupTypeAhead()
+        if (log?.addr1.isNullOrEmpty()) {
+            tryPrefillFromLocation()
+        }
+
+        binding.inputAddress.setOnClickListener {
+            if (binding.inputAddress.text.isNullOrBlank()) launchPlacesAutocomplete()
+        }
+
+        binding.inputAddress.setOnEditorActionListener { _, _, _ ->
+            val query = binding.inputAddress.text.toString().trim()
+            launchPlacesAutocomplete(query)
+            true
+        }
+
         setupClickListeners()
     }
-
-
-    private lateinit var addressAdapter: ArrayAdapter<String>
-
-    private fun setupTypeAhead() {
-
-        addressAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
-            mutableListOf()
-        )
-
-        binding.inputAddress.setAdapter(addressAdapter)
-        binding.inputAddress.threshold = 1
-
-        binding.inputAddress.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable?) {
-
-                val query = s?.toString()?.trim() ?: return
-
-                if (query.length < 2) {
-                    addressAdapter.clear()
-                    return
-                }
-
-                searchRunnable?.let { handler.removeCallbacks(it) }
-
-                searchRunnable = Runnable {
-                    fetchSuggestions(query)
-                }
-
-                handler.postDelayed(searchRunnable!!, 350)
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        binding.inputAddress.setOnItemClickListener { _, _, position, _ ->
-
-            if (position < suggestions.size) {
-
-                val selectedAddress = suggestions[position]
-
-                binding.inputAddress.setText(selectedAddress.getAddressLine(0))
-                binding.inputAddress.setSelection(binding.inputAddress.text.length)
-
-                fillFields(selectedAddress)
-                hideKeyboard()
-            }
-        }
-    }
-
-
 
     private fun setupClickListeners() {
         binding.iconMic.setOnClickListener { startVoiceInput() }
 
         binding.btnNext.setOnClickListener {
-
             val address = binding.inputAddress.text.toString().trim()
             val city = binding.inputCity.text.toString().trim()
             val state = binding.inputState.text.toString().trim()
             val zip = binding.inputZip.text.toString().trim()
 
-            if (address.isEmpty()) {
-                binding.inputAddress.error = "Enter address"
-                binding.inputAddress.requestFocus()
-                return@setOnClickListener
-            }
-
-            if (city.isEmpty()) {
-                binding.inputCity.error = "Enter city"
-                binding.inputCity.requestFocus()
-                return@setOnClickListener
-            }
-
-            if (state.isEmpty()) {
-                binding.inputState.error = "Enter state"
-                binding.inputState.requestFocus()
-                return@setOnClickListener
-            }
-
-            if (zip.isEmpty()) {
-                binding.inputZip.error = "Enter zip"
-                binding.inputZip.requestFocus()
-                return@setOnClickListener
-            }
-
-            // Save to ViewModel
             viewModel.updateAddress(address)
             viewModel.updateCity(city)
             viewModel.updateState(state)
             viewModel.updateZipcode(zip)
 
             Log.d("Q3_DEBUG", "After Q3 Save: ${viewModel.interactionLog.value}")
-
             findNavController().navigate(R.id.action_q3_to_q4)
         }
-
 
         binding.btnPrevious.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        binding.btnCloseContainer.setOnClickListener {
-            findNavController().popBackStack()
+        binding.skipBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_q3_to_q4)
+        }
+    }
+
+    private fun launchPlacesAutocomplete(initialQuery: String = "") {
+        try {
+            val fields = listOf(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.ADDRESS,
+                Place.Field.ADDRESS_COMPONENTS
+            )
+            val builder = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+            if (initialQuery.isNotBlank()) builder.setInitialQuery(initialQuery)
+            placesLauncher.launch(builder.build(requireContext()))
+        } catch (e: Exception) {
+            Log.e("Q3_Places", "Failed to launch autocomplete: ${e.message}")
         }
     }
 
     private fun startVoiceInput() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-            )
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         }
         voiceLauncher.launch(intent)
     }
 
-    private fun fetchSuggestions(query: String) {
+    // ---- GPS prefill ----
 
-        if (!Geocoder.isPresent()) {
-            Log.e("Geocoder", "Geocoder backend not available")
-            return
-        }
+    private fun tryPrefillFromLocation() {
+        val ctx = requireContext()
+        val hasPermission = ContextCompat.checkSelfPermission(
+            ctx, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                ctx, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+        if (!hasPermission) return
+
+        LocationServices.getFusedLocationProviderClient(ctx)
+            .lastLocation
+            .addOnSuccessListener { location ->
+                location ?: return@addOnSuccessListener
+                reverseGeocodeAndFill(location.latitude, location.longitude)
+            }
+    }
+
+    private fun reverseGeocodeAndFill(lat: Double, lon: Double) {
+        if (!Geocoder.isPresent()) return
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-
             try {
-
-                val geocoder = Geocoder(requireContext(), Locale.US)
-
-                val results = geocoder.getFromLocationName(
-                    query,
-                    5,
-                    24.396308, -124.848974,
-                    49.384358, -66.93457
-                )
+                val results = Geocoder(requireContext(), Locale.getDefault())
+                    .getFromLocation(lat, lon, 1)
+                val address = results?.firstOrNull() ?: return@launch
 
                 withContext(Dispatchers.Main) {
-
-                    suggestions = results ?: emptyList()
-
-                    val addressStrings = suggestions.map {
-                        it.getAddressLine(0)
-                    }
-
-                    addressAdapter.clear()
-                    addressAdapter.addAll(addressStrings)
-                    addressAdapter.notifyDataSetChanged()
-
-                    if (addressStrings.isNotEmpty()) {
-                        binding.inputAddress.showDropDown()
-                    }
-
-                    Log.d("Geocoder", "Results size: ${addressStrings.size}")
+                    if (_binding == null) return@withContext
+                    val street = listOfNotNull(
+                        address.subThoroughfare,
+                        address.thoroughfare
+                    ).joinToString(" ")
+                    binding.inputAddress.setText(street)
+                    fillFields(address)
                 }
-
             } catch (e: Exception) {
-
-                withContext(Dispatchers.Main) {
-                    addressAdapter.clear()
-                }
-
-                Log.e("Geocoder", "Error: ${e.message}")
+                Log.e("Q3_Location", "Reverse geocode failed: ${e.message}")
             }
         }
     }
 
-
-
-    override fun onDestroyView() {
-        searchRunnable?.let { handler.removeCallbacks(it) }
-        _binding = null
-        super.onDestroyView()
-    }
     private fun fillFields(address: Address) {
-
-        binding.inputCity.setText("")
-        binding.inputState.setText("")
-        binding.inputZip.setText("")
-
-        // City
-        address.locality?.let {
-            binding.inputCity.setText(it)
-        } ?: run {
-            address.subLocality?.let {
-                binding.inputCity.setText(it)
-            }
-        }
-
-        // State
-        val rawState = address.adminArea ?: ""
-        val stateMap = mapOf(
-            "ALABAMA" to "AL", "ALASKA" to "AK", "ARIZONA" to "AZ",
-            "CALIFORNIA" to "CA", "COLORADO" to "CO"
-            // Add full map again if needed
-        )
-
-        val abbreviation = stateMap[rawState.uppercase(Locale.US)]
-
-        if (abbreviation != null) {
-            binding.inputState.setText(abbreviation)
-        } else {
-            binding.inputState.setText(
-                if (rawState.length == 2) rawState.uppercase() else rawState
-            )
-        }
-
-        // Zip
-        address.postalCode?.let {
-            binding.inputZip.setText(it)
-        }
+        binding.inputCity.setText(address.locality ?: address.subLocality ?: "")
+        binding.inputState.setText(address.adminArea ?: "")
+        binding.inputZip.setText(address.postalCode ?: "")
     }
 
     private fun hideKeyboard() {
         val imm = requireContext()
             .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
         imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 }

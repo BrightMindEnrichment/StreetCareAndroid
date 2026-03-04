@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -20,8 +19,11 @@ class IndividualInteractionViewModel : ViewModel() {
     private val _interactions = MutableLiveData<List<IndividualInteraction>>()
     val interactions: LiveData<List<IndividualInteraction>> get() = _interactions
 
-    private val _currentInteraction = MutableLiveData<IndividualInteraction>()
+    private val _currentInteraction = MutableLiveData<IndividualInteraction>(IndividualInteraction())
     val currentInteraction: LiveData<IndividualInteraction> get() = _currentInteraction
+
+    private val _committedInteractions = MutableLiveData<List<IndividualInteraction>>(emptyList())
+    val committedInteractions: LiveData<List<IndividualInteraction>> get() = _committedInteractions
 
     private var interactionLogId: String = "test"
 
@@ -56,27 +58,29 @@ class IndividualInteractionViewModel : ViewModel() {
 
     }
 
-    fun saveQ2() {
-        // get the data
+    fun saveQ2(supportsProvided: List<String>) {
+        val base = _currentInteraction.value ?: IndividualInteraction()
+        _currentInteraction.value = base.copy(supportsProvided = supportsProvided)
     }
 
-    fun saveQ3() {
-        // get the data
+    fun saveQ3(furtherHelpNeeded: List<String>) {
+        val base = _currentInteraction.value ?: IndividualInteraction()
+        _currentInteraction.value = base.copy(furtherHelpNeeded = furtherHelpNeeded)
     }
 
-    fun saveQ4(date: Int, time: Int, listener: SaveFormListener) {
-        // get the data
+    fun saveQ4(followUpDate: String?, followUpTime: String?, notes: String?) {
+        val base = _currentInteraction.value ?: IndividualInteraction()
+        val completed = base.copy(
+            followUpDate = followUpDate,
+            followUpTime = followUpTime,
+            additionalDetails = notes?.takeUnless { it.isBlank() }
+        )
+        _currentInteraction.value = completed
 
-        // call firebase, get the result
-
-
-        //based on result call success or failure
-        listener.onSaveFormSuccess()
-    }
-
-    interface SaveFormListener {
-        fun onSaveFormSuccess()
-        fun onSaveFormFailure(message: String)
+        // Commit to the local list and reset for the next interaction
+        val current = _committedInteractions.value ?: emptyList()
+        _committedInteractions.value = current + completed
+        _currentInteraction.value = IndividualInteraction()
     }
 
     fun saveInteractions(interaction: IndividualInteraction) {

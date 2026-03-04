@@ -58,7 +58,7 @@
         android:id="@+id/visitForm7a"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitForm7a"
         android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_visit_form7a" >
+        tools:layout="@layout/fragment_log_interaction_q7" >
         <!-- Action for Yes button to VisitFormFragment1 -->
         <action
             android:id="@+id/action_visitForm7a_to_additional2"
@@ -117,7 +117,7 @@
 <!--        android:id="@+id/nav_interaction_log"-->
 <!--        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ1Fragment"-->
 <!--        android:label="Interaction Log"-->
-<!--        tools:layout="@layout/fragment_question1">-->
+<!--        tools:layout="@layout/fragment_log_interaction_q1">-->
 <!--        <action-->
 <!--            android:id="@+id/action_interactionQ1_to_interactionQ2"-->
 <!--            app:destination="@id/interactionQ2Fragment" />-->
@@ -127,7 +127,7 @@
         android:id="@+id/interactionQ1Fragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ1Fragment"
         android:label="Interaction Log"
-        tools:layout="@layout/fragment_question1">
+        tools:layout="@layout/fragment_log_interaction_q1">
         <action
             android:id="@+id/action_interactionQ1_to_interactionQ2"
             app:destination="@id/interactionQ2Fragment" />
@@ -137,7 +137,7 @@
         android:id="@+id/interactionQ2Fragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ2Fragment"
         android:label="Interaction Log"
-        tools:layout="@layout/fragment_question2">
+        tools:layout="@layout/fragment_log_interaction_q2">
         <action
             android:id="@+id/action_interactionQ2_to_visitForm3"
             app:destination="@id/interactionQ3Fragment" />
@@ -200,7 +200,7 @@
         android:id="@+id/interactionQ7Fragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ7Fragment"
         android:label="Interaction Q7"
-        tools:layout="@layout/fragment_visit_form7a">
+        tools:layout="@layout/fragment_log_interaction_q7">
 
         <action
             android:id="@+id/action_q7_yes_to_individualInteraction1"
@@ -532,7 +532,7 @@
         android:id="@+id/additional2"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Additional2"
         android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_question1">
+        tools:layout="@layout/fragment_log_interaction_q1">
         <action
             android:id="@+id/action_additional2_to_visitForm7a"
             app:destination="@id/visitForm7a" />
@@ -630,7 +630,7 @@
         android:id="@+id/additional10"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.Additional10"
         android:label="@string/visit_log_smallCaps"
-        tools:layout="@layout/fragment_question2">
+        tools:layout="@layout/fragment_log_interaction_q2">
         <action
             android:id="@+id/action_additional10_to_additional9"
             app:destination="@id/additional9" />
@@ -817,7 +817,7 @@
     <fragment
         android:id="@+id/consentFragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.visit_forms.ConsentFragment"
-        tools:layout="@layout/fragment_consent">
+        tools:layout="@layout/fragment_log_interaction_consent">
         <argument
             android:name="interactionId"
             app:argType="string"

@@ -45,17 +45,16 @@
 
     <TextView
         android:id="@+id/ok_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/ok"
+        android:textColor="@color/forget_blue"
         android:textFontWeight="500"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:textColor="@color/forget_blue"
-        android:layout_marginTop="5dp"
-        />
+        android:textStyle="bold" />
 
 </LinearLayout>

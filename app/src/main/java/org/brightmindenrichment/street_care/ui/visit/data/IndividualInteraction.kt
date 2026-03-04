@@ -22,6 +22,10 @@ data class IndividualInteraction(
     var date: String? = null,
     var time: String? = null,
 
+    // --- Follow-up timing (Q4) ---
+    var followUpDate: String? = null,
+    var followUpTime: String? = null,
+
     // --- Help Provided ---
     var supportsProvided: List<String> = emptyList(),
 

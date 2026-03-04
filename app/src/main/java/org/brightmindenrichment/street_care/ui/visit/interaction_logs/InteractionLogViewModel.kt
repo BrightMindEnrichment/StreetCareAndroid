@@ -53,6 +53,11 @@ class InteractionLogViewModel : ViewModel() {
             endTimestamp = Timestamp(date)
         )
     }
+
+    fun updateTimezone(timezone: String) {
+        val current = interactionLog.value ?: return
+        _interactionLog.value = current.copy(timezone = timezone)
+    }
     // =========================================================
     // -------------------- Q2 (User) ----------------------
     // =========================================================

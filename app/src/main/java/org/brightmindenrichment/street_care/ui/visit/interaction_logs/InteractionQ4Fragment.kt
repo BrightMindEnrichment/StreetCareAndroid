@@ -25,6 +25,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
 
         initializeViews()
         setupClickListeners()
+        restoreSelections()
     }
 
     private fun initializeViews() {
@@ -79,14 +80,41 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
             findNavController().popBackStack()
         }
 
-
-
-        binding.skipBtn.setOnClickListener {
-            findNavController().popBackStack()
+        binding.skipBtnQ4.setOnClickListener {
+            findNavController().navigate(R.id.action_q4_to_q5)
         }
+    }
 
-        binding.btnCloseContainer.setOnClickListener {
-            findNavController().popBackStack(R.id.nav_home, false)
+    private fun restoreSelections() {
+        val saved = viewModel.interactionLog.value?.listOfSupportsProvided ?: return
+        if (saved.isEmpty()) return
+
+        val standardTexts = setOf(
+            "Food & Drinks", "Clothes", "Hygiene Products",
+            "Wellness/Emotional Support", "Medical Help/Doctor",
+            "Social Worker/Psychiatrist", "Lawyer/Legal", "Other"
+        )
+
+        for (i in 0 until binding.checkboxList.childCount) {
+            val child = binding.checkboxList.getChildAt(i)
+            if (child !is CheckBox) continue
+
+            if (child.id == R.id.other_checkbox) {
+                val customOther = saved.firstOrNull { it !in standardTexts }
+                when {
+                    customOther != null -> {
+                        child.isChecked = true
+                        binding.otherInput.visibility = View.VISIBLE
+                        binding.otherInput.setText(customOther)
+                    }
+                    "Other" in saved -> {
+                        child.isChecked = true
+                        binding.otherInput.visibility = View.VISIBLE
+                    }
+                }
+            } else {
+                child.isChecked = child.text.toString() in saved
+            }
         }
     }
 

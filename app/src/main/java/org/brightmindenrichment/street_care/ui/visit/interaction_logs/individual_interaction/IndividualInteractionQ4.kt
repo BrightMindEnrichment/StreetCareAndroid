@@ -18,6 +18,7 @@ import com.google.android.material.timepicker.TimeFormat
 import com.google.android.material.textfield.TextInputEditText
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -33,7 +34,8 @@ class IndividualInteractionQ4 : Fragment() {
     private val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
     private val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
+    private val viewModel: IndividualInteractionViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,11 +58,11 @@ class IndividualInteractionQ4 : Fragment() {
 
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
-        viewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+        interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
             tvHeader.text = if (idx <= 1) {
-                getString(R.string.individual_interaction_title_base)  // e.g. "Individual Interaction"
+                getString(R.string.individual_interaction_title_base)
             } else {
-                getString(R.string.individual_interaction_title_numbered, idx) // e.g. "Individual Interaction 2"
+                getString(R.string.individual_interaction_title_numbered, idx)
             }
         }
 
@@ -135,13 +137,14 @@ class IndividualInteractionQ4 : Fragment() {
             findNavController().navigateUp()
         }
 
-        // Skip -> go to saveInteraction (no validation)
+        // Skip -> commit with no follow-up data and return
         btnSkip.setOnClickListener {
-            viewModel.nextInteraction()
+            viewModel.saveQ4(null, null, null)
+            interactionLogViewModel.nextInteraction()
             findNavController().navigate(R.id.individualInteractionFragment)
         }
 
-        // Save -> go to saveInteraction
+        // Save -> validate, persist, then return to list
         btnSave.setOnClickListener {
             val notes = etNotes.text?.toString()?.trim().orEmpty()
             tvDate.error = null
@@ -156,10 +159,26 @@ class IndividualInteractionQ4 : Fragment() {
                 return@setOnClickListener
             }
 
-            // TODO: persist selectedDate/selectedTime/notes somewhere (ViewModel, shared repo, arguments, etc.)
-
-            viewModel.nextInteraction()
+            viewModel.saveQ4(
+                selectedDate.toString(),
+                selectedTime.toString(),
+                notes.takeUnless { it.isEmpty() }
+            )
+            interactionLogViewModel.nextInteraction()
             findNavController().navigate(R.id.individualInteractionFragment)
+        }
+
+        // Restore previously entered follow-up data when navigating back
+        viewModel.currentInteraction.value?.let { saved ->
+            saved.followUpDate?.let {
+                selectedDate = LocalDate.parse(it)
+                tvDate.text = dateFormatter.format(selectedDate)
+            }
+            saved.followUpTime?.let {
+                selectedTime = LocalTime.parse(it)
+                tvTime.text = timeFormatter.format(selectedTime)
+            }
+            saved.additionalDetails?.let { etNotes.setText(it) }
         }
     }
 }

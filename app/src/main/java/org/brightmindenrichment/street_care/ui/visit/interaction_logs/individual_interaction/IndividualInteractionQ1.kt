@@ -19,6 +19,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -34,7 +35,8 @@ class IndividualInteractionQ1 : Fragment() {
     private val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
     private val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
+    private val viewModel: IndividualInteractionViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,11 +62,11 @@ class IndividualInteractionQ1 : Fragment() {
 
         val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
 
-        viewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+        interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
             tvHeader.text = if (idx <= 1) {
-                getString(R.string.individual_interaction_title_base)  // e.g. "Individual Interaction"
+                getString(R.string.individual_interaction_title_base)
             } else {
-                getString(R.string.individual_interaction_title_numbered, idx) // e.g. "Individual Interaction 2"
+                getString(R.string.individual_interaction_title_numbered, idx)
             }
         }
 
@@ -86,6 +88,25 @@ class IndividualInteractionQ1 : Fragment() {
         val btnNext     = view.findViewById<TextView>(R.id.txt_next2)
         val btnSkip     = view.findViewById<TextView>(R.id.txt_skip)
         //val btnClose    = view.findViewById<ImageButton>(R.id.btnClose)
+
+
+
+        // Restore previously entered values when navigating back
+        viewModel.currentInteraction.value?.let { saved ->
+            if (saved.firstName.isNotBlank()) etFirstName.setText(saved.firstName)
+            saved.lastName?.let { etLastName.setText(it) }
+            saved.locationLandmark?.let { etLocation.setText(it) }
+            saved.state?.let { actState.setText(it, false) }
+            saved.zip?.let { etZip.setText(it) }
+            saved.date?.let {
+                selectedDate = LocalDate.parse(it)
+                tvDate.text = dateFormatter.format(selectedDate)
+            }
+            saved.time?.let {
+                selectedTime = LocalTime.parse(it)
+                tvTime.text = timeFormatter.format(selectedTime)
+            }
+        }
 
         // Optional: state dropdown items (if you have an array)
         // If you already set adapter elsewhere, remove this.
@@ -211,7 +232,7 @@ class IndividualInteractionQ1 : Fragment() {
                 return@setOnClickListener
             }
 
-            // TODO: persist Q1 data somewhere (NavGraph ViewModel recommended)
+            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime)
 
             findNavController().navigate(
                 R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2

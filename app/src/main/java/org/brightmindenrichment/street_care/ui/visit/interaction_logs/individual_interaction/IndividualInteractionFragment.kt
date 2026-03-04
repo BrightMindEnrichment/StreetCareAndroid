@@ -49,7 +49,7 @@ class IndividualInteractionFragment : Fragment() {
         adapter = IndividualInteractionAdapter(requireContext(), emptyList(), listener)
         binding.listViewInteractions.adapter = adapter
 
-        viewModel.interactions.observe(viewLifecycleOwner) { list ->
+        viewModel.committedInteractions.observe(viewLifecycleOwner) { list ->
             binding.sectionHeading.text =
                 if (list.size > 1) "Individual Interactions" else "Individual Interaction"
             adapter.updateList(list)
