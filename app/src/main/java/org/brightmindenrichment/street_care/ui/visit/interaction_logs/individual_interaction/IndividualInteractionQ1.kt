@@ -1,25 +1,35 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction
 
-import androidx.fragment.app.activityViewModels
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.card.MaterialCardView
+import com.google.android.gms.location.LocationServices
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import org.brightmindenrichment.street_care.BuildConfig
 import org.brightmindenrichment.street_care.R
+import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionQ1Binding
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
-import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
+import org.brightmindenrichment.street_care.util.isInvalidZip
+import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
+import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -28,6 +38,9 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 class IndividualInteractionQ1 : Fragment() {
+
+    private var _binding: FragmentIndividualInteractionQ1Binding? = null
+    private val binding get() = _binding!!
 
     private var selectedDate: LocalDate? = null
     private var selectedTime: LocalTime? = null
@@ -38,18 +51,69 @@ class IndividualInteractionQ1 : Fragment() {
     private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
     private val viewModel: IndividualInteractionViewModel by activityViewModels()
 
+    // ---- Places Autocomplete launcher ----
+    private val placesLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        when (result.resultCode) {
+            Activity.RESULT_OK -> {
+                val b = _binding ?: return@registerForActivityResult
+                result.data?.let {
+                    val place = Autocomplete.getPlaceFromIntent(it)
+                    val street = place.address?.split(',')?.firstOrNull()?.trim().orEmpty()
+
+                    var city: String? = null
+                    var state: String? = null
+                    var zipCode: String? = null
+
+                    place.addressComponents?.asList()?.forEach { comp ->
+                        when {
+                            comp.types.contains("locality") -> city = comp.name
+                            comp.types.contains("sublocality") && city == null -> city = comp.name
+                            comp.types.contains("postal_town") && city == null -> city = comp.name
+                            comp.types.contains("administrative_area_level_2") && city == null -> city = comp.name
+                            comp.types.contains("administrative_area_level_1") -> state = comp.name
+                            comp.types.contains("postal_code") -> zipCode = comp.name
+                        }
+                    }
+
+                    val location = listOfNotNull(
+                        street.takeUnless { it.isEmpty() },
+                        city
+                    ).joinToString(", ")
+
+                    b.etLocation.setText(location)
+                    state?.let { s -> b.actState.setText(s, false) }
+                    zipCode?.let { z -> b.etZip.setText(z) }
+                }
+            }
+            AutocompleteActivity.RESULT_ERROR -> {
+                val status = Autocomplete.getStatusFromIntent(result.data!!)
+                Log.e("IIQ1_Places", "Autocomplete error: ${status.statusMessage}")
+            }
+            Activity.RESULT_CANCELED -> Log.d("IIQ1_Places", "Autocomplete cancelled")
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (!Places.isInitialized()) {
+            Places.initialize(requireContext(), BuildConfig.API_KEY_PLACES)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_individual_interaction_q1, container, false)
+    ): View {
+        _binding = FragmentIndividualInteractionQ1Binding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //(activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        //(activity as? AppCompatActivity)?.supportActionBar
-        //    ?.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
         requireActivity()
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
@@ -60,65 +124,59 @@ class IndividualInteractionQ1 : Fragment() {
             ab.title = "Individual Interaction"
         }
 
-        val tvHeader = view.findViewById<TextView>(R.id.tvHeader)
-
         interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
-            tvHeader.text = if (idx <= 1) {
+            binding.tvHeader.text = if (idx <= 1) {
                 getString(R.string.individual_interaction_title_base)
             } else {
                 getString(R.string.individual_interaction_title_numbered, idx)
             }
         }
 
-        // Inputs
-        val etFirstName = view.findViewById<TextInputEditText>(R.id.etFirstName)
-        val etLastName  = view.findViewById<TextInputEditText>(R.id.etLastName)
-        val etLocation  = view.findViewById<TextInputEditText>(R.id.etLocation)
-        val actState    = view.findViewById<MaterialAutoCompleteTextView>(R.id.actState)
-        val etZip       = view.findViewById<TextInputEditText>(R.id.etZip)
-
-        // Date/Time
-        val dateCard = view.findViewById<MaterialCardView>(R.id.datePickerCard)
-        val timeCard = view.findViewById<MaterialCardView>(R.id.timePickerCard)
-        val tvDate   = view.findViewById<TextView>(R.id.tvDate)
-        val tvTime   = view.findViewById<TextView>(R.id.tvTime)
-
-        // Buttons
-        val btnPrevious = view.findViewById<TextView>(R.id.txt_previous2)
-        val btnNext     = view.findViewById<TextView>(R.id.txt_next2)
-        val btnSkip     = view.findViewById<TextView>(R.id.txt_skip)
-        //val btnClose    = view.findViewById<ImageButton>(R.id.btnClose)
-
-
-
         // Restore previously entered values when navigating back
         viewModel.currentInteraction.value?.let { saved ->
-            if (saved.firstName.isNotBlank()) etFirstName.setText(saved.firstName)
-            saved.lastName?.let { etLastName.setText(it) }
-            saved.locationLandmark?.let { etLocation.setText(it) }
-            saved.state?.let { actState.setText(it, false) }
-            saved.zip?.let { etZip.setText(it) }
+            if (saved.firstName.isNotBlank()) binding.etFirstName.setText(saved.firstName)
+            saved.lastName?.let { binding.etLastName.setText(it) }
+            saved.locationLandmark?.let { binding.etLocation.setText(it) }
+            saved.state?.let { binding.actState.setText(it, false) }
+            saved.zip?.let { binding.etZip.setText(it) }
             saved.date?.let {
                 selectedDate = LocalDate.parse(it)
-                tvDate.text = dateFormatter.format(selectedDate)
+                binding.tvDate.text = dateFormatter.format(selectedDate)
             }
             saved.time?.let {
                 selectedTime = LocalTime.parse(it)
-                tvTime.text = timeFormatter.format(selectedTime)
+                binding.tvTime.text = timeFormatter.format(selectedTime)
             }
         }
 
-        // Optional: state dropdown items (if you have an array)
-        // If you already set adapter elsewhere, remove this.
         try {
             val states = resources.getStringArray(R.array.us_states)
-            actState.setSimpleItems(states)
+            binding.actState.setSimpleItems(states)
         } catch (_: Exception) {
             // ignore if array not present
         }
 
-        // Date picker (same approach as Q4)
-        dateCard.setOnClickListener {
+        // GPS prefill if location is blank
+        if (binding.etLocation.text.isNullOrBlank()) {
+            tryPrefillFromLocation()
+        }
+
+        // Launch Places autocomplete on tap when field is blank
+        binding.etLocation.setOnClickListener {
+            if (binding.etLocation.text.isNullOrBlank()) {
+                launchPlacesAutocomplete(placesLauncher, requireContext())
+            }
+        }
+
+        // Launch Places autocomplete on editor action (e.g. search key)
+        binding.etLocation.setOnEditorActionListener { _, _, _ ->
+            val query = binding.etLocation.text.toString().trim()
+            launchPlacesAutocomplete(placesLauncher, requireContext(), query)
+            true
+        }
+
+        // Date picker
+        binding.datePickerCard.setOnClickListener {
             val mountainZone = ZoneId.of("America/Denver")
             val baseDate = selectedDate ?: LocalDate.now(mountainZone)
 
@@ -139,15 +197,15 @@ class IndividualInteractionQ1 : Fragment() {
                     .toLocalDate()
 
                 selectedDate = pickedDate
-                tvDate.error = null
-                tvDate.text = dateFormatter.format(pickedDate)
+                binding.tvDate.error = null
+                binding.tvDate.text = dateFormatter.format(pickedDate)
             }
 
             picker.show(parentFragmentManager, "date_picker_q1")
         }
 
-        // Time picker (same approach as Q4)
-        timeCard.setOnClickListener {
+        // Time picker
+        binding.timePickerCard.setOnClickListener {
             val mountainZone = ZoneId.of("America/Denver")
             val baseTime = selectedTime ?: LocalTime.now(mountainZone)
 
@@ -162,76 +220,41 @@ class IndividualInteractionQ1 : Fragment() {
             picker.addOnPositiveButtonClickListener {
                 val pickedTime = LocalTime.of(picker.hour, picker.minute)
                 selectedTime = pickedTime
-                tvTime.error = null
-                tvTime.text = timeFormatter.format(pickedTime)
+                binding.tvTime.error = null
+                binding.tvTime.text = timeFormatter.format(pickedTime)
             }
 
             picker.show(parentFragmentManager, "time_picker_q1")
         }
 
-        // Close: exit entire flow
-        //btnClose.setOnClickListener {
-        //    findNavController().popBackStack(R.id.nav_visit, false)
-        //}
-
         // Previous -> back stack
-        btnPrevious.setOnClickListener {
+        binding.txtPrevious2.setOnClickListener {
             findNavController().navigateUp()
         }
 
         // Skip -> go to Q2 (no validation)
-        btnSkip.setOnClickListener {
+        binding.txtSkip.setOnClickListener {
             findNavController().navigate(
                 R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
             )
         }
 
         // Next -> validate -> go to Q2
-        btnNext.setOnClickListener {
+        binding.txtNext2.setOnClickListener {
+            binding.tvDate.error = null
+            binding.tvTime.error = null
 
-            // clear old errors (we only have EditTexts, so just validate with messages)
-            tvDate.error = null
-            tvTime.error = null
+            val first = binding.etFirstName.text?.toString()?.trim().orEmpty()
+            val last  = binding.etLastName.text?.toString()?.trim().orEmpty()
+            val loc   = binding.etLocation.text?.toString()?.trim().orEmpty()
+            val state = binding.actState.text?.toString()?.trim().orEmpty()
+            val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
 
-            val first = etFirstName.text?.toString()?.trim().orEmpty()
-            val last  = etLastName.text?.toString()?.trim().orEmpty()
-            val loc   = etLocation.text?.toString()?.trim().orEmpty()
-            val state = actState.text?.toString()?.trim().orEmpty()
-            val zip   = etZip.text?.toString()?.trim().orEmpty()
-
-            // You can switch these to TextInputLayout errors if you want (better UX),
-            // but I’m staying consistent with your Q4 style.
-            if (first.isEmpty()) {
-                etFirstName.error = "Required"
-                return@setOnClickListener
-            }
-            if (last.isEmpty()) {
-                etLastName.error = "Required"
-                return@setOnClickListener
-            }
-            if (loc.isEmpty()) {
-                etLocation.error = "Required"
-                return@setOnClickListener
-            }
-            if (state.isEmpty()) {
-                actState.error = "Required"
-                return@setOnClickListener
-            }
-
-            // ZIP rule: adjust if not strictly US
-            if (zip.length < 5) {
-                etZip.error = "Invalid"
-                return@setOnClickListener
-            }
-
-            if (selectedDate == null) {
-                tvDate.error = "Required"
-                return@setOnClickListener
-            }
-            if (selectedTime == null) {
-                tvTime.error = "Required"
-                return@setOnClickListener
-            }
+            if (first.isEmpty()) { binding.etFirstName.error = "Required"; return@setOnClickListener }
+            if (last.isEmpty())  { binding.etLastName.error  = "Required"; return@setOnClickListener }
+            if (loc.isEmpty())   { binding.etLocation.error  = "Required"; return@setOnClickListener }
+            if (state.isEmpty()) { binding.actState.error    = "Required"; return@setOnClickListener }
+            if (zip.isInvalidZip())  { binding.etZip.error = "Invalid";  return@setOnClickListener }
 
             viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime)
 
@@ -241,4 +264,42 @@ class IndividualInteractionQ1 : Fragment() {
         }
     }
 
+    // ---- GPS prefill ----
+
+    private fun tryPrefillFromLocation() {
+        val ctx = requireContext()
+        val hasPermission = ContextCompat.checkSelfPermission(
+            ctx, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                ctx, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+        if (!hasPermission) return
+
+        LocationServices.getFusedLocationProviderClient(ctx)
+            .lastLocation
+            .addOnSuccessListener { location ->
+                location ?: return@addOnSuccessListener
+                reverseGeocodeAndFill(
+                    location.latitude, location.longitude,
+                    requireContext(),
+                    viewLifecycleOwner.lifecycleScope,
+                    { _binding != null }
+                ) { street, city, state, zip ->
+                    val location = listOfNotNull(
+                        street.takeUnless { it.isEmpty() },
+                        city.takeUnless { it.isEmpty() }
+                    ).joinToString(", ")
+                    binding.etLocation.setText(location)
+                    binding.actState.setText(state, false)
+                    binding.etZip.setText(zip)
+                }
+            }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 }

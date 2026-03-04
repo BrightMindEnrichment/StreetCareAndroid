@@ -2,18 +2,14 @@ package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -25,14 +21,11 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.brightmindenrichment.street_care.BuildConfig
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ3Binding
-import java.util.Locale
+import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
+import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
 
 class InteractionQ3Fragment : Fragment() {
 
@@ -89,7 +82,7 @@ class InteractionQ3Fragment : Fragment() {
                     ?.firstOrNull()
                 if (!spokenText.isNullOrBlank()) {
                     binding.inputAddress.setText(spokenText)
-                    launchPlacesAutocomplete(spokenText)
+                    launchPlacesAutocomplete(placesLauncher, requireContext(), spokenText)
                 }
             }
         }
@@ -124,12 +117,12 @@ class InteractionQ3Fragment : Fragment() {
         }
 
         binding.inputAddress.setOnClickListener {
-            if (binding.inputAddress.text.isNullOrBlank()) launchPlacesAutocomplete()
+            if (binding.inputAddress.text.isNullOrBlank()) launchPlacesAutocomplete(placesLauncher, requireContext())
         }
 
         binding.inputAddress.setOnEditorActionListener { _, _, _ ->
             val query = binding.inputAddress.text.toString().trim()
-            launchPlacesAutocomplete(query)
+            launchPlacesAutocomplete(placesLauncher, requireContext(), query)
             true
         }
 
@@ -163,22 +156,6 @@ class InteractionQ3Fragment : Fragment() {
         }
     }
 
-    private fun launchPlacesAutocomplete(initialQuery: String = "") {
-        try {
-            val fields = listOf(
-                Place.Field.ID,
-                Place.Field.NAME,
-                Place.Field.ADDRESS,
-                Place.Field.ADDRESS_COMPONENTS
-            )
-            val builder = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
-            if (initialQuery.isNotBlank()) builder.setInitialQuery(initialQuery)
-            placesLauncher.launch(builder.build(requireContext()))
-        } catch (e: Exception) {
-            Log.e("Q3_Places", "Failed to launch autocomplete: ${e.message}")
-        }
-    }
-
     private fun startVoiceInput() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -203,38 +180,18 @@ class InteractionQ3Fragment : Fragment() {
             .lastLocation
             .addOnSuccessListener { location ->
                 location ?: return@addOnSuccessListener
-                reverseGeocodeAndFill(location.latitude, location.longitude)
-            }
-    }
-
-    private fun reverseGeocodeAndFill(lat: Double, lon: Double) {
-        if (!Geocoder.isPresent()) return
-
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val results = Geocoder(requireContext(), Locale.getDefault())
-                    .getFromLocation(lat, lon, 1)
-                val address = results?.firstOrNull() ?: return@launch
-
-                withContext(Dispatchers.Main) {
-                    if (_binding == null) return@withContext
-                    val street = listOfNotNull(
-                        address.subThoroughfare,
-                        address.thoroughfare
-                    ).joinToString(" ")
+                reverseGeocodeAndFill(
+                    location.latitude, location.longitude,
+                    requireContext(),
+                    viewLifecycleOwner.lifecycleScope,
+                    { _binding != null }
+                ) { street, city, state, zip ->
                     binding.inputAddress.setText(street)
-                    fillFields(address)
+                    binding.inputCity.setText(city)
+                    binding.inputState.setText(state)
+                    binding.inputZip.setText(zip)
                 }
-            } catch (e: Exception) {
-                Log.e("Q3_Location", "Reverse geocode failed: ${e.message}")
             }
-        }
-    }
-
-    private fun fillFields(address: Address) {
-        binding.inputCity.setText(address.locality ?: address.subLocality ?: "")
-        binding.inputState.setText(address.adminArea ?: "")
-        binding.inputZip.setText(address.postalCode ?: "")
     }
 
     override fun onDestroyView() {
