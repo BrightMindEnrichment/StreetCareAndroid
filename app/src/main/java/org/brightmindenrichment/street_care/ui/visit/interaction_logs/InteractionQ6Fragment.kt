@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -104,18 +103,6 @@ class InteractionQ6Fragment : Fragment() {
         }
 
         updateUI()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
     }
 
     // -----------------------

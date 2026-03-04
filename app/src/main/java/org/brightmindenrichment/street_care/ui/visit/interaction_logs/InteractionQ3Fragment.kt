@@ -13,7 +13,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -236,18 +235,6 @@ class InteractionQ3Fragment : Fragment() {
         binding.inputCity.setText(address.locality ?: address.subLocality ?: "")
         binding.inputState.setText(address.adminArea ?: "")
         binding.inputZip.setText(address.postalCode ?: "")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
     }
 
     override fun onDestroyView() {

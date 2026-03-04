@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -70,18 +69,6 @@ class InteractionQ5Fragment : Fragment() {
         syncFromInput()
         viewModel.updateCounts(helpedCount, joinedCount)
         findNavController().navigate(R.id.action_q5_to_q6)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
     }
 
     override fun onDestroyView() {

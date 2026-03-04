@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -242,15 +241,4 @@ class IndividualInteractionQ1 : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        @Suppress("DEPRECATION")
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
-    }
 }
