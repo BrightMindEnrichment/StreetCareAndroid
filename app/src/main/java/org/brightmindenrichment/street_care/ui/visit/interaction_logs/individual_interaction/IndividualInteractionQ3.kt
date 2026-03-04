@@ -38,12 +38,6 @@ class IndividualInteractionQ3 : Fragment() {
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
 
-        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
-            ab.setDisplayHomeAsUpEnabled(true)
-            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
-            ab.title = "Individual Interaction"
-        }
-
         interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
             binding.tvHeader.text = if (idx <= 1) {
                 getString(R.string.individual_interaction_title_base)

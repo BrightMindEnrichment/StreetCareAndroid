@@ -1,18 +1,13 @@
-package org.brightmindenrichment.street_care.ui.visit.visit_forms
+package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
 import android.app.AlertDialog
-import android.content.ContentValues.TAG
-import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -23,11 +18,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentSurvaySubmittedBinding
+import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitViewModel
 
-class SurveySubmittedFragment : Fragment() {
+class InteractionLogFormSubmittedFragment : Fragment() {
     private var prevTitle: CharSequence? = null
     private var prevHomeAsUpEnabled: Boolean? = null
-    private var prevHomeIndicator: android.graphics.drawable.Drawable? = null
+    private var prevHomeIndicator: Drawable? = null
     private var _binding: FragmentSurvaySubmittedBinding? = null
     private val binding get() = _binding!!
 
@@ -38,7 +34,6 @@ class SurveySubmittedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true) // needed for the ActionBar close click
     }
 
     override fun onCreateView(
@@ -59,23 +54,12 @@ class SurveySubmittedFragment : Fragment() {
             prevHomeIndicator = ab.themedContext.let { null }
 
             ab.setDisplayHomeAsUpEnabled(true)
-            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
             ab.title = "Interaction Log"
         }
 
         requireActivity()
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
-
-//        (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
-//            ab.setDisplayHomeAsUpEnabled(true)
-//            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
-//
-//            val title = SpannableString("Interaction Log").apply {
-//                setSpan(StyleSpan(Typeface.BOLD), 0, length, 0)
-//            }
-//            ab.title = title
-//        }
 
         binding.btnAnotherVisit.setOnClickListener {
             sharedCommunity = false
@@ -160,7 +144,6 @@ class SurveySubmittedFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
             title = "Interaction Log"
         }
     }

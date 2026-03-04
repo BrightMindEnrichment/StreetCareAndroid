@@ -1,5 +1,6 @@
-package org.brightmindenrichment.street_care.ui.visit.visit_forms
+package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -7,9 +8,9 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.core.os.bundleOf
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -17,12 +18,12 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import org.brightmindenrichment.street_care.R
 
-class ConsentFragment : Fragment(R.layout.fragment_log_interaction_consent) {
+class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interaction_consent) {
 
     // Save previous ActionBar state so we can restore it when leaving this fragment
     private var prevTitle: CharSequence? = null
     private var prevHomeAsUpEnabled: Boolean? = null
-    private var prevHomeIndicator: android.graphics.drawable.Drawable? = null
+    private var prevHomeIndicator: Drawable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,6 @@ class ConsentFragment : Fragment(R.layout.fragment_log_interaction_consent) {
             prevHomeIndicator = ab.themedContext.let { null }
 
             ab.setDisplayHomeAsUpEnabled(true)
-            ab.setHomeAsUpIndicator(R.drawable.ic_close_red_circle)
             ab.title = "Interaction Log"
         }
 
