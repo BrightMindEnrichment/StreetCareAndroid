@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -15,9 +16,11 @@ import android.widget.Filter
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.datepicker.MaterialDatePicker
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ1Binding
@@ -66,6 +69,11 @@ class InteractionQ1Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d("Q1_DEBUG", "NEW Q1 FRAGMENT LOADED")
+
+        setHasOptionsMenu(true)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            showDiscardDialog()
+        }
 
         binding.startDate.text = dateFormatter.format(startCalendar.time)
         binding.startTime.text = timeFormatter.format(startCalendar.time)
@@ -277,6 +285,28 @@ class InteractionQ1Fragment : Fragment() {
         val minutes = (absMs % 3_600_000) / 60_000
         val city = tz.id.substringAfterLast('/').replace('_', ' ')
         return "(UTC$sign${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}) $city"
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                showDiscardDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showDiscardDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Discard changes?")
+            .setMessage("Your progress will be lost if you leave now.")
+            .setPositiveButton("Discard") { _, _ ->
+                viewModel.resetInteractionLog()
+                findNavController().popBackStack()
+            }
+            .setNegativeButton("Keep editing", null)
+            .show()
     }
 
     // ---------------- Next ----------------

@@ -571,7 +571,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="first_name">First Name *</string>
     <string name="last_name">Last Name *</string>
     <string name="phoneField">Phone</string>
-    <string name="interaction_log_question_1">About you</string>
+    <string name="interaction_log_question_1">How do we contact you?</string>
     <string name="address">Address</string>
     <string name="address_line_1">Address Line 1 *</string>
     <string name="address_line_2">Address Line 2</string>

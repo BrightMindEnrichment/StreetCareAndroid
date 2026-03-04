@@ -212,7 +212,7 @@
                                 android:contentDescription="@string/desc_mic_icon"
                                 android:focusable="true"
                                 android:padding="8dp"
-                                android:src="@drawable/ic_mic"
+                                android:src="@drawable/mic_24"
                                 app:tint="#606060" />
                         </RelativeLayout>
 

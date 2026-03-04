@@ -38,7 +38,9 @@ import com.google.firebase.firestore.Query
 //import com.google.firebase.firestore.ktx.firestore
 //import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
@@ -233,8 +235,45 @@ class MainActivity : AppCompatActivity() {
         // Let Navigation handle bottom tabs
         bottomNavView.setupWithNavController(navController)
 
+        val interactionLogDestinations = setOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment,
+            R.id.individualInteractionQ1,
+            R.id.individualInteractionQ2,
+            R.id.individualInteractionQ3,
+            R.id.individualInteractionQ4,
+            R.id.individualInteractionFragment,
+            R.id.consentFragment
+        )
+
         bottomNavView.setOnItemSelectedListener { item ->
-            if (item.itemId == R.id.loginRedirectFragment) {
+            val currentDestId = navController.currentDestination?.id
+            if (currentDestId in interactionLogDestinations) {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Discard changes?")
+                    .setMessage("Your progress will be lost if you leave now.")
+                    .setPositiveButton("Discard") { _, _ ->
+                        ViewModelProvider(this)[InteractionLogViewModel::class.java]
+                            .resetInteractionLog()
+                        if (item.itemId == R.id.loginRedirectFragment) {
+                            if (FirebaseAuth.getInstance().currentUser != null) {
+                                navController.navigate(R.id.nav_visit)
+                            } else {
+                                navController.navigate(R.id.loginVisitLogFragment)
+                            }
+                        } else {
+                            NavigationUI.onNavDestinationSelected(item, navController)
+                        }
+                    }
+                    .setNegativeButton("Keep editing", null)
+                    .show()
+                false
+            } else if (item.itemId == R.id.loginRedirectFragment) {
                 if (FirebaseAuth.getInstance().currentUser != null) {
                     navController.navigate(R.id.nav_visit)
                 } else {
