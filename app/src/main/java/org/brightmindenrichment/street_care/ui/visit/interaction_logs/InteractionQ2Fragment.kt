@@ -114,12 +114,6 @@ class InteractionQ2Fragment : Fragment() {
 
     private fun setSkipButton() {
         binding.txtSkip3.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                "Skipped personal info",
-                Toast.LENGTH_SHORT
-            ).show()
-
             findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
         }
     }
