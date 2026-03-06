@@ -191,6 +191,10 @@
             app:destination="@id/individualInteractionQ1" />
 
         <action
+            android:id="@+id/action_q7_yes_to_individualInteractionList"
+            app:destination="@id/individualInteractionFragment" />
+
+        <action
             android:id="@+id/action_q7_no_to_consentPage"
             app:destination="@id/consentFragment" />
 
@@ -247,6 +251,10 @@
         <action
             android:id="@+id/action_individualInteractionFragment_to_individualInteractionQ1"
             app:destination="@id/individualInteractionQ1" />
+
+        <action
+            android:id="@+id/action_individualInteractionFragment_to_consentPage"
+            app:destination="@id/consentFragment" />
     </fragment>
 
 

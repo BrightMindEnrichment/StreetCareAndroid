@@ -91,6 +91,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     //implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-config'
     // For FirebaseUI, you need to specify the version separately as it's not included in the Firebase BoM
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
 

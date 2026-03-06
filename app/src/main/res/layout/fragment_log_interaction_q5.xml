@@ -27,10 +27,9 @@
             android:padding="5dp"
             android:text="@string/visit_log_inside"
             android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textFontWeight="700"
-            app:fontFamily="Poppins" />
+            android:textSize="28sp"
+            android:includeFontPadding="false"
+            app:fontFamily="@font/poppins_bold_new" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -88,9 +87,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="8dp"
-            app:cardUseCompatPadding="true">
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:strokeColor="@color/gray700"
+            app:strokeWidth="1.2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,29 +109,33 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Question 5/7"
-                        android:textSize="16sp"
-                        android:textColor="#424242" />
+                        android:textSize="14sp"
+                        android:textColor="#424242"
+                        app:fontFamily="@font/poppins_regular" />
 
                     <TextView
                         android:id="@+id/btn_skip"
-                        android:layout_width="90dp"
-                        android:layout_height="38dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:background="@drawable/button_skip_outline"
+                        android:background="@drawable/rounded_btn"
                         android:text="Skip"
-                        android:textColor="#0D3B3B"
+                        android:textColor="@color/black"
                         android:gravity="center"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textAllCaps="false" />
+                        android:textSize="13sp"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="6dp"
+                        android:textAllCaps="false"
+                        app:fontFamily="@font/poppins_bold_new" />
                 </RelativeLayout>
 
                 <!-- Divider -->
-                <View
+                <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
-                    android:background="#E0E0E0" />
+                    android:layout_height="0.7dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:dividerColor="@color/gray700"/>
 
                 <!-- Section 1: Number of people helped -->
                 <TextView
@@ -139,8 +144,7 @@
                     android:layout_marginTop="20dp"
                     android:text="Number of people helped"
                     android:textSize="22sp"
-                    android:textStyle="bold"
-                    app:fontFamily="Poppins"
+                    app:fontFamily="@font/poppins_bold_new"
                     android:textColor="@color/black"
                     android:gravity="center" />
 
@@ -214,8 +218,7 @@
                     android:layout_marginTop="22dp"
                     android:text="How many people have joined you?"
                     android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:fontFamily="Poppins"
+                    app:fontFamily="@font/poppins_bold_new"
                     android:textColor="@color/black"
                     android:gravity="center" />
 
@@ -292,15 +295,15 @@
 
                     <TextView
                         android:id="@+id/btn_previous"
-                        android:layout_width="110dp"
-                        android:layout_height="36dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Previous"
-                        android:textColor="#0D3B3B"
-                        android:background="@drawable/button_outline"
-                        android:textSize="16sp"
+                        android:textColor="@color/dark_green"
+                        android:background="@drawable/button_previous"
                         android:textStyle="bold"
-                        android:includeFontPadding="false"/>
+                        android:paddingVertical="6dp"
+                        android:paddingHorizontal="18dp"/>
 
                     <View
                         android:layout_width="0dp"
@@ -309,15 +312,16 @@
 
                     <TextView
                         android:id="@+id/btn_next"
-                        android:layout_width="120dp"
-                        android:layout_height="36dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Next"
-                        android:textColor="#F4D03F"
-                        android:background="@drawable/button_next_filled"
+                        android:textColor="@color/accent1"
+                        android:background="@drawable/button_next"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:includeFontPadding="false" />
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="22dp"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

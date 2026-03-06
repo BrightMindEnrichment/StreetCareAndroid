@@ -395,6 +395,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="back_to_visit_log">Back to Visit Log</string>
     <string name="history">HISTORY</string>
     <string name="add_new">ADD NEW+</string>
+    <string name="continue_draft">CONTINUE DRAFT</string>
     <string name="people_helped">People Helped</string>
     <string name="outreaches">Outreaches</string>
     <string name="items_donated">Items Donated</string>

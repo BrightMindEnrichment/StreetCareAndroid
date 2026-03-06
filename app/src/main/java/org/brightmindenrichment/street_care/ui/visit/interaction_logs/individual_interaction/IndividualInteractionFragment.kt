@@ -1,5 +1,6 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,10 +43,6 @@ class IndividualInteractionFragment : Fragment() {
             setHomeAsUpIndicator(R.drawable.ic_close)
         }
 
-        requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            ?.visibility = View.VISIBLE
-
         adapter = IndividualInteractionAdapter(requireContext(), emptyList(), listener)
         binding.listViewInteractions.adapter = adapter
 
@@ -62,7 +59,9 @@ class IndividualInteractionFragment : Fragment() {
         }
 
         binding.btnNext.setOnClickListener {
-            // TODO: next screen later
+            findNavController().navigate(
+                R.id.action_individualInteractionFragment_to_consentPage
+            )
         }
     }
 
@@ -72,12 +71,22 @@ class IndividualInteractionFragment : Fragment() {
     }
 
     private val listener = object : IndividualInteractionAdapter.InteractionListener {
-        override fun onEditClicked(item: IndividualInteraction) {
-            // TODO later
+        override fun onEditClicked(item: IndividualInteraction, position: Int) {
+            viewModel.startEditing(position)
+            findNavController().navigate(
+                R.id.action_individualInteractionFragment_to_individualInteractionQ1
+            )
         }
 
         override fun onDeleteClicked(item: IndividualInteraction) {
-            viewModel.deleteInteraction(item)
+            AlertDialog.Builder(requireContext())
+                .setTitle("Delete Interaction")
+                .setMessage("Are you sure you want to delete this interaction?")
+                .setPositiveButton("Delete") { _, _ ->
+                    viewModel.deleteCommittedInteraction(item)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
     }
 }

@@ -29,6 +29,16 @@ class IndividualInteractionViewModel : ViewModel() {
 
     private var listenerRegistration: ListenerRegistration? = null
 
+    /** Non-null while an existing committed interaction is being edited; its index in the list. */
+    var editingIndex: Int? = null
+        private set
+
+    /** Display name shown in the Q1-Q4 header during edit mode; null when creating a new II. */
+    private var _editingHeaderText: String? = null
+
+    /** Returns the header text to display during edit mode, or null if creating a new II. */
+    fun editingHeaderText(): String? = _editingHeaderText
+
     fun saveQ1(firstName: String, lastName: String?, locationLandmark: String?, state: String?, zip: String?, date: LocalDate?, time: LocalTime?) {
 
         // Initialize base instance if none exists
@@ -75,12 +85,47 @@ class IndividualInteractionViewModel : ViewModel() {
             followUpTime = followUpTime,
             additionalDetails = notes?.takeUnless { it.isBlank() }
         )
-        _currentInteraction.value = completed
 
-        // Commit to the local list and reset for the next interaction
-        val current = _committedInteractions.value ?: emptyList()
-        _committedInteractions.value = current + completed
+        val current = _committedInteractions.value?.toMutableList() ?: mutableListOf()
+        val idx = editingIndex
+        if (idx != null) {
+            current[idx] = completed
+            editingIndex = null
+            _editingHeaderText = null
+        } else {
+            current.add(completed)
+        }
+        _committedInteractions.value = current
         _currentInteraction.value = IndividualInteraction()
+    }
+
+    /** Loads an existing committed interaction into the current form for editing. */
+    fun startEditing(index: Int) {
+        editingIndex = index
+        val interaction = _committedInteractions.value?.getOrNull(index) ?: IndividualInteraction()
+        _currentInteraction.value = interaction
+        _editingHeaderText = buildDisplayName(interaction, index)
+    }
+
+    /** Resets all in-session II state. Called when the user discards the IL/II workflow. */
+    fun reset() {
+        _committedInteractions.value = emptyList()
+        _currentInteraction.value = IndividualInteraction()
+        editingIndex = null
+        _editingHeaderText = null
+    }
+
+    private fun buildDisplayName(interaction: IndividualInteraction, index: Int): String {
+        if (interaction.firstName.isBlank()) return "IndividualInteraction${index + 1}"
+        val lastInitial = interaction.lastName?.firstOrNull()?.let { "${it}." }.orEmpty()
+        return "Interaction with ${interaction.firstName}${if (lastInitial.isNotEmpty()) " $lastInitial" else ""}"
+    }
+
+    /** Removes a committed interaction from the local list (no Firestore call needed before submission). */
+    fun deleteCommittedInteraction(item: IndividualInteraction) {
+        val current = _committedInteractions.value?.toMutableList() ?: return
+        current.remove(item)
+        _committedInteractions.value = current
     }
 
     fun saveInteractions(interaction: IndividualInteraction) {

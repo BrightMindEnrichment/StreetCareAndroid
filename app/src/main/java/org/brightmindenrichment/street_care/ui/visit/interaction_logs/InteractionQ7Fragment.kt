@@ -13,10 +13,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 
 class InteractionQ7Fragment : Fragment() {
 
     private val viewModel: InteractionLogViewModel by activityViewModels()
+    private val iiViewModel: IndividualInteractionViewModel by activityViewModels()
 
     private var selectedAnswer: Boolean? = null
 
@@ -100,9 +102,12 @@ class InteractionQ7Fragment : Fragment() {
 
         when (selectedAnswer) {
             true -> {
-                findNavController().navigate(
-                    R.id.action_q7_yes_to_individualInteraction1
-                )
+                val hasExisting = !iiViewModel.committedInteractions.value.isNullOrEmpty()
+                if (hasExisting) {
+                    findNavController().navigate(R.id.action_q7_yes_to_individualInteractionList)
+                } else {
+                    findNavController().navigate(R.id.action_q7_yes_to_individualInteraction1)
+                }
             }
             false -> {
                 findNavController().navigate(

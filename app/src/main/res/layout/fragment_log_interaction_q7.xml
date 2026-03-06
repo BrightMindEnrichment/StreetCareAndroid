@@ -26,10 +26,9 @@
             android:padding="5dp"
             android:text="@string/visit_log_inside"
             android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textFontWeight="700"
-            app:fontFamily="Poppins" />
+            android:textSize="28sp"
+            android:includeFontPadding="false"
+            app:fontFamily="@font/poppins_bold_new" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -86,18 +85,18 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_interaction_log"
             android:layout_width="match_parent"
-            android:layout_height="355dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="2dp"
-            app:cardCornerRadius="6dp"
+            app:cardCornerRadius="10dp"
             app:cardUseCompatPadding="true"
             app:cardElevation="4dp"
             app:cardBackgroundColor="@color/white"
-            app:strokeColor="@color/gray400"
-            app:strokeWidth="5dp">
+            app:strokeColor="@color/gray700"
+            app:strokeWidth="1.2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -122,9 +121,8 @@
                         android:layout_weight="1"
                         android:text="@string/additional_7_7"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size14"
-                        android:includeFontPadding="false"
-                        app:fontFamily="Poppins" />
+                        android:textSize="14sp"
+                        app:fontFamily="@font/poppins_regular" />
 
                     <!-- using TextView as button (1st file style) -->
                     <TextView
@@ -135,20 +133,19 @@
                         android:textColor="@color/black"
                         android:gravity="center"
                         android:paddingVertical="6dp"
+                        android:paddingHorizontal="14dp"
                         android:background="@drawable/rounded_btn"
-                        android:textSize="@dimen/text_size12"
-                        app:fontFamily="Poppins"
-                        android:textStyle="bold"/>
+                        android:textSize="13sp"
+                        app:fontFamily="@font/poppins_bold_new"/>
                 </LinearLayout>
 
                 <!-- divider -->
-                <View
+                <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:background="@color/gray300" />
+                    android:layout_height="0.7dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:dividerColor="@color/gray700"/>
 
                 <!-- QUESTION TEXT (center, like 2nd) -->
                 <TextView
@@ -161,9 +158,7 @@
                     android:text="@string/provide_details_prompt"
                     android:textColor="@color/black"
                     android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textFontWeight="700"
-                    app:fontFamily="Poppins"
+                    app:fontFamily="@font/poppins_bold_new"
                     android:lineSpacingExtra="6dp"/>
 
                 <!-- YES / NO ROW (use TextView buttons like 1st, styled like 2nd) -->
@@ -216,12 +211,10 @@
                     android:textColor="@color/dark_green"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
-                    android:textFontWeight="600"
-                    android:textSize="@dimen/text_size12"
-                    android:paddingVertical="8dp"
-                    android:paddingHorizontal="20dp"
-                    android:background="@drawable/button_previous"
-                    app:fontFamily="Poppins" />
+                    android:textStyle="bold"
+                    android:paddingVertical="6dp"
+                    android:paddingHorizontal="18dp"
+                    android:background="@drawable/button_previous"/>
 
 
 

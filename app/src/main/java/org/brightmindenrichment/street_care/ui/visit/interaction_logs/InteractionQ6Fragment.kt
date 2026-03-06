@@ -34,13 +34,6 @@ class InteractionQ6Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // -----------------------
-        // 1. Show Bottom Navigation
-        // -----------------------
-        requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            ?.visibility = View.VISIBLE
-
-        // -----------------------
         // 3. Initialize Views
         // -----------------------
         val btnSkip = view.findViewById<TextView>(R.id.btn_skip)

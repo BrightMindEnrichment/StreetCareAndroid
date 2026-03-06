@@ -33,11 +33,6 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1) Show bottom nav
-        requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            ?.visibility = View.VISIBLE
-
         // 2) Configure ActionBar: red close icon + title
         (activity as? AppCompatActivity)?.supportActionBar?.let { ab ->
             // store previous state

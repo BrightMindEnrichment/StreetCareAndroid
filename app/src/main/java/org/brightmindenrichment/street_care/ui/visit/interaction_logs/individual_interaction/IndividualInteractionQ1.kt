@@ -30,12 +30,13 @@ import org.brightmindenrichment.street_care.ui.visit.interaction_logs.Interactio
 import org.brightmindenrichment.street_care.util.isInvalidZip
 import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
 import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import org.brightmindenrichment.street_care.util.localDateNow
+import org.brightmindenrichment.street_care.util.localTimeNow
+import org.brightmindenrichment.street_care.util.toLocalDateFromPicker
+import org.brightmindenrichment.street_care.util.toPickerMillis
 
 class IndividualInteractionQ1 : Fragment() {
 
@@ -114,15 +115,16 @@ class IndividualInteractionQ1 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            ?.visibility = View.VISIBLE
-
-        interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
-            binding.tvHeader.text = if (idx <= 1) {
-                getString(R.string.individual_interaction_title_base)
-            } else {
-                getString(R.string.individual_interaction_title_numbered, idx)
+        val editHeader = viewModel.editingHeaderText()
+        if (editHeader != null) {
+            binding.tvHeader.text = editHeader
+        } else {
+            interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+                binding.tvHeader.text = if (idx <= 1) {
+                    getString(R.string.individual_interaction_title_base)
+                } else {
+                    getString(R.string.individual_interaction_title_numbered, idx)
+                }
             }
         }
 
@@ -171,25 +173,16 @@ class IndividualInteractionQ1 : Fragment() {
 
         // Date picker
         binding.datePickerCard.setOnClickListener {
-            val mountainZone = ZoneId.of("America/Denver")
-            val baseDate = selectedDate ?: LocalDate.now(mountainZone)
-
-            val initialMillis = baseDate
-                .atStartOfDay(ZoneOffset.UTC)
-                .toInstant()
-                .toEpochMilli()
+            val baseDate = selectedDate ?: localDateNow()
 
             val picker = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.ThemeOverlay_StreetCare_DatePicker)
                 .setTitleText(getString(R.string.select_interaction_date))
-                .setSelection(initialMillis)
+                .setSelection(baseDate.toPickerMillis())
                 .build()
 
             picker.addOnPositiveButtonClickListener { millis ->
-                val pickedDate = Instant.ofEpochMilli(millis)
-                    .atOffset(ZoneOffset.UTC)
-                    .toLocalDate()
-
+                val pickedDate = millis.toLocalDateFromPicker()
                 selectedDate = pickedDate
                 binding.tvDate.error = null
                 binding.tvDate.text = dateFormatter.format(pickedDate)
@@ -200,8 +193,7 @@ class IndividualInteractionQ1 : Fragment() {
 
         // Time picker
         binding.timePickerCard.setOnClickListener {
-            val mountainZone = ZoneId.of("America/Denver")
-            val baseTime = selectedTime ?: LocalTime.now(mountainZone)
+            val baseTime = selectedTime ?: localTimeNow()
 
             val picker = MaterialTimePicker.Builder()
                 .setTheme(R.style.ThemeOverlay_StreetCare_TimePicker)

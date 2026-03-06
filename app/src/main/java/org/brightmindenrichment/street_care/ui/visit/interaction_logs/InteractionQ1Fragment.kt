@@ -19,7 +19,9 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.launch
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.datepicker.MaterialDatePicker
 import org.brightmindenrichment.street_care.R
@@ -38,18 +40,8 @@ class InteractionQ1Fragment : Fragment() {
 
     private val viewModel: InteractionLogViewModel by activityViewModels()
 
-    private val startCalendar = Calendar.getInstance().apply {
-        set(Calendar.HOUR_OF_DAY, 9)
-        set(Calendar.MINUTE, 0)
-        set(Calendar.SECOND, 0)
-        set(Calendar.MILLISECOND, 0)
-    }
-    private val endCalendar = Calendar.getInstance().apply {
-        set(Calendar.HOUR_OF_DAY, 17)
-        set(Calendar.MINUTE, 0)
-        set(Calendar.SECOND, 0)
-        set(Calendar.MILLISECOND, 0)
-    }
+    private val startCalendar = Calendar.getInstance()
+    private val endCalendar = Calendar.getInstance()
 
     private val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
     private val timeFormatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
@@ -75,18 +67,72 @@ class InteractionQ1Fragment : Fragment() {
             showDiscardDialog()
         }
 
-        binding.startDate.text = dateFormatter.format(startCalendar.time)
-        binding.startTime.text = timeFormatter.format(startCalendar.time)
-        binding.endDate.text = dateFormatter.format(endCalendar.time)
-        binding.endTime.text = timeFormatter.format(endCalendar.time)
-        binding.timezoneText.text = formatTimezone(selectedTimezone)
-
         setStartDatePicker()
         setStartTimePicker()
         setEndDatePicker()
         setEndTimePicker()
         setTimezonePicker()
         setNextButton()
+
+        // Restore in-memory ViewModel state (same session, e.g. back-navigation from Q2)
+        val log = viewModel.interactionLog.value
+        val preLoaded = viewModel.draftPreLoaded
+        if (preLoaded) viewModel.draftPreLoaded = false
+
+        if (log?.startTimestamp != null) {
+            restoreFromLog(log)
+        } else if (preLoaded) {
+            // Draft was pre-loaded from the Visit screen — restore directly without dialog
+            if (log != null) restoreFromLog(log) else refreshUI()
+        } else {
+            // No in-memory state — check DataStore for a cross-session draft
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (viewModel.hasDraft()) {
+                    showResumeDraftDialog()
+                } else {
+                    refreshUI()
+                }
+            }
+        }
+    }
+
+    private fun restoreFromLog(log: org.brightmindenrichment.street_care.ui.visit.data.InteractionLog) {
+        log.startTimestamp?.let { startCalendar.timeInMillis = it.toDate().time }
+        log.endTimestamp?.let { endCalendar.timeInMillis = it.toDate().time }
+        if (log.timezone.isNotEmpty()) {
+            selectedTimezone = TimeZone.getTimeZone(log.timezone)
+        }
+        refreshUI()
+    }
+
+    private fun refreshUI() {
+        binding.startDate.text = dateFormatter.format(startCalendar.time)
+        binding.startTime.text = timeFormatter.format(startCalendar.time)
+        binding.endDate.text = dateFormatter.format(endCalendar.time)
+        binding.endTime.text = timeFormatter.format(endCalendar.time)
+        binding.timezoneText.text = formatTimezone(selectedTimezone)
+    }
+
+    private fun showResumeDraftDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Resume previous session?")
+            .setMessage("You have an unfinished Interaction Log. Would you like to continue where you left off?")
+            .setPositiveButton("Resume") { _, _ ->
+                viewModel.loadDraft { restored ->
+                    if (restored) {
+                        val log = viewModel.interactionLog.value ?: return@loadDraft
+                        restoreFromLog(log)
+                    } else {
+                        refreshUI()
+                    }
+                }
+            }
+            .setNegativeButton("Start fresh") { _, _ ->
+                viewModel.clearDraft()
+                refreshUI()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     // ---------------- Start Date ----------------
@@ -104,11 +150,11 @@ class InteractionQ1Fragment : Fragment() {
                 startCalendar.set(
                     utcCalendar.get(Calendar.YEAR),
                     utcCalendar.get(Calendar.MONTH),
-                    utcCalendar.get(Calendar.DAY_OF_MONTH),
-                    0, 0, 0
+                    utcCalendar.get(Calendar.DAY_OF_MONTH)
                 )
 
                 binding.startDate.text = dateFormatter.format(startCalendar.time)
+                viewModel.updateStartDate(startCalendar.time)
             }
 
             picker.show(parentFragmentManager, "START_DATE_PICK")
@@ -124,6 +170,7 @@ class InteractionQ1Fragment : Fragment() {
                     startCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     startCalendar.set(Calendar.MINUTE, minute)
                     binding.startTime.text = timeFormatter.format(startCalendar.time)
+                    viewModel.updateStartDate(startCalendar.time)
                 },
                 startCalendar.get(Calendar.HOUR_OF_DAY),
                 startCalendar.get(Calendar.MINUTE),
@@ -142,8 +189,17 @@ class InteractionQ1Fragment : Fragment() {
                 .build()
 
             picker.addOnPositiveButtonClickListener { selection ->
-                endCalendar.timeInMillis = selection
+                val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                utcCalendar.timeInMillis = selection
+
+                endCalendar.set(
+                    utcCalendar.get(Calendar.YEAR),
+                    utcCalendar.get(Calendar.MONTH),
+                    utcCalendar.get(Calendar.DAY_OF_MONTH)
+                )
+
                 binding.endDate.text = dateFormatter.format(endCalendar.time)
+                viewModel.updateEndDate(endCalendar.time)
             }
 
             picker.show(parentFragmentManager, "END_DATE_PICK")
@@ -159,6 +215,7 @@ class InteractionQ1Fragment : Fragment() {
                     endCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     endCalendar.set(Calendar.MINUTE, minute)
                     binding.endTime.text = timeFormatter.format(endCalendar.time)
+                    viewModel.updateEndDate(endCalendar.time)
                 },
                 endCalendar.get(Calendar.HOUR_OF_DAY),
                 endCalendar.get(Calendar.MINUTE),
@@ -271,6 +328,7 @@ class InteractionQ1Fragment : Fragment() {
             val zone = adapter.getItem(position) ?: return@setOnItemClickListener
             selectedTimezone = zone
             binding.timezoneText.text = formatTimezone(zone)
+            viewModel.updateTimezone(zone.id)
             dialog.dismiss()
         }
 

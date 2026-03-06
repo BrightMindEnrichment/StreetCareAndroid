@@ -14,8 +14,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 //import com.google.firebase.auth.ktx.auth
 //import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.R
@@ -30,6 +32,7 @@ class VisitFormFragment0 : Fragment() {
     val binding get() = _binding!!
     private val viewModel: InteractionLogViewModel by activityViewModels()
     private val visitDataAdapter = VisitDataAdapter()
+    private var draftExists = false
     companion object {
         fun newInstance() = VisitFormFragment0()
     }
@@ -45,28 +48,24 @@ class VisitFormFragment0 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnAddNew.setOnClickListener {
-            // if user is submitting multiple visit log together, the view model field should reset
-
-                if(FirebaseAuth.getInstance().currentUser != null) {
-                    // showImpactDialog(requireContext())
+            if (FirebaseAuth.getInstance().currentUser != null) {
+                if (draftExists) {
+                    viewModel.loadDraft { _ ->
+                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    }
+                } else {
                     val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                     val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
-                    if(shouldShowDialog){
+                    if (shouldShowDialog) {
                         viewModel.resetInteractionLog()
                         findNavController().navigate(R.id.interactionQ1Fragment)
-                    }else{
+                    } else {
                         showCustomDialogPH()
                     }
-
-
-            } else{
-                /*  Extensions.showDialog(
-                      requireContext(), requireContext().getString(R.string.alert), requireContext().getString(R.string.visit_log_can_be_recorded_by_logged_in_users),
-                      requireContext().getString(R.string.ok),
-                      requireContext().getString(R.string.cancel))*/
+                }
+            } else {
                 showCustomDialog()
             }
-
         }
         if (FirebaseAuth.getInstance().currentUser != null) {
             binding.historyMsg.visibility = View.GONE
@@ -190,6 +189,15 @@ class VisitFormFragment0 : Fragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
+    override fun onResume() {
+        super.onResume()
+        val b = _binding ?: return
+        viewLifecycleOwner.lifecycleScope.launch {
+            draftExists = viewModel.hasDraft()
+            b.btnAddNew.text = if (draftExists) getString(R.string.continue_draft) else getString(R.string.add_new)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

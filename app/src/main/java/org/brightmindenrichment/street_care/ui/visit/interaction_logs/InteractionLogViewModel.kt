@@ -1,19 +1,26 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
 import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
+import org.brightmindenrichment.street_care.util.DataStoreManager
+import org.brightmindenrichment.street_care.util.InteractionLogDraftSerializer
 import java.util.Date
 
-class InteractionLogViewModel : ViewModel() {
+class InteractionLogViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val dataStoreManager = DataStoreManager(application)
 
     // Interaction counter
     private val _interactionIndex = MutableLiveData(1)
@@ -21,6 +28,9 @@ class InteractionLogViewModel : ViewModel() {
 
     private val _interactionLog = MutableLiveData(InteractionLog())
     val interactionLog: LiveData<InteractionLog> = _interactionLog
+
+    /** Set to true when a draft is pre-loaded before navigating to Q1 so Q1 can skip the resume dialog. */
+    var draftPreLoaded = false
 
     fun nextInteraction() {
         val cur = _interactionIndex.value ?: 1
@@ -34,6 +44,7 @@ class InteractionLogViewModel : ViewModel() {
     fun resetInteractionLog() {
         _interactionLog.value = InteractionLog()
         resetInteractions()
+        clearDraft()
     }
 
     // =========================================================
@@ -182,9 +193,43 @@ class InteractionLogViewModel : ViewModel() {
         )
     }
 
-    fun resetInteractionLog(forceReset: Boolean = true) {
-        if (forceReset) {
-            _interactionLog.value = InteractionLog()
+    // =========================================================
+    // -------------------- DRAFT PERSISTENCE ------------------
+    // =========================================================
+
+    fun saveDraft() {
+        viewModelScope.launch {
+            val json = InteractionLogDraftSerializer.serialize(_interactionLog.value ?: return@launch)
+            dataStoreManager.saveILDraft(json)
+        }
+    }
+
+    fun clearDraft() {
+        viewModelScope.launch {
+            dataStoreManager.clearILDraft()
+        }
+    }
+
+    /** Returns true if a persisted draft exists in DataStore. */
+    suspend fun hasDraft(): Boolean = dataStoreManager.getILDraft().map { it != null }.first()
+
+    /**
+     * Loads the DataStore draft into [_interactionLog]. Calls [onLoaded] with true if a valid
+     * draft was found and restored, false otherwise.
+     */
+    fun loadDraft(onLoaded: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val json = dataStoreManager.getILDraft().first()
+            if (json != null) {
+                val log = InteractionLogDraftSerializer.deserialize(json)
+                if (log != null) {
+                    _interactionLog.value = log
+                    draftPreLoaded = true
+                    onLoaded(true)
+                    return@launch
+                }
+            }
+            onLoaded(false)
         }
     }
 

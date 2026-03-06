@@ -15,12 +15,13 @@ import com.google.android.material.timepicker.TimeFormat
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionQ4Binding
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import org.brightmindenrichment.street_care.util.localDateNow
+import org.brightmindenrichment.street_care.util.localTimeNow
+import org.brightmindenrichment.street_care.util.toLocalDateFromPicker
+import org.brightmindenrichment.street_care.util.toPickerMillis
 
 class IndividualInteractionQ4 : Fragment() {
 
@@ -48,15 +49,16 @@ class IndividualInteractionQ4 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            ?.visibility = View.VISIBLE
-
-        interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
-            binding.tvHeader.text = if (idx <= 1) {
-                getString(R.string.individual_interaction_title_base)
-            } else {
-                getString(R.string.individual_interaction_title_numbered, idx)
+        val editHeader = viewModel.editingHeaderText()
+        if (editHeader != null) {
+            binding.tvHeader.text = editHeader
+        } else {
+            interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+                binding.tvHeader.text = if (idx <= 1) {
+                    getString(R.string.individual_interaction_title_base)
+                } else {
+                    getString(R.string.individual_interaction_title_numbered, idx)
+                }
             }
         }
 
@@ -75,25 +77,16 @@ class IndividualInteractionQ4 : Fragment() {
 
         // Date picker
         binding.datePickerCard.setOnClickListener {
-            val mountainZone = ZoneId.of("America/Denver")
-            val baseDate = selectedDate ?: LocalDate.now(mountainZone)
-
-            val initialMillis = baseDate
-                .atStartOfDay(ZoneOffset.UTC)
-                .toInstant()
-                .toEpochMilli()
+            val baseDate = selectedDate ?: localDateNow()
 
             val picker = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.ThemeOverlay_StreetCare_DatePicker)
                 .setTitleText(getString(R.string.select_interaction_date))
-                .setSelection(initialMillis)
+                .setSelection(baseDate.toPickerMillis())
                 .build()
 
             picker.addOnPositiveButtonClickListener { millis ->
-                val pickedDate = Instant.ofEpochMilli(millis)
-                    .atOffset(ZoneOffset.UTC)
-                    .toLocalDate()
-
+                val pickedDate = millis.toLocalDateFromPicker()
                 selectedDate = pickedDate
                 binding.tvDate.text = dateFormatter.format(pickedDate)
             }
@@ -103,8 +96,7 @@ class IndividualInteractionQ4 : Fragment() {
 
         // Time picker
         binding.timePickerCard.setOnClickListener {
-            val mountainZone = ZoneId.of("America/Denver")
-            val baseTime = selectedTime ?: LocalTime.now(mountainZone)
+            val baseTime = selectedTime ?: localTimeNow()
 
             val picker = MaterialTimePicker.Builder()
                 .setTheme(R.style.ThemeOverlay_StreetCare_TimePicker)
@@ -130,8 +122,9 @@ class IndividualInteractionQ4 : Fragment() {
 
         // Skip -> commit with no follow-up data and return
         binding.txtSkip.setOnClickListener {
+            val wasEditing = viewModel.editingIndex != null
             viewModel.saveQ4(null, null, null)
-            interactionLogViewModel.nextInteraction()
+            if (!wasEditing) interactionLogViewModel.nextInteraction()
             findNavController().navigate(R.id.individualInteractionFragment)
         }
 
@@ -141,21 +134,13 @@ class IndividualInteractionQ4 : Fragment() {
             binding.tvDate.error = null
             binding.tvTime.error = null
 
-            if (selectedDate == null) {
-                binding.tvDate.error = "Required"
-                return@setOnClickListener
-            }
-            if (selectedTime == null) {
-                binding.tvTime.error = "Required"
-                return@setOnClickListener
-            }
-
+            val wasEditing = viewModel.editingIndex != null
             viewModel.saveQ4(
-                selectedDate.toString(),
-                selectedTime.toString(),
+                selectedDate?.toString(),
+                selectedTime?.toString(),
                 notes.takeUnless { it.isEmpty() }
             )
-            interactionLogViewModel.nextInteraction()
+            if (!wasEditing) interactionLogViewModel.nextInteraction()
             findNavController().navigate(R.id.individualInteractionFragment)
         }
     }

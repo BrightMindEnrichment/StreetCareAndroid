@@ -34,15 +34,16 @@ class IndividualInteractionQ2 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            ?.visibility = View.VISIBLE
-
-        interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
-            binding.tvHeader.text = if (idx <= 1) {
-                getString(R.string.individual_interaction_title_base)
-            } else {
-                getString(R.string.individual_interaction_title_numbered, idx)
+        val editHeader = viewModel.editingHeaderText()
+        if (editHeader != null) {
+            binding.tvHeader.text = editHeader
+        } else {
+            interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
+                binding.tvHeader.text = if (idx <= 1) {
+                    getString(R.string.individual_interaction_title_base)
+                } else {
+                    getString(R.string.individual_interaction_title_numbered, idx)
+                }
             }
         }
 

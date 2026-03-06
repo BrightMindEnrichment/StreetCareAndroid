@@ -57,10 +57,6 @@ class InteractionLogFormSubmittedFragment : Fragment() {
             ab.title = "Interaction Log"
         }
 
-        requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            ?.visibility = View.VISIBLE
-
         binding.btnAnotherVisit.setOnClickListener {
             sharedCommunity = false
             clicked = false

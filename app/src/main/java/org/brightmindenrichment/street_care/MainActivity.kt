@@ -42,6 +42,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
@@ -257,30 +260,56 @@ class MainActivity : AppCompatActivity() {
         bottomNavView.setOnItemSelectedListener { item ->
             val currentDestId = navController.currentDestination?.id
             if (currentDestId in interactionLogDestinations) {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("Discard changes?")
-                    .setMessage("Your progress will be lost if you leave now.")
-                    .setPositiveButton("Discard") { _, _ ->
-                        ViewModelProvider(this)[InteractionLogViewModel::class.java]
-                            .resetInteractionLog()
-                        if (item.itemId == R.id.loginRedirectFragment) {
-                            if (FirebaseAuth.getInstance().currentUser != null) {
-                                navController.navigate(R.id.nav_visit)
-                            } else {
-                                navController.navigate(R.id.loginVisitLogFragment)
-                            }
+
+                fun navigateToItem() {
+                    // Pop the IL back stack back to nav_visit (where IL was launched from),
+                    // then navigate to the target tab using standard NavigationUI behaviour.
+                    navController.popBackStack(R.id.nav_visit, false)
+                    if (item.itemId == R.id.loginRedirectFragment) {
+                        val opts = NavOptions.Builder()
+                            .setLaunchSingleTop(true)
+                            .setRestoreState(true)
+                            .setPopUpTo(navController.graph.startDestinationId, false, true)
+                            .build()
+                        if (FirebaseAuth.getInstance().currentUser != null) {
+                            navController.navigate(R.id.nav_visit, null, opts)
                         } else {
-                            navController.navigate(
-                                item.itemId, null,
-                                NavOptions.Builder()
-                                    .setLaunchSingleTop(true)
-                                    .setPopUpTo(R.id.nav_home, false)
-                                    .build()
-                            )
+                            navController.navigate(R.id.loginVisitLogFragment, null, opts)
                         }
+                    } else if (item.itemId != R.id.nav_visit) {
+                        NavigationUI.onNavDestinationSelected(item, navController)
                     }
-                    .setNegativeButton("Keep editing", null)
-                    .show()
+                    // if item is nav_visit, popBackStack already landed us there
+                }
+
+                fun clearAndNavigate() {
+                    ViewModelProvider(this)[InteractionLogViewModel::class.java].resetInteractionLog()
+                    ViewModelProvider(this)[IndividualInteractionViewModel::class.java].reset()
+                    navigateToItem()
+                }
+
+                if (FeatureFlagManager.isEnabled(FeatureFlag.CLEAR_FORM_ON_WORKFLOW_EXIT)) {
+                    // Case 2: simple 2-button dialog
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Discard changes?")
+                        .setMessage("Your progress will be lost if you leave now.")
+                        .setPositiveButton("Discard") { _, _ -> clearAndNavigate() }
+                        .setNegativeButton("Keep editing", null)
+                        .show()
+                } else {
+                    // Case 1: 3-button dialog — state can be preserved
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Leave form?")
+                        .setMessage("Do you want to save your progress and continue later, or discard everything?")
+                        .setPositiveButton("Discard") { _, _ -> clearAndNavigate() }
+                        .setNeutralButton("Continue later") { _, _ ->
+                            ViewModelProvider(this)[InteractionLogViewModel::class.java].saveDraft()
+                            navigateToItem()
+                        }
+                        .setNegativeButton("Keep editing", null)
+                        .show()
+                }
+
                 false
             } else if (item.itemId == R.id.loginRedirectFragment) {
                 val visitNavOptions = NavOptions.Builder()
@@ -302,21 +331,33 @@ class MainActivity : AppCompatActivity() {
 
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-                bottomNavView.visibility =
-                    if (destination.id in setOf(
-                        R.id.nav_home,
-                        R.id.loginVisitLogFragment,
-                        R.id.loginRedirectFragment,
-                        R.id.nav_visit,
-                        R.id.nav_community,
-                        R.id.nav_profile,
-                            // add the screens which require bottom navigation bar
-                        )
-                    ) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+            bottomNavView.visibility =
+                if (destination.id in setOf(
+                    R.id.nav_home,
+                    R.id.loginVisitLogFragment,
+                    R.id.loginRedirectFragment,
+                    R.id.nav_visit,
+                    R.id.nav_community,
+                    R.id.nav_profile,
+                    // IL form screens
+                    R.id.interactionQ1Fragment,
+                    R.id.interactionQ2Fragment,
+                    R.id.interactionQ3Fragment,
+                    R.id.interactionQ4Fragment,
+                    R.id.interactionQ5Fragment,
+                    R.id.interactionQ6Fragment,
+                    R.id.interactionQ7Fragment,
+                    // II sub-form screens
+                    R.id.individualInteractionQ1,
+                    R.id.individualInteractionQ2,
+                    R.id.individualInteractionQ3,
+                    R.id.individualInteractionQ4,
+                    R.id.individualInteractionFragment,
+                    // tail screens
+                    R.id.consentFragment,
+                    R.id.surveySubmittedFragment,
+                )
+            ) { View.VISIBLE } else { View.GONE }
         }
     }
 

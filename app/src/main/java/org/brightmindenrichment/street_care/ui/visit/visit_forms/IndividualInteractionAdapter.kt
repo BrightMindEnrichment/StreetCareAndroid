@@ -35,11 +35,17 @@ class IndividualInteractionAdapter(
             binding = view.tag as ItemInteractionBinding
         }
         val item = getItem(position) ?: return view
-        binding.tvInteractionTitle.text = "Individual Interaction ${position + 1}"
 
+        val displayName = if (item.firstName.isNotBlank()) {
+            val lastInitial = item.lastName?.firstOrNull()?.let { "${it}." }.orEmpty()
+            "Interaction with ${item.firstName}${if (lastInitial.isNotEmpty()) " $lastInitial" else ""}"
+        } else {
+            "IndividualInteraction${position + 1}"
+        }
+        binding.tvInteractionTitle.text = displayName
 
         binding.btnEdit.setOnClickListener {
-//            listener.onEditClicked(item)
+            listener.onEditClicked(item, position)
         }
 
         binding.btnDelete.setOnClickListener {
@@ -49,7 +55,7 @@ class IndividualInteractionAdapter(
     }
 
     interface InteractionListener {
-        fun onEditClicked(item: IndividualInteraction)
+        fun onEditClicked(item: IndividualInteraction, position: Int)
         fun onDeleteClicked(item: IndividualInteraction)
     }
 }
