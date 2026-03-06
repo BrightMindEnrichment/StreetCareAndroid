@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
@@ -17,8 +18,12 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import org.brightmindenrichment.street_care.R
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 
 class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interaction_consent) {
+
+    private val ilViewModel: InteractionLogViewModel by activityViewModels()
+    private val iiViewModel: IndividualInteractionViewModel by activityViewModels()
 
     // Save previous ActionBar state so we can restore it when leaving this fragment
     private var prevTitle: CharSequence? = null
@@ -72,6 +77,9 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
                     bundleOf("interactionId" to interactionId)
                 )
 
+                ilViewModel.resetInteractionLog()
+                iiViewModel.reset()
+
                 db.collection("interactions")
                     .document(interactionId)
                     .update(
@@ -98,6 +106,9 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
                     R.id.action_consentFragment_to_surveySubmittedFragment,
                     bundleOf("interactionId" to newId)
                 )
+
+                ilViewModel.resetInteractionLog()
+                iiViewModel.reset()
 
                 val interaction = hashMapOf(
                     "isPublic" to true,

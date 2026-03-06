@@ -70,6 +70,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
                 "After Q4 Save: ${viewModel.interactionLog.value}"
             )
 
+            viewModel.saveDraft()
             // Navigate
             findNavController().navigate(R.id.action_q4_to_q5)
         }
@@ -81,6 +82,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
         }
 
         binding.skipBtn.setOnClickListener {
+            viewModel.saveDraft()
             findNavController().navigate(R.id.action_q4_to_q5)
         }
     }

@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionListBinding
 import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 
 class IndividualInteractionListFragment : Fragment() {
 
@@ -20,6 +21,7 @@ class IndividualInteractionListFragment : Fragment() {
 
     // For list + delete + later saving (Firebase)
     private val viewModel: IndividualInteractionViewModel by activityViewModels()
+    private val ilViewModel: InteractionLogViewModel by activityViewModels()
 
     private lateinit var adapter: IndividualInteractionAdapter
 
@@ -78,7 +80,12 @@ class IndividualInteractionListFragment : Fragment() {
                 .setTitle("Delete Interaction")
                 .setMessage("Are you sure you want to delete this interaction?")
                 .setPositiveButton("Delete") { _, _ ->
+                    val idx = viewModel.committedInteractions.value?.indexOf(item) ?: -1
                     viewModel.deleteCommittedInteraction(item)
+                    if (idx >= 0) {
+                        ilViewModel.removeIndividualInteraction(idx)
+                        ilViewModel.saveDraft()
+                    }
                 }
                 .setNegativeButton("Cancel", null)
                 .show()

@@ -99,6 +99,7 @@ class InteractionQ7Fragment : Fragment() {
     private fun goToNext() {
 
         viewModel.updateQ7Answer(selectedAnswer)
+        viewModel.saveDraft()
 
         when (selectedAnswer) {
             true -> {

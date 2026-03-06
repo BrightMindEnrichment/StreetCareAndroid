@@ -302,7 +302,7 @@ class MainActivity : AppCompatActivity() {
                         .setTitle("Leave form?")
                         .setMessage("Do you want to save your progress and continue later, or discard everything?")
                         .setPositiveButton("Discard") { _, _ -> clearAndNavigate() }
-                        .setNeutralButton("Continue later") { _, _ ->
+                        .setNeutralButton("Save & Exit") { _, _ ->
                             ViewModelProvider(this)[InteractionLogViewModel::class.java].saveDraft()
                             navigateToItem()
                         }

@@ -68,6 +68,7 @@ class InteractionQ5Fragment : Fragment() {
     private fun navigateNext() {
         syncFromInput()
         viewModel.updateCounts(helpedCount, joinedCount)
+        viewModel.saveDraft()
         findNavController().navigate(R.id.action_q5_to_q6)
     }
 

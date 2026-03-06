@@ -193,6 +193,13 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
         )
     }
 
+    fun replaceIndividualInteraction(index: Int, interaction: IndividualInteraction) {
+        val current = interactionLog.value ?: return
+        val updatedList = current.individualInteractions.toMutableList()
+        if (index in updatedList.indices) updatedList[index] = interaction
+        _interactionLog.value = current.copy(individualInteractions = updatedList)
+    }
+
     // =========================================================
     // -------------------- DRAFT PERSISTENCE ------------------
     // =========================================================

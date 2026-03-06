@@ -122,9 +122,10 @@ class IndividualInteractionQ4 : Fragment() {
 
         // Skip -> commit with no follow-up data and return
         binding.txtSkip.setOnClickListener {
-            val wasEditing = viewModel.editingIndex != null
+            val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
             viewModel.saveQ4(null, null, null)
-            if (!wasEditing) interactionLogViewModel.nextInteraction()
+            mergeIntoILAndSave(editingIdx)
+            if (editingIdx == null) interactionLogViewModel.nextInteraction()
             findNavController().navigate(R.id.individualInteractionFragment)
         }
 
@@ -133,16 +134,28 @@ class IndividualInteractionQ4 : Fragment() {
             val notes = binding.etNotes.text?.toString()?.trim().orEmpty()
             binding.tvDate.error = null
             binding.tvTime.error = null
-
-            val wasEditing = viewModel.editingIndex != null
+            val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
             viewModel.saveQ4(
                 selectedDate?.toString(),
                 selectedTime?.toString(),
                 notes.takeUnless { it.isEmpty() }
             )
-            if (!wasEditing) interactionLogViewModel.nextInteraction()
+            mergeIntoILAndSave(editingIdx)
+            if (editingIdx == null) interactionLogViewModel.nextInteraction()
             findNavController().navigate(R.id.individualInteractionFragment)
         }
+    }
+
+    private fun mergeIntoILAndSave(editingIdx: Int?) {
+        val committed = viewModel.committedInteractions.value ?: return
+        if (editingIdx != null) {
+            val updated = committed.getOrNull(editingIdx) ?: return
+            interactionLogViewModel.replaceIndividualInteraction(editingIdx, updated)
+        } else {
+            val newItem = committed.lastOrNull() ?: return
+            interactionLogViewModel.addIndividualInteraction(newItem)
+        }
+        interactionLogViewModel.saveDraft()
     }
 
     override fun onDestroyView() {

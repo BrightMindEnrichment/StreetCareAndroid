@@ -105,6 +105,7 @@ class InteractionQ6Fragment : Fragment() {
 
         viewModel.updateCarePackage(carePackageCount, notes)
 
+        viewModel.saveDraft()
         findNavController().navigate(
             R.id.action_q6_to_q7
         )

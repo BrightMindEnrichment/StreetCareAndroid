@@ -144,6 +144,7 @@ class InteractionQ3Fragment : Fragment() {
             viewModel.updateZipcode(zip)
 
             Log.d("Q3_DEBUG", "After Q3 Save: ${viewModel.interactionLog.value}")
+            viewModel.saveDraft()
             findNavController().navigate(R.id.action_q3_to_q4)
         }
 
@@ -152,6 +153,7 @@ class InteractionQ3Fragment : Fragment() {
         }
 
         binding.skipBtn.setOnClickListener {
+            viewModel.saveDraft()
             findNavController().navigate(R.id.action_q3_to_q4)
         }
     }

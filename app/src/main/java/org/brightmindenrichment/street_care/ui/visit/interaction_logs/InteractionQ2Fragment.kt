@@ -107,6 +107,7 @@ class InteractionQ2Fragment : Fragment() {
                 "InteractionLog after Q2 save: ${viewModel.interactionLog.value}"
             )
 
+            viewModel.saveDraft()
             // ---- Navigate to Q3 ----
             findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
         }
@@ -114,6 +115,7 @@ class InteractionQ2Fragment : Fragment() {
 
     private fun setSkipButton() {
         binding.txtSkip3.setOnClickListener {
+            viewModel.saveDraft()
             findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
         }
     }

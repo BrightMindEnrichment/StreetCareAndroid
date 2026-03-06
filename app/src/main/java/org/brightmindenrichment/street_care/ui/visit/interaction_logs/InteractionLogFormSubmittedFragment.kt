@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,6 +29,8 @@ class InteractionLogFormSubmittedFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val sharedVisitViewModel: VisitViewModel by activityViewModels()
+    private val ilViewModel: InteractionLogViewModel by activityViewModels()
+    private val iiViewModel: IndividualInteractionViewModel by activityViewModels()
 
     private var clicked = false
     private var sharedCommunity = false
@@ -61,6 +64,8 @@ class InteractionLogFormSubmittedFragment : Fragment() {
             sharedCommunity = false
             clicked = false
             sharedVisitViewModel.resetVisitLogPage() // Add this to clear old visit data
+            ilViewModel.resetInteractionLog()
+            iiViewModel.reset()
             findNavController().navigate(R.id.action_surveySubmittedFragment_to_interactionQ1Fragment)
         }
 

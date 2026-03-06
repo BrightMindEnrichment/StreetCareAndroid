@@ -26,6 +26,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.datepicker.MaterialDatePicker
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ1Binding
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -39,6 +40,7 @@ class InteractionQ1Fragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: InteractionLogViewModel by activityViewModels()
+    private val iiViewModel: IndividualInteractionViewModel by activityViewModels()
 
     private val startCalendar = Calendar.getInstance()
     private val endCalendar = Calendar.getInstance()
@@ -83,7 +85,12 @@ class InteractionQ1Fragment : Fragment() {
             restoreFromLog(log)
         } else if (preLoaded) {
             // Draft was pre-loaded from the Visit screen — restore directly without dialog
-            if (log != null) restoreFromLog(log) else refreshUI()
+            if (log != null) {
+                iiViewModel.restoreFromInteractionLog(log.individualInteractions)
+                restoreFromLog(log)
+            } else {
+                refreshUI()
+            }
         } else {
             // No in-memory state — check DataStore for a cross-session draft
             viewLifecycleOwner.lifecycleScope.launch {
@@ -121,6 +128,7 @@ class InteractionQ1Fragment : Fragment() {
                 viewModel.loadDraft { restored ->
                     if (restored) {
                         val log = viewModel.interactionLog.value ?: return@loadDraft
+                        iiViewModel.restoreFromInteractionLog(log.individualInteractions)
                         restoreFromLog(log)
                     } else {
                         refreshUI()
@@ -381,6 +389,7 @@ class InteractionQ1Fragment : Fragment() {
             viewModel.updateEndDate(endCalendar.time)
             viewModel.updateTimezone(selectedTimezone.id)
 
+            viewModel.saveDraft()
             findNavController().navigate(R.id.action_interactionQ1_to_interactionQ2)
         }
     }

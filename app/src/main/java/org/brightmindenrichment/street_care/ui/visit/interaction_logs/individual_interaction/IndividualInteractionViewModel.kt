@@ -115,6 +115,11 @@ class IndividualInteractionViewModel : ViewModel() {
         _editingHeaderText = null
     }
 
+    /** Syncs _committedInteractions from a restored DataStore draft. Called in Q1 after loadDraft(). */
+    fun restoreFromInteractionLog(interactions: List<IndividualInteraction>) {
+        _committedInteractions.value = interactions.toList()
+    }
+
     private fun buildDisplayName(interaction: IndividualInteraction, index: Int): String {
         if (interaction.firstName.isBlank()) return "IndividualInteraction${index + 1}"
         val lastInitial = interaction.lastName?.firstOrNull()?.let { "${it}." }.orEmpty()
