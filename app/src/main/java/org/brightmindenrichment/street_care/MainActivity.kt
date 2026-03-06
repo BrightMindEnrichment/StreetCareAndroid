@@ -298,12 +298,11 @@ class MainActivity : AppCompatActivity() {
                         .setNegativeButton("Keep editing", null)
                         .show()
                 } else {
-                    // Case 1: 3-button dialog — state can be preserved
+                    // Case 1: 2-button dialog — state can be preserved
                     MaterialAlertDialogBuilder(this)
                         .setTitle("Leave form?")
-                        .setMessage("Do you want to save your progress and continue later, or discard everything?")
-                        .setPositiveButton("Discard") { _, _ -> clearAndNavigate() }
-                        .setNeutralButton("Save & Exit") { _, _ ->
+                        .setMessage("Save your progress and continue later, or keep editing?")
+                        .setPositiveButton("Save & Exit") { _, _ ->
                             ViewModelProvider(this)[InteractionLogViewModel::class.java].saveDraft()
                             navigateToItem()
                         }

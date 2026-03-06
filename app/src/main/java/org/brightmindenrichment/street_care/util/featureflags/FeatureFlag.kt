@@ -14,5 +14,13 @@ enum class FeatureFlag(val key: String) {
      *   "Keep editing" — stays on form
      *   "Discard" — navigates away, clears both IL and II state
      */
-    CLEAR_FORM_ON_WORKFLOW_EXIT("clearFormOnWorkflowExit")
+    CLEAR_FORM_ON_WORKFLOW_EXIT("clearFormOnWorkflowExit"),
+
+    /**
+     * Controls whether to show a resume draft dialog on IL home screen.
+     *
+     * OFF: No dialog shown; Q1 handles resume logic directly
+     * ON: Dialog shown on IL home (before Q1) with options "Continue Draft" / "Start Fresh"
+     */
+    SHOW_IL_DRAFT_RESUME_DIALOG("showILDraftResumeDialog")
 }

@@ -27,6 +27,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ1Binding
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -92,13 +94,12 @@ class InteractionQ1Fragment : Fragment() {
                 refreshUI()
             }
         } else {
-            // No in-memory state — check DataStore for a cross-session draft
-            viewLifecycleOwner.lifecycleScope.launch {
-                if (viewModel.hasDraft()) {
-                    showResumeDraftDialog()
-                } else {
-                    refreshUI()
-                }
+            // No in-memory state — restore from ViewModel if available
+            if (log != null) {
+                iiViewModel.restoreFromInteractionLog(log.individualInteractions)
+                restoreFromLog(log)
+            } else {
+                refreshUI()
             }
         }
     }
@@ -124,28 +125,6 @@ class InteractionQ1Fragment : Fragment() {
         binding.timezoneText.text = formatTimezone(selectedTimezone)
     }
 
-    private fun showResumeDraftDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Resume previous session?")
-            .setMessage("You have an unfinished Interaction Log. Would you like to continue where you left off?")
-            .setPositiveButton("Resume") { _, _ ->
-                viewModel.loadDraft { restored ->
-                    if (restored) {
-                        val log = viewModel.interactionLog.value ?: return@loadDraft
-                        iiViewModel.restoreFromInteractionLog(log.individualInteractions)
-                        restoreFromLog(log)
-                    } else {
-                        refreshUI()
-                    }
-                }
-            }
-            .setNegativeButton("Start fresh") { _, _ ->
-                viewModel.clearDraft()
-                refreshUI()
-            }
-            .setCancelable(false)
-            .show()
-    }
 
     // ---------------- Start Date ----------------
     private fun setStartDatePicker() {
@@ -397,18 +376,36 @@ class InteractionQ1Fragment : Fragment() {
     }
 
     private fun showDiscardDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Discard changes?")
-            .setMessage("Your progress will be lost if you leave now.")
-            .setPositiveButton("Discard") { _, _ ->
-                viewModel.resetInteractionLog {
+        fun clearAndNavigateBack() {
+            viewModel.resetInteractionLog {
+                if (isAdded) {
+                    findNavController().popBackStack()
+                }
+            }
+        }
+
+        if (FeatureFlagManager.isEnabled(FeatureFlag.CLEAR_FORM_ON_WORKFLOW_EXIT)) {
+            // Case 2: simple 2-button dialog
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Discard changes?")
+                .setMessage("Your progress will be lost if you leave now.")
+                .setPositiveButton("Discard") { _, _ -> clearAndNavigateBack() }
+                .setNegativeButton("Keep editing", null)
+                .show()
+        } else {
+            // Case 1: 2-button dialog — state can be preserved
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Leave form?")
+                .setMessage("Save your progress and continue later, or keep editing?")
+                .setPositiveButton("Save & Exit") { _, _ ->
+                    viewModel.saveDraft()
                     if (isAdded) {
                         findNavController().popBackStack()
                     }
                 }
-            }
-            .setNegativeButton("Keep editing", null)
-            .show()
+                .setNegativeButton("Keep editing", null)
+                .show()
+        }
     }
 
     // ---------------- Next ----------------

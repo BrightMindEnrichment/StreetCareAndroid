@@ -20,12 +20,15 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 //import com.google.firebase.auth.ktx.auth
 //import com.google.firebase.ktx.Firebase
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentVisitBinding
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.DetailsButtonClickListener
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitLogRecyclerAdapter
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
 
 class VisitFormFragment0 : Fragment() {
     private var _binding: FragmentVisitBinding? = null
@@ -50,8 +53,12 @@ class VisitFormFragment0 : Fragment() {
         binding.btnAddNew.setOnClickListener {
             if (FirebaseAuth.getInstance().currentUser != null) {
                 if (draftExists) {
-                    viewModel.loadDraft { _ ->
-                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    if (FeatureFlagManager.isEnabled(FeatureFlag.SHOW_IL_DRAFT_RESUME_DIALOG)) {
+                        showDraftResumeDialog()
+                    } else {
+                        viewModel.loadDraft { _ ->
+                            findNavController().navigate(R.id.interactionQ1Fragment)
+                        }
                     }
                 } else {
                     val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -197,6 +204,28 @@ class VisitFormFragment0 : Fragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
+    private fun showDraftResumeDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Resume previous session?")
+            .setMessage("You have an unfinished Interaction Log. Would you like to continue where you left off?")
+            .setPositiveButton("Continue Draft") { _, _ ->
+                viewModel.loadDraft { restored ->
+                    if (restored && isAdded) {
+                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    }
+                }
+            }
+            .setNegativeButton("Start Fresh") { _, _ ->
+                viewModel.resetInteractionLog {
+                    if (isAdded) {
+                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    }
+                }
+            }
+            .setCancelable(false)
+            .show()
+    }
+
     override fun onResume() {
         super.onResume()
         val b = _binding ?: return
