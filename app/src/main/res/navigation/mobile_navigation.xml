@@ -183,7 +183,7 @@
     <fragment
         android:id="@+id/interactionQ7Fragment"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionQ7Fragment"
-        android:label="Interaction Q7"
+        android:label="Interaction Log"
         tools:layout="@layout/fragment_log_interaction_q7">
 
         <action
@@ -204,6 +204,7 @@
     <fragment
         android:id="@+id/individualInteractionQ1"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionQ1"
+        android:label="Interaction Log"
         tools:layout="@layout/fragment_individual_interaction_q1">
 
         <action
@@ -214,6 +215,7 @@
     <fragment
         android:id="@+id/individualInteractionQ2"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionQ2"
+        android:label="Interaction Log"
         tools:layout="@layout/fragment_individual_interaction_q2">
 
         <action
@@ -224,6 +226,7 @@
     <fragment
         android:id="@+id/individualInteractionQ3"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionQ3"
+        android:label="Interaction Log"
         tools:layout="@layout/fragment_individual_interaction_q3">
 
         <action
@@ -234,6 +237,7 @@
     <fragment
         android:id="@+id/individualInteractionQ4"
         android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionQ4"
+        android:label="Interaction Log"
         tools:layout="@layout/fragment_individual_interaction_q4">
 
         <!-- Change Fragment-->

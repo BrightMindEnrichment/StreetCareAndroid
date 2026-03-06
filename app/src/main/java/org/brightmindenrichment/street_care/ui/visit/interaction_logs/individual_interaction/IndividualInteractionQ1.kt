@@ -2,12 +2,14 @@ package org.brightmindenrichment.street_care.ui.visit.interaction_logs.individua
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -201,6 +203,9 @@ class IndividualInteractionQ1 : Fragment() {
 
         // Date picker
         binding.datePickerCard.setOnClickListener {
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val keyboardWasVisible = imm.isActive
+
             val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.ThemeOverlay_StreetCare_DatePicker)
                 .setTitleText(getString(R.string.select_interaction_date))
@@ -217,6 +222,17 @@ class IndividualInteractionQ1 : Fragment() {
                 selectedDate = pickedDate
                 binding.tvDate.error = null
                 binding.tvDate.text = dateFormatter.format(pickedDate)
+                // Restore keyboard state
+                if (!keyboardWasVisible) {
+                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                }
+            }
+
+            picker.addOnDismissListener {
+                // Restore keyboard state on dismiss (cancel or outside tap)
+                if (!keyboardWasVisible) {
+                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                }
             }
 
             picker.show(parentFragmentManager, "date_picker_q1")
@@ -224,6 +240,9 @@ class IndividualInteractionQ1 : Fragment() {
 
         // Time picker
         binding.timePickerCard.setOnClickListener {
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val keyboardWasVisible = imm.isActive
+
             val pickerBuilder = MaterialTimePicker.Builder()
                 .setTheme(R.style.ThemeOverlay_StreetCare_TimePicker)
                 .setTimeFormat(TimeFormat.CLOCK_12H)
@@ -245,6 +264,17 @@ class IndividualInteractionQ1 : Fragment() {
                 binding.tvTime.text = timeFormatter.format(
                     pickedTime.atDate(LocalDate.now()).atZone(getInteractionTimezone())
                 )
+                // Restore keyboard state
+                if (!keyboardWasVisible) {
+                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                }
+            }
+
+            picker.addOnDismissListener {
+                // Restore keyboard state on dismiss (cancel or outside tap)
+                if (!keyboardWasVisible) {
+                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                }
             }
 
             picker.show(parentFragmentManager, "time_picker_q1")
@@ -259,14 +289,25 @@ class IndividualInteractionQ1 : Fragment() {
             val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
             val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
             viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
-            findNavController().navigateUp()
+            mergeIntoILAndSave(viewModel.editingIndex) {
+                findNavController().popBackStack()
+            }
         }
 
         // Skip -> go to Q2 (no validation)
         binding.txtSkip.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
-            )
+            val first = binding.etFirstName.text?.toString()?.trim().orEmpty()
+            val last  = binding.etLastName.text?.toString()?.trim().orEmpty()
+            val loc   = binding.etLocation.text?.toString()?.trim().orEmpty()
+            val state = binding.actState.text?.toString()?.trim().orEmpty()
+            val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
+            val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
+            mergeIntoILAndSave(viewModel.editingIndex) {
+                findNavController().navigate(
+                    R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
+                )
+            }
         }
 
         // Next -> validate -> go to Q2
@@ -288,14 +329,29 @@ class IndividualInteractionQ1 : Fragment() {
 
             val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
             viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
-
-            findNavController().navigate(
-                R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
-            )
+            mergeIntoILAndSave(viewModel.editingIndex) {
+                findNavController().navigate(
+                    R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
+                )
+            }
         }
     }
 
     // ---- GPS prefill ----
+
+    private fun mergeIntoILAndSave(editingIdx: Int?, onComplete: () -> Unit) {
+        if (editingIdx != null) {
+            // Editing: use current interaction from ViewModel
+            val current = viewModel.currentInteraction.value ?: return onComplete()
+            interactionLogViewModel.replaceIndividualInteraction(editingIdx, current)
+        } else {
+            // New interaction: nothing to merge yet, just save the draft
+            // The actual merge happens in Q4 when the II is completed
+        }
+        interactionLogViewModel.saveDraft {
+            onComplete()
+        }
+    }
 
     private fun tryPrefillFromLocation() {
         val ctx = requireContext()

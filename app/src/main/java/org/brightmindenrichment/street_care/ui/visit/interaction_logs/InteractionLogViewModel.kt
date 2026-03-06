@@ -216,10 +216,11 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
     // -------------------- DRAFT PERSISTENCE ------------------
     // =========================================================
 
-    fun saveDraft() {
+    fun saveDraft(onSaved: (() -> Unit)? = null) {
         viewModelScope.launch {
             val json = InteractionLogDraftSerializer.serialize(_interactionLog.value ?: return@launch)
             dataStoreManager.saveILDraft(json)
+            onSaved?.invoke()
         }
     }
 

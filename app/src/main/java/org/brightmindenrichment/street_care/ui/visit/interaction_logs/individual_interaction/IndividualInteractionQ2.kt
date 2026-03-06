@@ -47,14 +47,14 @@ class IndividualInteractionQ2 : Fragment() {
             }
         }
 
-        // Enable/disable Other text
-        fun refreshOtherEnabled() {
-            val enabled = binding.cbOther.isChecked
-            binding.etOther.isEnabled = enabled
-            if (!enabled) binding.etOther.setText("")
+        // Show/hide Other text
+        fun refreshOtherVisibility() {
+            val isChecked = binding.cbOther.isChecked
+            binding.etOther.visibility = if (isChecked) View.VISIBLE else View.GONE
+            if (!isChecked) binding.etOther.setText("")
         }
-        binding.cbOther.setOnCheckedChangeListener { _, _ -> refreshOtherEnabled() }
-        refreshOtherEnabled()
+        binding.cbOther.setOnCheckedChangeListener { _, _ -> refreshOtherVisibility() }
+        refreshOtherVisibility()
 
         // Restore previously selected supports when navigating back
         viewModel.currentInteraction.value?.supportsProvided?.forEach { support ->
@@ -69,7 +69,7 @@ class IndividualInteractionQ2 : Fragment() {
                 else -> { binding.cbOther.isChecked = true; binding.etOther.setText(support) }
             }
         }
-        refreshOtherEnabled()
+        refreshOtherVisibility()
 
         // Helper to build the selected list
         fun collectSupports(): List<String> {
@@ -89,15 +89,19 @@ class IndividualInteractionQ2 : Fragment() {
         // Previous: back to Q1
         binding.txtPrevious2.setOnClickListener {
             viewModel.saveQ2(collectSupports())
-            findNavController().navigateUp()
+            mergeIntoILAndSave(viewModel.editingIndex) {
+                findNavController().popBackStack()
+            }
         }
 
         // Skip: save empty and proceed
         binding.txtSkip.setOnClickListener {
             viewModel.saveQ2(emptyList())
-            findNavController().navigate(
-                R.id.action_individualInteractionQ2_to_individualInteractionQ3
-            )
+            mergeIntoILAndSave(viewModel.editingIndex) {
+                findNavController().navigate(
+                    R.id.action_individualInteractionQ2_to_individualInteractionQ3
+                )
+            }
         }
 
         // Next: must select at least one
@@ -118,9 +122,25 @@ class IndividualInteractionQ2 : Fragment() {
             }
 
             viewModel.saveQ2(collectSupports())
-            findNavController().navigate(
-                R.id.action_individualInteractionQ2_to_individualInteractionQ3
-            )
+            mergeIntoILAndSave(viewModel.editingIndex) {
+                findNavController().navigate(
+                    R.id.action_individualInteractionQ2_to_individualInteractionQ3
+                )
+            }
+        }
+    }
+
+    private fun mergeIntoILAndSave(editingIdx: Int?, onComplete: () -> Unit) {
+        if (editingIdx != null) {
+            // Editing: use current interaction from ViewModel
+            val current = viewModel.currentInteraction.value ?: return onComplete()
+            interactionLogViewModel.replaceIndividualInteraction(editingIdx, current)
+        } else {
+            // New interaction: nothing to merge yet, just save the draft
+            // The actual merge happens in Q4 when the II is completed
+        }
+        interactionLogViewModel.saveDraft {
+            onComplete()
         }
     }
 

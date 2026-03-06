@@ -1,9 +1,11 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -105,6 +107,9 @@ class IndividualInteractionQ4 : Fragment() {
 
         // Date picker
         binding.datePickerCard.setOnClickListener {
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val keyboardWasVisible = imm.isActive
+
             val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.ThemeOverlay_StreetCare_DatePicker)
                 .setTitleText(getString(R.string.select_interaction_date))
@@ -120,6 +125,17 @@ class IndividualInteractionQ4 : Fragment() {
                 val pickedDate = millis.toLocalDateFromPicker()
                 selectedDate = pickedDate
                 binding.tvDate.text = dateFormatter.format(pickedDate)
+                // Restore keyboard state
+                if (!keyboardWasVisible) {
+                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                }
+            }
+
+            picker.addOnDismissListener {
+                // Restore keyboard state on dismiss (cancel or outside tap)
+                if (!keyboardWasVisible) {
+                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                }
             }
 
             picker.show(parentFragmentManager, "date_picker_q4")
@@ -127,6 +143,9 @@ class IndividualInteractionQ4 : Fragment() {
 
         // Time picker
         binding.timePickerCard.setOnClickListener {
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val keyboardWasVisible = imm.isActive
+
             val pickerBuilder = MaterialTimePicker.Builder()
                 .setTheme(R.style.ThemeOverlay_StreetCare_TimePicker)
                 .setTimeFormat(TimeFormat.CLOCK_12H)
@@ -147,6 +166,17 @@ class IndividualInteractionQ4 : Fragment() {
                 binding.tvTime.text = timeFormatter.format(
                     pickedTime.atDate(LocalDate.now()).atZone(getInteractionTimezone())
                 )
+                // Restore keyboard state
+                if (!keyboardWasVisible) {
+                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                }
+            }
+
+            picker.addOnDismissListener {
+                // Restore keyboard state on dismiss (cancel or outside tap)
+                if (!keyboardWasVisible) {
+                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                }
             }
 
             picker.show(parentFragmentManager, "time_picker_q4")
@@ -156,22 +186,26 @@ class IndividualInteractionQ4 : Fragment() {
         binding.txtPrevious2.setOnClickListener {
             val notes = binding.etNotes.text?.toString()?.trim().orEmpty()
             val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+            val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
             viewModel.saveQ4(
                 selectedDate?.toString(),
                 selectedTime?.toString(),
                 notes.takeUnless { it.isEmpty() },
                 timeWithTz
             )
-            findNavController().navigateUp()
+            mergeIntoILAndSave(editingIdx) {
+                findNavController().popBackStack()
+            }
         }
 
         // Skip -> commit with no follow-up data and return
         binding.txtSkip.setOnClickListener {
             val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
             viewModel.saveQ4(null, null, null, null)
-            mergeIntoILAndSave(editingIdx)
-            if (editingIdx == null) interactionLogViewModel.nextInteraction()
-            findNavController().navigate(R.id.individualInteractionFragment)
+            mergeIntoILAndSave(editingIdx) {
+                if (editingIdx == null) interactionLogViewModel.nextInteraction()
+                findNavController().navigate(R.id.individualInteractionFragment)
+            }
         }
 
         // Save -> validate, persist, then return to list
@@ -187,22 +221,37 @@ class IndividualInteractionQ4 : Fragment() {
                 notes.takeUnless { it.isEmpty() },
                 timeWithTz
             )
-            mergeIntoILAndSave(editingIdx)
-            if (editingIdx == null) interactionLogViewModel.nextInteraction()
-            findNavController().navigate(R.id.individualInteractionFragment)
+            mergeIntoILAndSave(editingIdx) {
+                if (editingIdx == null) interactionLogViewModel.nextInteraction()
+                findNavController().navigate(R.id.individualInteractionFragment)
+            }
         }
     }
 
-    private fun mergeIntoILAndSave(editingIdx: Int?) {
-        val committed = viewModel.committedInteractions.value ?: return
+    private fun mergeIntoILAndSave(editingIdx: Int?, onComplete: (() -> Unit)? = null) {
+        val committed = viewModel.committedInteractions.value
+        if (committed == null) {
+            onComplete?.invoke()
+            return
+        }
         if (editingIdx != null) {
-            val updated = committed.getOrNull(editingIdx) ?: return
+            val updated = committed.getOrNull(editingIdx)
+            if (updated == null) {
+                onComplete?.invoke()
+                return
+            }
             interactionLogViewModel.replaceIndividualInteraction(editingIdx, updated)
         } else {
-            val newItem = committed.lastOrNull() ?: return
+            val newItem = committed.lastOrNull()
+            if (newItem == null) {
+                onComplete?.invoke()
+                return
+            }
             interactionLogViewModel.addIndividualInteraction(newItem)
         }
-        interactionLogViewModel.saveDraft()
+        interactionLogViewModel.saveDraft {
+            onComplete?.invoke()
+        }
     }
 
     override fun onDestroyView() {

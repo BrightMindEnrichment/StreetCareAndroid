@@ -1,8 +1,6 @@
 package org.brightmindenrichment.street_care.ui.visit.data
 
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.ServerTimestamp
-import java.util.Date
 
 data class FirestoreHelpRequest(
     val interactionLogDocId: String = "",
@@ -17,7 +15,7 @@ data class FirestoreHelpRequest(
     val interactionLogFirstName: String = "",
     val isPublic: Boolean = true,
     val status: String = "Pending",
-    @ServerTimestamp val lastModifiedTimestamp: Date? = null,
+    val lastModifiedTimestamp: Timestamp = Timestamp.now(),
     val lastActionPerformed: String? = null,
     val isCompleted: Boolean = false
 )

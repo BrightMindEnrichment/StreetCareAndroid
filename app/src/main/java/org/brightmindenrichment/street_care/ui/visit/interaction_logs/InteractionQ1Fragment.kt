@@ -83,24 +83,12 @@ class InteractionQ1Fragment : Fragment() {
         val preLoaded = viewModel.draftPreLoaded
         if (preLoaded) viewModel.draftPreLoaded = false
 
-        if (log?.startTimestamp != null) {
+        if (log != null) {
+            // Always restore II state from the log
+            iiViewModel.restoreFromInteractionLog(log.individualInteractions)
             restoreFromLog(log)
-        } else if (preLoaded) {
-            // Draft was pre-loaded from the Visit screen — restore directly without dialog
-            if (log != null) {
-                iiViewModel.restoreFromInteractionLog(log.individualInteractions)
-                restoreFromLog(log)
-            } else {
-                refreshUI()
-            }
         } else {
-            // No in-memory state — restore from ViewModel if available
-            if (log != null) {
-                iiViewModel.restoreFromInteractionLog(log.individualInteractions)
-                restoreFromLog(log)
-            } else {
-                refreshUI()
-            }
+            refreshUI()
         }
     }
 
