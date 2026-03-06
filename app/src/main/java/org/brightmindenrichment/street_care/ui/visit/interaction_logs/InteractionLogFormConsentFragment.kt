@@ -63,11 +63,14 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
             ilViewModel.saveWithIIs { success ->
                 if (!isAdded) return@saveWithIIs
                 if (success) {
-                    ilViewModel.resetInteractionLog()
-                    iiViewModel.reset()
-                    findNavController().navigate(
-                        R.id.action_consentFragment_to_surveySubmittedFragment
-                    )
+                    ilViewModel.resetInteractionLog {
+                        if (isAdded) {
+                            iiViewModel.reset()
+                            findNavController().navigate(
+                                R.id.action_consentFragment_to_surveySubmittedFragment
+                            )
+                        }
+                    }
                 } else {
                     submit.isEnabled = true
                     Toast.makeText(requireContext(),

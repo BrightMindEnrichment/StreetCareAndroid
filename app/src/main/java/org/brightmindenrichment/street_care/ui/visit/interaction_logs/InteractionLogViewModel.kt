@@ -24,6 +24,10 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import java.time.Instant
+import java.time.ZonedDateTime
+import java.time.LocalTime
+import java.time.LocalDate
+import java.time.ZoneId
 
 class InteractionLogViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -48,10 +52,10 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
         _interactionIndex.value = 1
     }
 
-    fun resetInteractionLog() {
+    fun resetInteractionLog(onCleared: (() -> Unit)? = null) {
         _interactionLog.value = InteractionLog()
         resetInteractions()
-        clearDraft()
+        clearDraft(onCleared)
     }
 
     // =========================================================
@@ -219,9 +223,10 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
-    fun clearDraft() {
+    fun clearDraft(onCleared: (() -> Unit)? = null) {
         viewModelScope.launch {
             dataStoreManager.clearILDraft()
+            onCleared?.invoke()
         }
     }
 
@@ -320,12 +325,30 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
             batch.set(ilRef, ilDoc)
 
             iis.forEachIndexed { i, ii ->
+                // Parse interaction time with timezone context
                 val timestampOfInteraction = ii.time?.let { t ->
-                    runCatching { Instant.parse(t).let { Timestamp(it.epochSecond, it.nano) } }.getOrNull()
+                    runCatching {
+                        // Try to parse as ZonedDateTime (includes timezone)
+                        val zdt = ZonedDateTime.parse(t)
+                        Timestamp(zdt.toInstant().epochSecond, zdt.toInstant().nano)
+                    }.getOrNull() ?:
+                    // Fallback: Try parsing as simple time string without timezone
+                    runCatching {
+                        Instant.parse(t).let { Timestamp(it.epochSecond, it.nano) }
+                    }.getOrNull()
                 } ?: log.startTimestamp
 
+                // Parse follow-up time with timezone context
                 val followUpTimestamp = ii.followUpTime?.let { ft ->
-                    runCatching { Instant.parse(ft).let { Timestamp(it.epochSecond, it.nano) } }.getOrNull()
+                    runCatching {
+                        // Try to parse as ZonedDateTime (includes timezone)
+                        val zdt = ZonedDateTime.parse(ft)
+                        Timestamp(zdt.toInstant().epochSecond, zdt.toInstant().nano)
+                    }.getOrNull() ?:
+                    // Fallback: Try parsing as simple time string without timezone
+                    runCatching {
+                        Instant.parse(ft).let { Timestamp(it.epochSecond, it.nano) }
+                    }.getOrNull()
                 }
 
                 val hrDoc = FirestoreHelpRequest(

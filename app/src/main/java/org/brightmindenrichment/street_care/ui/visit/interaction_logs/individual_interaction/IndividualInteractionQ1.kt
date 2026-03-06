@@ -32,11 +32,14 @@ import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
 import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import org.brightmindenrichment.street_care.util.localDateNow
 import org.brightmindenrichment.street_care.util.localTimeNow
 import org.brightmindenrichment.street_care.util.toLocalDateFromPicker
 import org.brightmindenrichment.street_care.util.toPickerMillis
+import org.brightmindenrichment.street_care.util.toZonedString
 
 class IndividualInteractionQ1 : Fragment() {
 
@@ -47,10 +50,24 @@ class IndividualInteractionQ1 : Fragment() {
     private var selectedTime: LocalTime? = null
 
     private val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-    private val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+    private val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a z")
 
     private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
     private val viewModel: IndividualInteractionViewModel by activityViewModels()
+
+    /** Get the timezone from the InteractionLogViewModel (set in ILq1). */
+    private fun getInteractionTimezone(): ZoneId {
+        val tzString = interactionLogViewModel.interactionLog.value?.timezone
+        return if (tzString.isNullOrBlank()) {
+            ZoneId.systemDefault()
+        } else {
+            try {
+                ZoneId.of(tzString)
+            } catch (e: Exception) {
+                ZoneId.systemDefault()
+            }
+        }
+    }
 
     // ---- Places Autocomplete launcher ----
     private val placesLauncher = registerForActivityResult(
@@ -128,6 +145,15 @@ class IndividualInteractionQ1 : Fragment() {
             }
         }
 
+        // Observe timezone changes and refresh time display
+        interactionLogViewModel.interactionLog.observe(viewLifecycleOwner) { _ ->
+            if (selectedTime != null) {
+                binding.tvTime.text = timeFormatter.format(
+                    selectedTime!!.atDate(LocalDate.now()).atZone(getInteractionTimezone())
+                )
+            }
+        }
+
         // Restore previously entered values when navigating back
         viewModel.currentInteraction.value?.let { saved ->
             if (saved.firstName.isNotBlank()) binding.etFirstName.setText(saved.firstName)
@@ -141,7 +167,9 @@ class IndividualInteractionQ1 : Fragment() {
             }
             saved.time?.let {
                 selectedTime = LocalTime.parse(it)
-                binding.tvTime.text = timeFormatter.format(selectedTime)
+                binding.tvTime.text = timeFormatter.format(
+                    selectedTime!!.atDate(LocalDate.now()).atZone(getInteractionTimezone())
+                )
             }
         }
 
@@ -173,13 +201,16 @@ class IndividualInteractionQ1 : Fragment() {
 
         // Date picker
         binding.datePickerCard.setOnClickListener {
-            val baseDate = selectedDate ?: localDateNow()
-
-            val picker = MaterialDatePicker.Builder.datePicker()
+            val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.ThemeOverlay_StreetCare_DatePicker)
                 .setTitleText(getString(R.string.select_interaction_date))
-                .setSelection(baseDate.toPickerMillis())
-                .build()
+
+            // Only set selection if a date was previously selected
+            if (selectedDate != null) {
+                pickerBuilder.setSelection(selectedDate!!.toPickerMillis())
+            }
+
+            val picker = pickerBuilder.build()
 
             picker.addOnPositiveButtonClickListener { millis ->
                 val pickedDate = millis.toLocalDateFromPicker()
@@ -193,13 +224,17 @@ class IndividualInteractionQ1 : Fragment() {
 
         // Time picker
         binding.timePickerCard.setOnClickListener {
-            val baseTime = selectedTime ?: localTimeNow()
-
-            val picker = MaterialTimePicker.Builder()
+            val pickerBuilder = MaterialTimePicker.Builder()
                 .setTheme(R.style.ThemeOverlay_StreetCare_TimePicker)
                 .setTimeFormat(TimeFormat.CLOCK_12H)
-                .setHour(baseTime.hour)
-                .setMinute(baseTime.minute)
+
+            // Only set time if one was previously selected; otherwise leave unset (00:00)
+            if (selectedTime != null) {
+                pickerBuilder.setHour(selectedTime!!.hour)
+                pickerBuilder.setMinute(selectedTime!!.minute)
+            }
+
+            val picker = pickerBuilder
                 .setTitleText(getString(R.string.select_interaction_time))
                 .build()
 
@@ -207,7 +242,9 @@ class IndividualInteractionQ1 : Fragment() {
                 val pickedTime = LocalTime.of(picker.hour, picker.minute)
                 selectedTime = pickedTime
                 binding.tvTime.error = null
-                binding.tvTime.text = timeFormatter.format(pickedTime)
+                binding.tvTime.text = timeFormatter.format(
+                    pickedTime.atDate(LocalDate.now()).atZone(getInteractionTimezone())
+                )
             }
 
             picker.show(parentFragmentManager, "time_picker_q1")
@@ -220,7 +257,8 @@ class IndividualInteractionQ1 : Fragment() {
             val loc   = binding.etLocation.text?.toString()?.trim().orEmpty()
             val state = binding.actState.text?.toString()?.trim().orEmpty()
             val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
-            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime)
+            val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
             findNavController().navigateUp()
         }
 
@@ -248,7 +286,8 @@ class IndividualInteractionQ1 : Fragment() {
             if (state.isEmpty()) { binding.actState.error    = "Required"; return@setOnClickListener }
             if (zip.isInvalidZip())  { binding.etZip.error = "Invalid";  return@setOnClickListener }
 
-            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime)
+            val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
 
             findNavController().navigate(
                 R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2

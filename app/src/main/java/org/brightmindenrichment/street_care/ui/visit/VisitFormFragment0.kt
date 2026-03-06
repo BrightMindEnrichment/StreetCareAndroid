@@ -57,8 +57,11 @@ class VisitFormFragment0 : Fragment() {
                     val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                     val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
                     if (shouldShowDialog) {
-                        viewModel.resetInteractionLog()
-                        findNavController().navigate(R.id.interactionQ1Fragment)
+                        viewModel.resetInteractionLog {
+                            if (isAdded) {
+                                findNavController().navigate(R.id.interactionQ1Fragment)
+                            }
+                        }
                     } else {
                         showCustomDialogPH()
                     }
@@ -85,8 +88,11 @@ class VisitFormFragment0 : Fragment() {
             .setTitle("I provided help!")
             .setMessage("Please fill out this form each time you perform an outreach. This helps you track your contributions and allows StreetCare to bring more support and services to help the community!")
             .setPositiveButton("OK") { dialog, _ ->
-                viewModel.resetInteractionLog()
-                findNavController().navigate(R.id.interactionQ1Fragment)
+                viewModel.resetInteractionLog {
+                    if (isAdded) {
+                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    }
+                }
                 dialog.dismiss()
             }
             .create()
@@ -173,9 +179,11 @@ class VisitFormFragment0 : Fragment() {
 //
 //                prefs.edit().putBoolean("dont_show_again", true).apply()
 //            }
-            viewModel.resetInteractionLog()
-
-            findNavController().navigate(R.id.interactionQ1Fragment)
+            viewModel.resetInteractionLog {
+                if (isAdded) {
+                    findNavController().navigate(R.id.interactionQ1Fragment)
+                }
+            }
             dialog.dismiss()
 
         }

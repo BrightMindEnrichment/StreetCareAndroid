@@ -64,9 +64,12 @@ class InteractionLogFormSubmittedFragment : Fragment() {
             sharedCommunity = false
             clicked = false
             sharedVisitViewModel.resetVisitLogPage() // Add this to clear old visit data
-            ilViewModel.resetInteractionLog()
-            iiViewModel.reset()
-            findNavController().navigate(R.id.action_surveySubmittedFragment_to_interactionQ1Fragment)
+            ilViewModel.resetInteractionLog {
+                if (isAdded) {
+                    iiViewModel.reset()
+                    findNavController().navigate(R.id.action_surveySubmittedFragment_to_interactionQ1Fragment)
+                }
+            }
         }
 
         binding.btnReturnHome.setOnClickListener {

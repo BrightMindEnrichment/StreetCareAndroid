@@ -283,9 +283,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 fun clearAndNavigate() {
-                    ViewModelProvider(this)[InteractionLogViewModel::class.java].resetInteractionLog()
-                    ViewModelProvider(this)[IndividualInteractionViewModel::class.java].reset()
-                    navigateToItem()
+                    ViewModelProvider(this)[InteractionLogViewModel::class.java].resetInteractionLog {
+                        ViewModelProvider(this)[IndividualInteractionViewModel::class.java].reset()
+                        navigateToItem()
+                    }
                 }
 
                 if (FeatureFlagManager.isEnabled(FeatureFlag.CLEAR_FORM_ON_WORKFLOW_EXIT)) {

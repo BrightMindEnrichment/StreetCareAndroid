@@ -40,7 +40,7 @@ class IndividualInteractionViewModel : ViewModel() {
     /** Returns the header text to display during edit mode, or null if creating a new II. */
     fun editingHeaderText(): String? = _editingHeaderText
 
-    fun saveQ1(firstName: String, lastName: String?, locationLandmark: String?, state: String?, zip: String?, date: LocalDate?, time: LocalTime?) {
+    fun saveQ1(firstName: String, lastName: String?, locationLandmark: String?, state: String?, zip: String?, date: LocalDate?, time: LocalTime?, timeWithTimezone: String? = null) {
 
         // Initialize base instance if none exists
         val base = _currentInteraction.value ?: IndividualInteraction(
@@ -50,6 +50,9 @@ class IndividualInteractionViewModel : ViewModel() {
         )
 
         // Copy updated values
+        // Use timeWithTimezone if provided (includes timezone context), otherwise fall back to time string
+        val timeString = timeWithTimezone ?: time?.toString()
+
         val updated = base.copy(
             firstName = firstName.trim(),
             lastName = lastName?.trim().takeUnless { it.isNullOrBlank() },
@@ -57,7 +60,7 @@ class IndividualInteractionViewModel : ViewModel() {
             state = state?.trim().takeUnless { it.isNullOrBlank() },
             zip = zip?.trim().takeUnless { it.isNullOrBlank() },
             date = date?.toString(),
-            time = time?.toString(),
+            time = timeString,
             interactionLogFirstName = firstName.trim(),
         )
 
@@ -79,11 +82,13 @@ class IndividualInteractionViewModel : ViewModel() {
         _currentInteraction.value = base.copy(furtherHelpNeeded = furtherHelpNeeded)
     }
 
-    fun saveQ4(followUpDate: String?, followUpTime: String?, notes: String?) {
+    fun saveQ4(followUpDate: String?, followUpTime: String?, notes: String?, followUpTimeWithTimezone: String? = null) {
         val base = _currentInteraction.value ?: IndividualInteraction()
+        // Use followUpTimeWithTimezone if provided (includes timezone context), otherwise use followUpTime
+        val timeString = followUpTimeWithTimezone ?: followUpTime
         val completed = base.copy(
             followUpDate = followUpDate,
-            followUpTime = followUpTime,
+            followUpTime = timeString,
             additionalDetails = notes?.takeUnless { it.isBlank() }
         )
 

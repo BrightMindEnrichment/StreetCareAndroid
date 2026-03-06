@@ -713,12 +713,13 @@ If needed, you may fill out  one log \n for your entire day.
 
     <!-- Individual Interaction Question 3 -->
     <string name="Individual_Interaction_Question_3">Question 3/4</string>
+    <string name="Individual_Interaction_Question_of_4">Question {0}/4</string>
     <string name="question_3">"What kind of further help is needed?</string>
 
     <!-- Individual Interaction Question 4 -->
     <string name="Individual_Interaction_Question_4">Question 4/4</string>
-    <string name="default_date">03/30/2025</string>
-    <string name="default_time">11:35 AM MDT</string>
+    <string name="default_date" translatable="false">MMM DD, YYYY</string>
+    <string name="default_time" translatable="false">HH:MM AA</string>
     <string name="select_interaction_date">Select date of interaction</string>
     <string name="select_interaction_time">Select time of interaction</string>
     <string name="question_4">Follow-up Date and Time</string>
@@ -734,6 +735,8 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="number_of_care_packages_given_out">Number of care\npackages given out</string>
     <string name="skip_btn_txt">Skip</string>
     <string name="interaction_log_question_6_7">Question 6/7</string>
+    <string name="interaction_log_question_of_7">Question {0}/7</string>
+    <string name="question_x_of_y">Question {0}/{1}</string>
 
 
 </resources>

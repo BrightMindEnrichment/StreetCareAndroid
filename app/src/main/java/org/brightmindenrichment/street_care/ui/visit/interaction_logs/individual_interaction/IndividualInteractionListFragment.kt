@@ -3,6 +3,7 @@ package org.brightmindenrichment.street_care.ui.visit.interaction_logs.individua
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +41,7 @@ class IndividualInteractionListFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
         }
+        setHasOptionsMenu(true)
 
         adapter = IndividualInteractionAdapter(requireContext(), emptyList(), listener)
         binding.listViewInteractions.adapter = adapter
@@ -59,6 +61,19 @@ class IndividualInteractionListFragment : Fragment() {
             findNavController().navigate(
                 R.id.action_individualInteractionFragment_to_consentPage
             )
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                // Back button navigates to Q7 (consent page)
+                findNavController().navigate(
+                    R.id.action_individualInteractionFragment_to_consentPage
+                )
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

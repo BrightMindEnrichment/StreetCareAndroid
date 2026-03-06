@@ -46,7 +46,7 @@ class InteractionQ1Fragment : Fragment() {
     private val endCalendar = Calendar.getInstance()
 
     private val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-    private val timeFormatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    private val timeFormatter = SimpleDateFormat("hh:mm a z", Locale.getDefault())
 
     private var selectedTimezone: TimeZone = TimeZone.getDefault()
 
@@ -113,6 +113,10 @@ class InteractionQ1Fragment : Fragment() {
     }
 
     private fun refreshUI() {
+        // Apply selected timezone to calendars for proper display and time calculations
+        startCalendar.timeZone = selectedTimezone
+        endCalendar.timeZone = selectedTimezone
+
         binding.startDate.text = dateFormatter.format(startCalendar.time)
         binding.startTime.text = timeFormatter.format(startCalendar.time)
         binding.endDate.text = dateFormatter.format(endCalendar.time)
@@ -155,6 +159,7 @@ class InteractionQ1Fragment : Fragment() {
                 val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
                 utcCalendar.timeInMillis = selection
 
+                startCalendar.timeZone = selectedTimezone
                 startCalendar.set(
                     utcCalendar.get(Calendar.YEAR),
                     utcCalendar.get(Calendar.MONTH),
@@ -175,6 +180,7 @@ class InteractionQ1Fragment : Fragment() {
             val dialog = TimePickerDialog(
                 requireContext(),
                 { _, hour, minute ->
+                    startCalendar.timeZone = selectedTimezone
                     startCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     startCalendar.set(Calendar.MINUTE, minute)
                     binding.startTime.text = timeFormatter.format(startCalendar.time)
@@ -200,6 +206,7 @@ class InteractionQ1Fragment : Fragment() {
                 val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
                 utcCalendar.timeInMillis = selection
 
+                endCalendar.timeZone = selectedTimezone
                 endCalendar.set(
                     utcCalendar.get(Calendar.YEAR),
                     utcCalendar.get(Calendar.MONTH),
@@ -220,6 +227,7 @@ class InteractionQ1Fragment : Fragment() {
             val dialog = TimePickerDialog(
                 requireContext(),
                 { _, hour, minute ->
+                    endCalendar.timeZone = selectedTimezone
                     endCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     endCalendar.set(Calendar.MINUTE, minute)
                     binding.endTime.text = timeFormatter.format(endCalendar.time)
@@ -335,8 +343,33 @@ class InteractionQ1Fragment : Fragment() {
         listView.setOnItemClickListener { _, _, position, _ ->
             val zone = adapter.getItem(position) ?: return@setOnItemClickListener
             selectedTimezone = zone
+
+            // Preserve displayed time values by extracting them before timezone change
+            val startYear = startCalendar.get(Calendar.YEAR)
+            val startMonth = startCalendar.get(Calendar.MONTH)
+            val startDay = startCalendar.get(Calendar.DAY_OF_MONTH)
+            val startHour = startCalendar.get(Calendar.HOUR_OF_DAY)
+            val startMinute = startCalendar.get(Calendar.MINUTE)
+
+            val endYear = endCalendar.get(Calendar.YEAR)
+            val endMonth = endCalendar.get(Calendar.MONTH)
+            val endDay = endCalendar.get(Calendar.DAY_OF_MONTH)
+            val endHour = endCalendar.get(Calendar.HOUR_OF_DAY)
+            val endMinute = endCalendar.get(Calendar.MINUTE)
+
+            // Change timezone and restore the same displayed values
+            startCalendar.timeZone = zone
+            startCalendar.set(startYear, startMonth, startDay, startHour, startMinute)
+
+            endCalendar.timeZone = zone
+            endCalendar.set(endYear, endMonth, endDay, endHour, endMinute)
+
             binding.timezoneText.text = formatTimezone(zone)
+            binding.startTime.text = timeFormatter.format(startCalendar.time)
+            binding.endTime.text = timeFormatter.format(endCalendar.time)
             viewModel.updateTimezone(zone.id)
+            viewModel.updateStartDate(startCalendar.time)
+            viewModel.updateEndDate(endCalendar.time)
             dialog.dismiss()
         }
 
@@ -368,8 +401,11 @@ class InteractionQ1Fragment : Fragment() {
             .setTitle("Discard changes?")
             .setMessage("Your progress will be lost if you leave now.")
             .setPositiveButton("Discard") { _, _ ->
-                viewModel.resetInteractionLog()
-                findNavController().popBackStack()
+                viewModel.resetInteractionLog {
+                    if (isAdded) {
+                        findNavController().popBackStack()
+                    }
+                }
             }
             .setNegativeButton("Keep editing", null)
             .show()

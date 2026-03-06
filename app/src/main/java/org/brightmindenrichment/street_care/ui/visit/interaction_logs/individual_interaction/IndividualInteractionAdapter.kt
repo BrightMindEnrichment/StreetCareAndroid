@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionListItemBinding
 import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
-import org.brightmindenrichment.street_care.util.toFormattedTime
+import org.brightmindenrichment.street_care.util.formatTimeWithTimezone
 import java.time.LocalTime
 
 class IndividualInteractionAdapter(
@@ -42,7 +42,7 @@ class IndividualInteractionAdapter(
             val details = listOfNotNull(
                 name,
                 item.locationLandmark?.takeIf { it.isNotBlank() },
-                item.time.toFormattedTime
+                formatTimeWithTimezone(item.time)
             )
 
             details.joinToString(" | ")
