@@ -5,6 +5,8 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 /** Returns today's date in the device's local timezone. */
 fun localDateNow(): LocalDate = LocalDate.now(ZoneId.systemDefault())
@@ -25,3 +27,26 @@ fun LocalDate.toPickerMillis(): Long =
  */
 fun Long.toLocalDateFromPicker(): LocalDate =
     Instant.ofEpochMilli(this).atOffset(ZoneOffset.UTC).toLocalDate()
+
+
+/**
+ * Parses an ISO-8601 time string and formats it to (e.g., "6:30 PM")
+ * in the device's local timezone.
+ */
+val String?.toFormattedTime: String?
+    get() {
+        if (this.isNullOrBlank()) return null
+
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("h:mm a", Locale.getDefault())
+
+            // Parse the string to an Instant, then format it locally
+            Instant.parse(this)
+                .atZone(ZoneId.systemDefault())
+                .format(formatter)
+        } catch (e: Exception) {
+            // Pro-tip: If parsing fails (e.g. malformed data), fallback to showing
+            // the original string rather than crashing or showing nothing.
+            this
+        }
+    }

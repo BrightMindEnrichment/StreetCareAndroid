@@ -244,9 +244,9 @@
 
     <fragment
         android:id="@+id/individualInteractionFragment"
-        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionFragment"
+        android:name="org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionListFragment"
         android:label="Individual Interaction"
-        tools:layout="@layout/edit_individual_interaction">
+        tools:layout="@layout/fragment_individual_interaction_list">
 
         <action
             android:id="@+id/action_individualInteractionFragment_to_individualInteractionQ1"

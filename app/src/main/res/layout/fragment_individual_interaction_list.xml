@@ -51,7 +51,7 @@
                 android:padding="4dp"
                 tools:layout_editor_absoluteX="12dp"
                 tools:layout_editor_absoluteY="16dp"
-                tools:listitem="@layout/item_interaction" />
+                tools:listitem="@layout/fragment_individual_interaction_list_item" />
 
             <TextView
                 android:id="@+id/addMorePrompt"

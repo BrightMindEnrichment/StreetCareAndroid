@@ -1,15 +1,14 @@
-package org.brightmindenrichment.street_care.ui.visit
+package org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
-import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.ItemInteractionBinding
+import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionListItemBinding
 import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
-
+import org.brightmindenrichment.street_care.util.toFormattedTime
+import java.time.LocalTime
 
 class IndividualInteractionAdapter(
     context: Context,
@@ -24,21 +23,35 @@ class IndividualInteractionAdapter(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val binding: ItemInteractionBinding
+        val binding: FragmentIndividualInteractionListItemBinding
         val view: View
         if (convertView == null) {
-            binding = ItemInteractionBinding.inflate(LayoutInflater.from(context), parent, false)
+            binding = FragmentIndividualInteractionListItemBinding.inflate(LayoutInflater.from(context), parent, false)
             view = binding.root
             view.tag = binding
         } else {
             view = convertView
-            binding = view.tag as ItemInteractionBinding
+            binding = view.tag as FragmentIndividualInteractionListItemBinding
         }
         val item = getItem(position) ?: return view
 
         val displayName = if (item.firstName.isNotBlank()) {
-            val lastInitial = item.lastName?.firstOrNull()?.let { "${it}." }.orEmpty()
-            "Interaction with ${item.firstName}${if (lastInitial.isNotEmpty()) " $lastInitial" else ""}"
+            val lastInitial = item.lastName?.firstOrNull()?.let { " $it." }.orEmpty()
+            val name = "${item.firstName}$lastInitial"
+
+            val details = listOfNotNull(
+                name,
+                item.locationLandmark?.takeIf { it.isNotBlank() },
+                item.time.toFormattedTime
+            )
+
+            details.joinToString(" | ")
+
+            // Outputs:
+            // "John K. | 123 Main St | 6:30 PM"
+            // "John K. | 123 Main St"
+            // "John K. | 6:30 PM"
+            // "John K."
         } else {
             "IndividualInteraction${position + 1}"
         }

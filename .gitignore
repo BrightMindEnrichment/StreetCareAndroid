@@ -37,3 +37,6 @@ local.properties
 # firebase
 google-services.json
 .DS_Store
+
+.claude
+CLAUDE.md

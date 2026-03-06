@@ -24,24 +24,24 @@
         android:id="@+id/btnEdit"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/icon_edit1"
+        android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:tint="@android:color/white"
+        android:src="@drawable/edit_24"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnDelete"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="8dp"/>
+        app:tint="@android:color/white" />
 
     <ImageButton
         android:id="@+id/btnDelete"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_close"
+        android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:tint="@android:color/holo_red_light"
+        android:src="@drawable/delete_24px"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="8dp"/>
+        app:tint="@android:color/holo_red_light" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
