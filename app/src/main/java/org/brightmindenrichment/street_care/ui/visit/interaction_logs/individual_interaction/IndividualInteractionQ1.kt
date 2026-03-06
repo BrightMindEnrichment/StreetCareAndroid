@@ -215,6 +215,12 @@ class IndividualInteractionQ1 : Fragment() {
 
         // Previous -> back stack
         binding.txtPrevious2.setOnClickListener {
+            val first = binding.etFirstName.text?.toString()?.trim().orEmpty()
+            val last  = binding.etLastName.text?.toString()?.trim().orEmpty()
+            val loc   = binding.etLocation.text?.toString()?.trim().orEmpty()
+            val state = binding.actState.text?.toString()?.trim().orEmpty()
+            val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
+            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime)
             findNavController().navigateUp()
         }
 

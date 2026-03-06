@@ -87,6 +87,8 @@ class InteractionQ7Fragment : Fragment() {
         }
 
         btnPrevious.setOnClickListener {
+            viewModel.updateQ7Answer(selectedAnswer)
+            viewModel.saveDraft()
             findNavController().popBackStack()
         }
 

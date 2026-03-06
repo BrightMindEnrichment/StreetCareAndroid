@@ -70,6 +70,15 @@ class InteractionQ2Fragment : Fragment() {
 
     private fun setPreviousButton() {
         binding.txtPrevious2.setOnClickListener {
+            val firstName = binding.inputFirstName.text.toString().trim()
+            val lastName = binding.inputLastName.text.toString().trim()
+            val email = binding.inputEmail.text.toString().trim()
+            val phone = binding.inputPhoneNumber.text.toString().trim()
+            viewModel.updateFirstName(firstName)
+            viewModel.updateLastName(lastName)
+            viewModel.updateEmail(email)
+            viewModel.updatePhone(phone)
+            viewModel.saveDraft()
             findNavController().popBackStack()
         }
     }

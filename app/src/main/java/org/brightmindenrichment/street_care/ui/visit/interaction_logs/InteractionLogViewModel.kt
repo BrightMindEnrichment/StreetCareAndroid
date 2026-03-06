@@ -14,9 +14,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
 import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
+import org.brightmindenrichment.street_care.ui.visit.data.FirestoreInteractionLog
+import org.brightmindenrichment.street_care.ui.visit.data.FirestoreHelpRequest
 import org.brightmindenrichment.street_care.util.DataStoreManager
 import org.brightmindenrichment.street_care.util.InteractionLogDraftSerializer
+import org.brightmindenrichment.street_care.util.FirestoreCollections
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+import java.time.Instant
 
 class InteractionLogViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -162,7 +169,8 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
 
     fun updateCarePackageContents(contents: String) {
         val current = interactionLog.value!!
-        _interactionLog.value = current.copy(carePackageContents = contents)
+        val list = contents.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        _interactionLog.value = current.copy(carePackageContents = list)
     }
 
     // =========================================================
@@ -257,7 +265,7 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
         viewModelScope.launch {
             try {
                 val docRef = firestore
-                    .collection("InteractionLogDev")
+                    .collection(FirestoreCollections.INTERACTION_LOG)
                     .add(log)
                     .await()
 
@@ -266,6 +274,80 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
 
             } catch (e: Exception) {
                 android.util.Log.e("FIRESTORE", "Save failed: ${e.message}")
+                onComplete(false)
+            }
+        }
+    }
+
+    fun saveWithIIs(onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val log = _interactionLog.value ?: run { onComplete(false); return@launch }
+            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+            val db = FirebaseFirestore.getInstance()
+
+            val ilRef = db.collection(FirestoreCollections.INTERACTION_LOG).document()
+            val iis = log.individualInteractions
+            val hrRefs = iis.map { db.collection(FirestoreCollections.HELP_REQUEST).document() }
+            val hrIds = hrRefs.map { it.id }
+
+            val interactionDate = log.startTimestamp?.toDate()?.let {
+                SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                    .apply { timeZone = TimeZone.getTimeZone("UTC") }
+                    .format(it)
+            } ?: ""
+
+            val ilDoc = FirestoreInteractionLog(
+                userId = uid,
+                firstName = log.firstName,
+                lastName = log.lastName,
+                email = log.email,
+                phoneNumber = log.phoneNumber,
+                interactionDate = interactionDate,
+                startTimestamp = log.startTimestamp,
+                endTimestamp = log.endTimestamp,
+                listOfSupportsProvided = log.listOfSupportsProvided,
+                numPeopleHelped = log.numPeopleHelped,
+                numPeopleJoined = log.numPeopleJoined,
+                carePackagesDistributed = log.carePackagesDistributed,
+                carePackageContents = log.carePackageContents,
+                addr1 = log.addr1, addr2 = log.addr2,
+                city = log.city, state = log.state, zipcode = log.zipcode, country = log.country,
+                helpRequestCount = hrIds.size,
+                helpRequestDocIds = hrIds
+            )
+
+            val batch = db.batch()
+            batch.set(ilRef, ilDoc)
+
+            iis.forEachIndexed { i, ii ->
+                val timestampOfInteraction = ii.time?.let { t ->
+                    runCatching { Instant.parse(t).let { Timestamp(it.epochSecond, it.nano) } }.getOrNull()
+                } ?: log.startTimestamp
+
+                val followUpTimestamp = ii.followUpTime?.let { ft ->
+                    runCatching { Instant.parse(ft).let { Timestamp(it.epochSecond, it.nano) } }.getOrNull()
+                }
+
+                val hrDoc = FirestoreHelpRequest(
+                    interactionLogDocId = ilRef.id,
+                    firstName = ii.firstName,
+                    lastName = ii.lastName,
+                    locationLandmark = ii.locationLandmark,
+                    timestampOfInteraction = timestampOfInteraction,
+                    helpProvidedCategory = ii.supportsProvided,
+                    furtherHelpCategory = ii.furtherHelpNeeded,
+                    followUpTimestamp = followUpTimestamp,
+                    additionalDetails = ii.additionalDetails,
+                    interactionLogFirstName = log.firstName
+                )
+                batch.set(hrRefs[i], hrDoc)
+            }
+
+            try {
+                batch.commit().await()
+                onComplete(true)
+            } catch (e: Exception) {
+                e.printStackTrace()
                 onComplete(false)
             }
         }
@@ -288,9 +370,10 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
 
     fun updateCarePackage(count: Int, notes: String) {
         val current = _interactionLog.value ?: return
+        val list = notes.split(",").map { it.trim() }.filter { it.isNotEmpty() }
         _interactionLog.value = current.copy(
             carePackagesDistributed = count,
-            carePackageContents = notes
+            carePackageContents = list
         )
     }
 

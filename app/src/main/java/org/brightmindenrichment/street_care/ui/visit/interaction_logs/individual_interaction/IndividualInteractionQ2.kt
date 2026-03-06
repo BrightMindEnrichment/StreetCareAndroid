@@ -88,6 +88,7 @@ class IndividualInteractionQ2 : Fragment() {
 
         // Previous: back to Q1
         binding.txtPrevious2.setOnClickListener {
+            viewModel.saveQ2(collectSupports())
             findNavController().navigateUp()
         }
 

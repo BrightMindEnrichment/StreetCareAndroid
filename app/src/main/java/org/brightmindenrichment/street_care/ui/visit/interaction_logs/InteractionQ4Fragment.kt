@@ -78,6 +78,11 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
 
         // Previous → go back in stack
         binding.btnPrevious.setOnClickListener {
+            val selectedOptions = getSelectedOptions()
+            if (selectedOptions.isNotEmpty()) {
+                viewModel.setSupportsProvided(selectedOptions)
+            }
+            viewModel.saveDraft()
             findNavController().popBackStack()
         }
 

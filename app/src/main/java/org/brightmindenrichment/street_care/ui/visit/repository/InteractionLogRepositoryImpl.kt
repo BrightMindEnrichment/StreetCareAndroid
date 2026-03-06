@@ -3,11 +3,11 @@ package org.brightmindenrichment.street_care.ui.visit.repository
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
+import org.brightmindenrichment.street_care.util.FirestoreCollections
 
 class InteractionLogRepositoryImpl: InteractionLogRepository {
 
     private val db = FirebaseFirestore.getInstance()
-    private val collectionName = "InteractionLogDev"
 
     override fun saveInteractionLog(
         interactionLog: InteractionLog,
@@ -50,7 +50,7 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
 
         // If ID exists → update; else → create new document
         if (interactionLog.id.isNotEmpty()) {
-            db.collection(collectionName)
+            db.collection(FirestoreCollections.INTERACTION_LOG)
                 .document(interactionLog.id)
                 .set(data)
                 .addOnSuccessListener {
@@ -62,7 +62,7 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
                     onComplete(false, null)
                 }
         } else {
-            db.collection(collectionName)
+            db.collection(FirestoreCollections.INTERACTION_LOG)
                 .add(data)
                 .addOnSuccessListener { ref ->
                     Log.d("InteractionLogRepo", "Created document ${ref.id}")
@@ -82,7 +82,7 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
         documentId: String,
         onComplete: (InteractionLog?) -> Unit
     ) {
-        db.collection(collectionName)
+        db.collection(FirestoreCollections.INTERACTION_LOG)
             .document(documentId)
             .get()
             .addOnSuccessListener { document ->
@@ -114,7 +114,7 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
                         endTimestamp = document.getTimestamp("endTimestamp"),
                         lastModifiedTimestamp = document.getTimestamp("lastModifiedTimestamp"),
 
-                        carePackageContents = document.getString("carePackageContents") ?: "",
+                        carePackageContents = (document.get("carePackageContents") as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
                         carePackagesDistributed = (document.getLong("carePackagesDistributed") ?: 0L).toInt(),
 
                         helpRequestCount = (document.getLong("helpRequestCount") ?: 0L).toInt(),
@@ -147,7 +147,7 @@ class InteractionLogRepositoryImpl: InteractionLogRepository {
     override fun loadPublicInteractionLogs(
         onComplete: (List<InteractionLog>) -> Unit
     ) {
-        db.collection(collectionName)
+        db.collection(FirestoreCollections.INTERACTION_LOG)
             .whereEqualTo("isPublic", true)
             .get()
             .addOnSuccessListener { result ->

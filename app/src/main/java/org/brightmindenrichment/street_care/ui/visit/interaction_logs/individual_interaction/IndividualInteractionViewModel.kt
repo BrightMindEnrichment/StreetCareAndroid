@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.WriteBatch
 import org.brightmindenrichment.street_care.ui.visit.data.IndividualInteraction
+import org.brightmindenrichment.street_care.util.FirestoreCollections
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -167,7 +168,7 @@ class IndividualInteractionViewModel : ViewModel() {
 
 
 
-//        db.collection(COLLECTION_HELP_REQUEST_DEV).document().set(helpRequestPayload).addOnSuccessListener {
+//        db.collection(FirestoreCollections.HELP_REQUEST).document().set(helpRequestPayload).addOnSuccessListener {
 //            Log.d(
 //                "TAG",
 //                "saveInteractions: "
@@ -178,7 +179,7 @@ class IndividualInteractionViewModel : ViewModel() {
 
     fun fetchInteractions(interactionId: String) {
         this.interactionLogId = interactionId
-        listenerRegistration = db.collection(COLLECTION_INTERACTION_LOG_DEV).document(interactionId)
+        listenerRegistration = db.collection(FirestoreCollections.INTERACTION_LOG).document(interactionId)
             .addSnapshotListener { document, e ->
                 if (document == null || e != null) {
                     _interactions.value = emptyList()
@@ -206,7 +207,7 @@ class IndividualInteractionViewModel : ViewModel() {
 
         if (interactionLogId != null){
             val interactionLogRef =
-                db.collection(COLLECTION_INTERACTION_LOG_DEV).document(interactionLogId!!)
+                db.collection(FirestoreCollections.INTERACTION_LOG).document(interactionLogId!!)
             batch.update(
                 interactionLogRef, FIELD_HELP_REQUEST_DOC_IDS,
                 FieldValue.arrayRemove(interaction.helpRequestId)
@@ -214,7 +215,7 @@ class IndividualInteractionViewModel : ViewModel() {
 
 
             val helpRequestRef =
-                db.collection(COLLECTION_HELP_REQUEST_DEV).document(interaction.helpRequestId!!)
+                db.collection(FirestoreCollections.HELP_REQUEST).document(interaction.helpRequestId!!)
             batch.delete(helpRequestRef)
 
 
@@ -232,10 +233,6 @@ class IndividualInteractionViewModel : ViewModel() {
     }
 
     companion object {
-        private const val COLLECTION_INTERACTION_LOG_DEV = "InteractionLogDev"
-        private const val COLLECTION_HELP_REQUEST_DEV = "HelpRequestDev"
         private const val FIELD_HELP_REQUEST_DOC_IDS = "helpRequestDocIds"
-
-
     }
 }

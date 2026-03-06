@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
+import org.brightmindenrichment.street_care.util.FirestoreCollections
 
 class InteractionLogDataAdapter {
 
@@ -32,7 +33,7 @@ class InteractionLogDataAdapter {
 
         val allInteractions = mutableListOf<InteractionLog>()
 
-        db.collection("InteractionLogDev")
+        db.collection(FirestoreCollections.INTERACTION_LOG)
             .whereEqualTo("userId", user.uid)
             .get()
             .addOnSuccessListener { result ->
@@ -69,7 +70,7 @@ class InteractionLogDataAdapter {
 
     fun getPublicInteractionLogs(onComplete: () -> Unit) {
 
-        db.collection("InteractionLogDev")
+        db.collection(FirestoreCollections.INTERACTION_LOG)
             .whereEqualTo("isPublic", true)
             .get()
             .addOnSuccessListener { result ->
@@ -106,7 +107,7 @@ class InteractionLogDataAdapter {
         documentId: String,
         onComplete: (Boolean) -> Unit
     ) {
-        db.collection("InteractionLogDev")
+        db.collection(FirestoreCollections.INTERACTION_LOG)
             .document(documentId)
             .get()
             .addOnSuccessListener { document ->
@@ -136,7 +137,7 @@ class InteractionLogDataAdapter {
                             endTimestamp = document.getTimestamp("endTimestamp"),
                             lastModifiedTimestamp = document.getTimestamp("lastModifiedTimestamp"),
 
-                            carePackageContents = document.getString("carePackageContents") ?: "",
+                            carePackageContents = (document.get("carePackageContents") as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
                             carePackagesDistributed = (document.getLong("carePackagesDistributed") ?: 0L).toInt(),
 
                             helpRequestCount = (document.getLong("helpRequestCount") ?: 0L).toInt(),
@@ -205,7 +206,7 @@ class InteractionLogDataAdapter {
                     endTimestamp = document.getTimestamp("endTimestamp"),
                     lastModifiedTimestamp = document.getTimestamp("lastModifiedTimestamp"),
 
-                    carePackageContents = document.getString("carePackageContents") ?: "",
+                    carePackageContents = (document.get("carePackageContents") as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
                     carePackagesDistributed =
                         (document.getLong("carePackagesDistributed") ?: 0L).toInt(),
 

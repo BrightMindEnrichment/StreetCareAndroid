@@ -31,6 +31,8 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
         buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
         buildConfigField "String", "API_KEY_PLACES", "\"${properties.getProperty("API_KEY_PLACES")}\""
+        buildConfigField "String", "INTERACTION_LOG_COLLECTION", "\"${properties.getProperty("INTERACTION_LOG_COLLECTION")}\""
+        buildConfigField "String", "HELP_REQUEST_COLLECTION", "\"${properties.getProperty("HELP_REQUEST_COLLECTION")}\""
     }
 
     buildTypes {

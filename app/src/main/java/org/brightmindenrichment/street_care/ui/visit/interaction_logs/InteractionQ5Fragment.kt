@@ -48,6 +48,9 @@ class InteractionQ5Fragment : Fragment() {
         binding.btnDecreaseJoined.setOnClickListener { syncFromInput(); if (joinedCount > 0) { joinedCount--; updateUI() } }
 
         binding.btnPrevious.setOnClickListener {
+            syncFromInput()
+            viewModel.updateCounts(helpedCount, joinedCount)
+            viewModel.saveDraft()
             findNavController().popBackStack()
         }
 

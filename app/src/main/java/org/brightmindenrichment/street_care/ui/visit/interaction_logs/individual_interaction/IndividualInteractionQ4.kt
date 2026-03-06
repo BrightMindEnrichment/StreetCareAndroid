@@ -117,6 +117,12 @@ class IndividualInteractionQ4 : Fragment() {
 
         // Previous -> back to Q3
         binding.txtPrevious2.setOnClickListener {
+            val notes = binding.etNotes.text?.toString()?.trim().orEmpty()
+            viewModel.saveQ4(
+                selectedDate?.toString(),
+                selectedTime?.toString(),
+                notes.takeUnless { it.isEmpty() }
+            )
             findNavController().navigateUp()
         }
 

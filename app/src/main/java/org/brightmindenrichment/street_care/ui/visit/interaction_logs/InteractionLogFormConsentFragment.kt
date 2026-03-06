@@ -13,10 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.firestore
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 
@@ -52,9 +48,6 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
         val cb = view.findViewById<CheckBox>(R.id.cbConsent)
         val submit = view.findViewById<Button>(R.id.btnSubmitConsent)
 
-        val interactionId = arguments?.getString("interactionId").orEmpty()
-        val mode = arguments?.getString("mode") ?: "create"
-
         fun setEnabled(b: Boolean) {
             submit.isEnabled = b
             submit.alpha = if (b) 1f else 0.5f
@@ -65,135 +58,24 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
 
         submit.setOnClickListener {
             if (!cb.isChecked) return@setOnClickListener
-
             submit.isEnabled = false
 
-            val db = Firebase.firestore
-            val now = FieldValue.serverTimestamp()
-
-            if (mode == "publish" && interactionId.isNotBlank()) {
-                findNavController().navigate(
-                    R.id.action_consentFragment_to_surveySubmittedFragment,
-                    bundleOf("interactionId" to interactionId)
-                )
-
-                ilViewModel.resetInteractionLog()
-                iiViewModel.reset()
-
-                db.collection("interactions")
-                    .document(interactionId)
-                    .update(
-                        mapOf(
-                            "isPublic" to true,
-                            "status" to "Pending",
-                            "lastModifiedTimestamp" to now
-                        )
+            ilViewModel.saveWithIIs { success ->
+                if (!isAdded) return@saveWithIIs
+                if (success) {
+                    ilViewModel.resetInteractionLog()
+                    iiViewModel.reset()
+                    findNavController().navigate(
+                        R.id.action_consentFragment_to_surveySubmittedFragment
                     )
-                    .addOnFailureListener { e ->
-                        e.printStackTrace()
-                        Toast.makeText(
-                            requireContext(),
-                            "Couldn’t sync right now. Your submission will retry when online.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-
-            } else {
-                val docRef = db.collection("interactions").document()
-                val newId = docRef.id
-
-                findNavController().navigate(
-                    R.id.action_consentFragment_to_surveySubmittedFragment,
-                    bundleOf("interactionId" to newId)
-                )
-
-                ilViewModel.resetInteractionLog()
-                iiViewModel.reset()
-
-                val interaction = hashMapOf(
-                    "isPublic" to true,
-                    "status" to "Pending",
-                    "createdTimestamp" to now,
-                    "lastModifiedTimestamp" to now,
-                    "helpRequestCount" to 0,
-                    "helpRequestDocIds" to emptyList<String>(),
-                    "userId" to (Firebase.auth.currentUser?.uid ?: "")
-                )
-
-                docRef.set(interaction)
-                    .addOnFailureListener { e ->
-                        e.printStackTrace()
-                        val ctx = activity ?: return@addOnFailureListener
-                        Toast.makeText(
-                            ctx,
-                            "Couldn’t sync right now. Will retry when online.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                } else {
+                    submit.isEnabled = true
+                    Toast.makeText(requireContext(),
+                        "Couldn’t submit right now. Please try again.",
+                        Toast.LENGTH_LONG).show()
+                }
             }
         }
-
-//        submit.setOnClickListener {
-//            if (!cb.isChecked) return@setOnClickListener
-//
-//            val db = Firebase.firestore
-//            val now = FieldValue.serverTimestamp()
-//
-//            submit.isEnabled = false
-//
-//            if (mode == "publish" && interactionId.isNotBlank()) {
-//                // UPDATE existing interaction: make public (and bump timestamp)
-//                db.collection("interactions")
-//                    .document(interactionId)
-//                    .update(
-//                        mapOf(
-//                            "isPublic" to true,
-//                            "status" to "Pending",
-//                            "lastModifiedTimestamp" to now
-//                        )
-//                    )
-//                    .addOnSuccessListener {
-//                        findNavController().navigate(
-//                            R.id.action_consentFragment_to_surveySubmittedFragment,
-//                            bundleOf("interactionId" to interactionId)
-//                        )
-//                    }
-//                    .addOnFailureListener {
-//                        submit.isEnabled = true
-//                        Toast.makeText(
-//                            requireContext(),
-//                            "Failed to share. Please try again.",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//                    }
-//            } else {
-//                val interaction = hashMapOf(
-//                    "isPublic" to cb.isChecked,
-//                    "status" to "Pending",
-//                    "createdTimestamp" to now,
-//                    "lastModifiedTimestamp" to now,
-//                    "helpRequestCount" to 0,
-//                    "helpRequestDocIds" to emptyList<String>(),
-//                    "userId" to (Firebase.auth.currentUser?.uid ?: "")
-//                )
-//
-//                db.collection("interactions").add(interaction)
-//                    .addOnSuccessListener { doc ->
-//                        findNavController().navigate(
-//                            R.id.action_consentFragment_to_surveySubmittedFragment,
-//                            bundleOf("interactionId" to doc.id)
-//                        )
-//                    }
-//                    .addOnFailureListener {
-//                        submit.isEnabled = true
-//                        Toast.makeText(
-//                            requireContext(),
-//                            "Failed to save. Please try again.",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//                    }
-//            }
-//        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

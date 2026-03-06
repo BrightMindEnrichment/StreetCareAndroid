@@ -105,6 +105,7 @@ class IndividualInteractionQ3 : Fragment() {
 
         // Previous: back to Q2
         binding.txtPrevious2.setOnClickListener {
+            viewModel.saveQ3(collectFurtherHelp())
             findNavController().popBackStack()
         }
 

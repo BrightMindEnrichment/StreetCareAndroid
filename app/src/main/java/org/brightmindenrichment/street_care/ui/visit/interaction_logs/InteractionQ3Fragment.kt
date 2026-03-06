@@ -149,6 +149,15 @@ class InteractionQ3Fragment : Fragment() {
         }
 
         binding.btnPrevious.setOnClickListener {
+            val address = binding.inputAddress.text.toString().trim()
+            val city = binding.inputCity.text.toString().trim()
+            val state = binding.inputState.text.toString().trim()
+            val zip = binding.inputZip.text.toString().trim()
+            viewModel.updateAddress(address)
+            viewModel.updateCity(city)
+            viewModel.updateState(state)
+            viewModel.updateZipcode(zip)
+            viewModel.saveDraft()
             findNavController().popBackStack()
         }
 

@@ -37,7 +37,7 @@ data class InteractionLog(
 
     // ================= SESSION STATS =================
     var carePackagesDistributed: Int = 0,
-    var carePackageContents: String = "",
+    var carePackageContents: List<String> = emptyList(),
     var numPeopleHelped: Int = 0,
     var numPeopleJoined: Int = 0,
 

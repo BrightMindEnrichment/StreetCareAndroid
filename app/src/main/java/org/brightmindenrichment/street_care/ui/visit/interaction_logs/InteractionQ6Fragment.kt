@@ -53,7 +53,7 @@ class InteractionQ6Fragment : Fragment() {
 
         carePackageCount = current.carePackagesDistributed
         tvCount.text = carePackageCount.toString()
-        etNotes.setText(current.carePackageContents)
+        etNotes.setText(current.carePackageContents.joinToString(", "))
 
         fun updateUI() {
             tvCount.text = carePackageCount.toString()
@@ -78,6 +78,8 @@ class InteractionQ6Fragment : Fragment() {
         // 6. Previous Button
         // -----------------------
         btnPrevious.setOnClickListener {
+            viewModel.updateCarePackage(carePackageCount, etNotes.text.toString())
+            viewModel.saveDraft()
             findNavController().popBackStack()
         }
 
