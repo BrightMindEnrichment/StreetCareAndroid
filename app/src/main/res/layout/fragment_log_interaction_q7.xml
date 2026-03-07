@@ -102,7 +102,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="4dp">
+                android:paddingTop="18dp"
+                android:paddingBottom="18dp">
 
                 <!-- top row: index + skip -->
                 <LinearLayout
@@ -110,8 +111,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="8dp"
-                    android:paddingTop="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="0dp"
                     android:paddingBottom="8dp">
 
                     <TextView
@@ -152,8 +153,9 @@
                     android:id="@+id/txt_question"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginHorizontal="16dp"
                     android:gravity="center"
                     android:text="@string/provide_details_prompt"
                     android:textColor="@color/black"
@@ -168,7 +170,7 @@
                     android:layout_gravity="center_horizontal"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_marginTop="18dp">
+                    android:layout_marginTop="8dp">
 
                     <TextView
                         android:id="@+id/txt_yes"
@@ -211,6 +213,7 @@
                     android:textColor="@color/dark_green"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="8dp"
                     android:textStyle="bold"
                     android:paddingVertical="6dp"
                     android:paddingHorizontal="18dp"

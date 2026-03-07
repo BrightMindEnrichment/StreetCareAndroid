@@ -29,7 +29,6 @@ import org.brightmindenrichment.street_care.BuildConfig
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionQ1Binding
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
-import org.brightmindenrichment.street_care.util.isInvalidZip
 import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
 import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
 import java.time.LocalDate
@@ -325,7 +324,6 @@ class IndividualInteractionQ1 : Fragment() {
             if (last.isEmpty())  { binding.etLastName.error  = "Required"; return@setOnClickListener }
             if (loc.isEmpty())   { binding.etLocation.error  = "Required"; return@setOnClickListener }
             if (state.isEmpty()) { binding.actState.error    = "Required"; return@setOnClickListener }
-            if (zip.isInvalidZip())  { binding.etZip.error = "Invalid";  return@setOnClickListener }
 
             val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
             viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)

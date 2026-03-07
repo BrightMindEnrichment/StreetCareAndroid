@@ -42,39 +42,35 @@
             android:paddingBottom="38dp">
 
             <!-- Checkbox + consent text in one row -->
-            <FrameLayout
+            <LinearLayout
+                android:id="@+id/cbConsentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:includeFontPadding="false"
-                    android:text="@string/consent_text"
-                    android:textAlignment="center"
-                    android:paddingStart="8dp"
-                    app:layout_constraintTop_toTopOf="@id/cbConsent"
-                    app:layout_constraintStart_toEndOf="@id/cbConsent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/cbConsent"
-                    app:layout_constraintVertical_bias="0.0"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                android:gravity="center_vertical"
+                android:paddingHorizontal="12dp">
+
                 <CheckBox
                     android:id="@+id/cbConsent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top|start"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="-11dp"
                     android:button="@drawable/checkbox_selector"
                     android:background="@null"
                     android:buttonTint="@null"
+                    android:minHeight="48dp"
                     app:useMaterialThemeColors="false"/>
 
-            </FrameLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:includeFontPadding="false"
+                    android:text="@string/consent_text"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
 
             <!-- Submit button -->
@@ -83,6 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="10dp"
                 android:backgroundTint="#073532"
                 android:elevation="4dp"

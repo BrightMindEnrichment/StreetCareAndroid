@@ -180,16 +180,23 @@
                             tools:ignore="UseAppTint" />
                     </FrameLayout>
 
-                    <!-- Counter value -->
-                    <TextView
+                    <!-- Counter value (editable) -->
+                    <EditText
                         android:id="@+id/tv_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="0"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         app:fontFamily="Poppins"
                         android:textColor="#071F1E"
-                        android:gravity="center" />
+                        android:inputType="number"
+                        android:gravity="center"
+                        android:minWidth="48dp"
+                        android:selectAllOnFocus="true"
+                        android:background="@android:color/transparent" />
 
                     <!-- Plus button (smaller) -->
                     <FrameLayout

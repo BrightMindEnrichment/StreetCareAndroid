@@ -46,6 +46,7 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
         }
 
         val cb = view.findViewById<CheckBox>(R.id.cbConsent)
+        val cbContainer = view.findViewById<android.widget.LinearLayout>(R.id.cbConsentContainer)
         val submit = view.findViewById<Button>(R.id.btnSubmitConsent)
 
         fun setEnabled(b: Boolean) {
@@ -56,9 +57,17 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
         setEnabled(cb.isChecked)
         cb.setOnCheckedChangeListener { _, checked -> setEnabled(checked) }
 
+        // Make the container clickable to toggle the checkbox
+        cbContainer.setOnClickListener {
+            cb.isChecked = !cb.isChecked
+        }
+
         submit.setOnClickListener {
             if (!cb.isChecked) return@setOnClickListener
             submit.isEnabled = false
+
+            // Update isPublic based on consent checkbox state
+            ilViewModel.updateIsPublic(cb.isChecked)
 
             ilViewModel.saveWithIIs { success ->
                 if (!isAdded) return@saveWithIIs

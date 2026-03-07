@@ -304,6 +304,7 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
 
             val ilDoc = FirestoreInteractionLog(
                 userId = uid,
+                outreachId = null,
                 firstName = log.firstName,
                 lastName = log.lastName,
                 email = log.email,
@@ -319,11 +320,50 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
                 addr1 = log.addr1, addr2 = log.addr2,
                 city = log.city, state = log.state, zipcode = log.zipcode, country = log.country,
                 helpRequestCount = hrIds.size,
-                helpRequestDocIds = hrIds
+                helpRequestDocIds = hrIds,
+                isPublic = log.isPublic,
+                status = "pending",
+                lastModifiedTimestamp = Timestamp(Date()),
+                lastActionPerformed = "submit",
+                isFlagged = false,
+                flaggedByUser = ""
             )
 
             val batch = db.batch()
-            batch.set(ilRef, ilDoc)
+
+            // Convert to Map and remove null values
+            val ilMap = mapOf(
+                "userId" to ilDoc.userId,
+                "outreachId" to ilDoc.outreachId,
+                "firstName" to ilDoc.firstName,
+                "lastName" to ilDoc.lastName,
+                "email" to ilDoc.email,
+                "phoneNumber" to ilDoc.phoneNumber,
+                "interactionDate" to ilDoc.interactionDate,
+                "startTimestamp" to ilDoc.startTimestamp,
+                "endTimestamp" to ilDoc.endTimestamp,
+                "listOfSupportsProvided" to ilDoc.listOfSupportsProvided,
+                "numPeopleHelped" to ilDoc.numPeopleHelped,
+                "carePackagesDistributed" to ilDoc.carePackagesDistributed,
+                "carePackageContents" to ilDoc.carePackageContents,
+                "numPeopleJoined" to ilDoc.numPeopleJoined,
+                "addr1" to ilDoc.addr1,
+                "addr2" to ilDoc.addr2,
+                "city" to ilDoc.city,
+                "state" to ilDoc.state,
+                "zipcode" to ilDoc.zipcode,
+                "country" to ilDoc.country,
+                "helpRequestCount" to ilDoc.helpRequestCount,
+                "helpRequestDocIds" to ilDoc.helpRequestDocIds,
+                "isPublic" to ilDoc.isPublic,
+                "status" to ilDoc.status,
+                "lastModifiedTimestamp" to ilDoc.lastModifiedTimestamp,
+                "lastActionPerformed" to ilDoc.lastActionPerformed,
+                "isFlagged" to ilDoc.isFlagged,
+                "flaggedByUser" to ilDoc.flaggedByUser
+            ).filterValues { it != null }
+
+            batch.set(ilRef, ilMap)
 
             iis.forEachIndexed { i, ii ->
                 // Parse interaction time with timezone context
@@ -362,9 +402,79 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
                     furtherHelpCategory = ii.furtherHelpNeeded,
                     followUpTimestamp = followUpTimestamp,
                     additionalDetails = ii.additionalDetails,
-                    interactionLogFirstName = log.firstName
+                    interactionLogFirstName = log.firstName,
+                    isPublic = log.isPublic,
+                    status = "pending",
+                    lastModifiedTimestamp = Timestamp(Date()),
+                    lastActionPerformed = "submit",
+                    completedTimestamp = null,
+                    isCompleted = false
                 )
-                batch.set(hrRefs[i], hrDoc)
+
+                // Convert to Map and remove null values
+                val hrMap = mapOf(
+                    "interactionLogDocId" to hrDoc.interactionLogDocId,
+                    "firstName" to hrDoc.firstName,
+                    "lastName" to hrDoc.lastName,
+                    "locationLandmark" to hrDoc.locationLandmark,
+                    "timestampOfInteraction" to hrDoc.timestampOfInteraction,
+                    "helpProvidedCategory" to hrDoc.helpProvidedCategory,
+                    "furtherHelpCategory" to hrDoc.furtherHelpCategory,
+                    "followUpTimestamp" to hrDoc.followUpTimestamp,
+                    "additionalDetails" to hrDoc.additionalDetails,
+                    "interactionLogFirstName" to hrDoc.interactionLogFirstName,
+                    "isPublic" to hrDoc.isPublic,
+                    "status" to hrDoc.status,
+                    "lastModifiedTimestamp" to hrDoc.lastModifiedTimestamp,
+                    "lastActionPerformed" to hrDoc.lastActionPerformed,
+                    "completedTimestamp" to hrDoc.completedTimestamp,
+                    "isCompleted" to hrDoc.isCompleted
+                ).filterValues { it != null }
+
+                batch.set(hrRefs[i], hrMap)
+            }
+
+            // Log what's being submitted
+            android.util.Log.d("FIRESTORE_DEBUG", "=== INTERACTION LOG ===")
+            android.util.Log.d("FIRESTORE_DEBUG", "IL Doc ID: ${ilRef.id}")
+            android.util.Log.d("FIRESTORE_DEBUG", ilDoc.toString())
+            android.util.Log.d("FIRESTORE_DEBUG", "=== HELP REQUESTS (${iis.size}) ===")
+            iis.forEachIndexed { i, _ ->
+                val hrDoc = FirestoreHelpRequest(
+                    interactionLogDocId = ilRef.id,
+                    firstName = iis[i].firstName,
+                    lastName = iis[i].lastName,
+                    locationLandmark = iis[i].locationLandmark,
+                    timestampOfInteraction = iis[i].time?.let { t ->
+                        runCatching {
+                            val zdt = ZonedDateTime.parse(t)
+                            Timestamp(zdt.toInstant().epochSecond, zdt.toInstant().nano)
+                        }.getOrNull() ?:
+                        runCatching {
+                            Instant.parse(t).let { Timestamp(it.epochSecond, it.nano) }
+                        }.getOrNull()
+                    } ?: log.startTimestamp,
+                    helpProvidedCategory = iis[i].supportsProvided,
+                    furtherHelpCategory = iis[i].furtherHelpNeeded,
+                    followUpTimestamp = iis[i].followUpTime?.let { ft ->
+                        runCatching {
+                            val zdt = ZonedDateTime.parse(ft)
+                            Timestamp(zdt.toInstant().epochSecond, zdt.toInstant().nano)
+                        }.getOrNull() ?:
+                        runCatching {
+                            Instant.parse(ft).let { Timestamp(it.epochSecond, it.nano) }
+                        }.getOrNull()
+                    },
+                    additionalDetails = iis[i].additionalDetails,
+                    interactionLogFirstName = log.firstName,
+                    isPublic = log.isPublic,
+                    status = "pending",
+                    lastModifiedTimestamp = Timestamp(Date()),
+                    lastActionPerformed = "submit",
+                    completedTimestamp = null,
+                    isCompleted = false
+                )
+                android.util.Log.d("FIRESTORE_DEBUG", "HR[$i]: ${hrDoc.toString()}")
             }
 
             try {
@@ -406,5 +516,10 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
         _interactionLog.value = current.copy(
             wantsToProvideDetails = answer
         )
+    }
+
+    fun updateIsPublic(isPublic: Boolean) {
+        val current = interactionLog.value ?: return
+        _interactionLog.value = current.copy(isPublic = isPublic)
     }
 }

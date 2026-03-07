@@ -122,7 +122,7 @@
                                 android:layout_marginTop="0dp"
                                 app:hintEnabled="false"
                                 app:boxStrokeWidth="1dp"
-                                app:boxStrokeColor="@color/black"
+                                app:boxStrokeColor="@color/gray700"
                                 android:imeOptions="actionNext"
                                 app:boxCornerRadiusTopStart="10dp"
                                 app:boxCornerRadiusTopEnd="10dp"
@@ -275,7 +275,8 @@
                                         style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense"
                                         android:minHeight="42dp"
                                         android:includeFontPadding="false"
-                                        android:inputType="number"/>
+                                        android:inputType="number"
+                                        android:maxLength="5"/>
                                 </com.google.android.material.textfield.TextInputLayout>
                             </LinearLayout>
 

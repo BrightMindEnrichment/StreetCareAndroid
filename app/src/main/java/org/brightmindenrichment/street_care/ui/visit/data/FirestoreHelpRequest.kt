@@ -14,8 +14,9 @@ data class FirestoreHelpRequest(
     val additionalDetails: String? = null,
     val interactionLogFirstName: String = "",
     val isPublic: Boolean = true,
-    val status: String = "Pending",
+    val status: String = "pending",
     val lastModifiedTimestamp: Timestamp = Timestamp.now(),
     val lastActionPerformed: String? = null,
+    val completedTimestamp: Timestamp? = null,
     val isCompleted: Boolean = false
 )
