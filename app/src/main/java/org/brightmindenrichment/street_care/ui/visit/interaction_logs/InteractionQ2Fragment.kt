@@ -12,13 +12,17 @@ import com.google.firebase.auth.FirebaseAuth
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ2Binding
 import org.brightmindenrichment.street_care.ui.user.UserSingleton
+import org.brightmindenrichment.street_care.ui.widget.StepState
+import org.brightmindenrichment.street_care.ui.widget.StepValidator
 
-class InteractionQ2Fragment : Fragment() {
+class InteractionQ2Fragment : Fragment(), StepValidator {
 
     private var _binding: FragmentLogInteractionQ2Binding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    override val viewModel: InteractionLogViewModel by activityViewModels()
+    private var wasSkipped = false
+    private var isTouched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +70,15 @@ class InteractionQ2Fragment : Fragment() {
         setPreviousButton()
         setNextButton()
         setSkipButton()
+
+        // Set up progress bar with current step and click handler
+        binding.progressBar.setCurrentStep(2)
+        binding.progressBar.onDotClicked = { step ->
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+            }
+        }
     }
 
     private fun setPreviousButton() {
@@ -78,8 +91,9 @@ class InteractionQ2Fragment : Fragment() {
             viewModel.updateLastName(lastName)
             viewModel.updateEmail(email)
             viewModel.updatePhone(phone)
-            viewModel.saveDraft()
-            findNavController().popBackStack()
+            viewModel.saveDraft {
+                findNavController().popBackStack()
+            }
         }
     }
 
@@ -116,21 +130,64 @@ class InteractionQ2Fragment : Fragment() {
                 "InteractionLog after Q2 save: ${viewModel.interactionLog.value}"
             )
 
-            viewModel.saveDraft()
-            // ---- Navigate to Q3 ----
-            findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
+            viewModel.saveDraft {
+                // ---- Navigate to Q3 ----
+                findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
+            }
         }
     }
 
     private fun setSkipButton() {
         binding.txtSkip3.setOnClickListener {
-            viewModel.saveDraft()
-            findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
+            wasSkipped = true
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
+            }
         }
+    }
+
+    override fun saveCurrentState() {
+        isTouched = true
+        val firstName = binding.inputFirstName.text.toString().trim()
+        val lastName = binding.inputLastName.text.toString().trim()
+        val email = binding.inputEmail.text.toString().trim()
+        val phone = binding.inputPhoneNumber.text.toString().trim()
+        viewModel.updateFirstName(firstName)
+        viewModel.updateLastName(lastName)
+        viewModel.updateEmail(email)
+        viewModel.updatePhone(phone)
+    }
+
+    override fun getStepState(): StepState {
+        return when {
+            wasSkipped -> StepState.SKIPPED
+            isCurrentStepValid() -> StepState.VALID
+            isTouched -> StepState.TOUCHED
+            else -> StepState.EMPTY
+        }
+    }
+
+    private fun isCurrentStepValid(): Boolean {
+        val firstName = binding.inputFirstName.text.toString().trim()
+        val lastName = binding.inputLastName.text.toString().trim()
+        return firstName.isNotEmpty() && lastName.isNotEmpty()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private val DOT_DEST_IDS = listOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment
+        )
     }
 }

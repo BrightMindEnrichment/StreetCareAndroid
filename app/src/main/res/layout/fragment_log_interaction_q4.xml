@@ -25,73 +25,29 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="12dp"
-            android:paddingBottom="12dp">
+            android:paddingBottom="24dp">
 
             <!-- Title -->
             <TextView
                 android:id="@+id/tvHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/visit_log_inside"
                 android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/visit_log_inside"
                 android:textColor="@color/black"
                 android:textSize="28sp"
                 android:includeFontPadding="false"
                 app:fontFamily="@font/poppins_bold_new"/>
 
             <!-- Progress dots -->
-            <LinearLayout
+            <org.brightmindenrichment.street_care.ui.widget.StepProgressView
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="15dp"
-                    android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_yellow" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="15dp"
-                    android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_yellow" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="15dp"
-                    android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_yellow" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="15dp"
-                    android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_yellow_with_border" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="15dp"
-                    android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_green_dark" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="15dp"
-                    android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_green_dark" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="15dp"
-                    android:layout_marginHorizontal="3dp"
-                    android:background="@drawable/progress_dot_green_dark" />
-            </LinearLayout>
+                android:layout_marginBottom="5dp" />
 
             <!-- Card -->
             <androidx.cardview.widget.CardView

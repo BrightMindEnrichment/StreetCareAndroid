@@ -303,8 +303,9 @@ class MainActivity : AppCompatActivity() {
                         .setTitle("Leave form?")
                         .setMessage("Save your progress and continue later, or keep editing?")
                         .setPositiveButton("Save & Exit") { _, _ ->
-                            ViewModelProvider(this)[InteractionLogViewModel::class.java].saveDraft()
-                            navigateToItem()
+                            ViewModelProvider(this)[InteractionLogViewModel::class.java].saveDraft {
+                                navigateToItem()
+                            }
                         }
                         .setNegativeButton("Keep editing", null)
                         .show()

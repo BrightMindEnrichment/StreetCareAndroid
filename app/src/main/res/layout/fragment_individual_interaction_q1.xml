@@ -20,7 +20,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:paddingTop="12dp"
-                android:paddingBottom="16dp">
+                android:paddingBottom="12dp">
 
                 <!-- Section Header -->
                 <TextView

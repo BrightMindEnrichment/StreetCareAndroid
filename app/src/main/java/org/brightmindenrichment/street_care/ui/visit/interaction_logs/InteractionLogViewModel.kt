@@ -505,10 +505,12 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
     fun updateCarePackage(count: Int, notes: String) {
         val current = _interactionLog.value ?: return
         val list = notes.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        android.util.Log.d("Q6_DEBUG", "updateCarePackage called: count=$count, notes=$notes")
         _interactionLog.value = current.copy(
             carePackagesDistributed = count,
             carePackageContents = list
         )
+        android.util.Log.d("Q6_DEBUG", "ViewModel updated: carePackagesDistributed=${_interactionLog.value?.carePackagesDistributed}")
     }
 
     fun updateQ7Answer(answer: Boolean?) {

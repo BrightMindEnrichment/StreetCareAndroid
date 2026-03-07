@@ -695,7 +695,7 @@ If needed, you may fill out  one log \n for your entire day.
 
     <!--Individual Interaction Question 1 -->
     <string name="Individual_Interaction_Question_1">Question 1/4</string>
-    <string name="hint_first_name">First Name(Person You Interacted)*</string>
+    <string name="hint_first_name">First Name(Person You Interacted)</string>
     <string name="hint_last_name">Last Name</string>
     <string name="hint_location">Location or Landmark</string>
 
@@ -718,7 +718,7 @@ If needed, you may fill out  one log \n for your entire day.
 
     <!-- Individual Interaction Question 4 -->
     <string name="Individual_Interaction_Question_4">Question 4/4</string>
-    <string name="default_date" translatable="false">MMM DD, YYYY</string>
+    <string name="default_date" translatable="false">MM/DD/YYYY</string>
     <string name="default_time" translatable="false">HH:MM AA</string>
     <string name="select_interaction_date">Select date of interaction</string>
     <string name="select_interaction_time">Select time of interaction</string>

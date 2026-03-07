@@ -27,6 +27,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ1Binding
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
+import org.brightmindenrichment.street_care.ui.widget.StepState
+import org.brightmindenrichment.street_care.ui.widget.StepValidator
 import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
 import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
 import java.text.SimpleDateFormat
@@ -36,12 +38,12 @@ import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.abs
 
-class InteractionQ1Fragment : Fragment() {
+class InteractionQ1Fragment : Fragment(), StepValidator {
 
     private var _binding: FragmentLogInteractionQ1Binding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    override val viewModel: InteractionLogViewModel by activityViewModels()
     private val iiViewModel: IndividualInteractionViewModel by activityViewModels()
 
     private val startCalendar = Calendar.getInstance()
@@ -51,6 +53,8 @@ class InteractionQ1Fragment : Fragment() {
     private val timeFormatter = SimpleDateFormat("hh:mm a z", Locale.getDefault())
 
     private var selectedTimezone: TimeZone = TimeZone.getDefault()
+    private var wasSkipped = false
+    private var isTouched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,6 +93,15 @@ class InteractionQ1Fragment : Fragment() {
             restoreFromLog(log)
         } else {
             refreshUI()
+        }
+
+        // Set up progress bar with current step and click handler
+        binding.progressBar.setCurrentStep(1)
+        binding.progressBar.onDotClicked = { step ->
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+            }
         }
     }
 
@@ -386,9 +399,10 @@ class InteractionQ1Fragment : Fragment() {
                 .setTitle("Leave form?")
                 .setMessage("Save your progress and continue later, or keep editing?")
                 .setPositiveButton("Save & Exit") { _, _ ->
-                    viewModel.saveDraft()
-                    if (isAdded) {
-                        findNavController().popBackStack()
+                    viewModel.saveDraft {
+                        if (isAdded) {
+                            findNavController().popBackStack()
+                        }
                     }
                 }
                 .setNegativeButton("Keep editing", null)
@@ -410,13 +424,46 @@ class InteractionQ1Fragment : Fragment() {
             viewModel.updateEndDate(endCalendar.time)
             viewModel.updateTimezone(selectedTimezone.id)
 
-            viewModel.saveDraft()
-            findNavController().navigate(R.id.action_interactionQ1_to_interactionQ2)
+            viewModel.saveDraft {
+                findNavController().navigate(R.id.action_interactionQ1_to_interactionQ2)
+            }
         }
+    }
+
+    override fun saveCurrentState() {
+        isTouched = true
+        viewModel.updateStartDate(startCalendar.time)
+        viewModel.updateEndDate(endCalendar.time)
+        viewModel.updateTimezone(selectedTimezone.id)
+    }
+
+    override fun getStepState(): StepState {
+        return when {
+            wasSkipped -> StepState.SKIPPED
+            isCurrentStepValid() -> StepState.VALID
+            isTouched -> StepState.TOUCHED
+            else -> StepState.EMPTY
+        }
+    }
+
+    private fun isCurrentStepValid(): Boolean {
+        return startCalendar.time.before(endCalendar.time)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private val DOT_DEST_IDS = listOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment
+        )
     }
 }

@@ -126,10 +126,14 @@ class IndividualInteractionViewModel : ViewModel() {
         _committedInteractions.value = interactions.toList()
     }
 
-    private fun buildDisplayName(interaction: IndividualInteraction, index: Int): String {
-        if (interaction.firstName.isBlank()) return "IndividualInteraction${index + 1}"
-        val lastInitial = interaction.lastName?.firstOrNull()?.let { "${it}." }.orEmpty()
-        return "Interaction with ${interaction.firstName}${if (lastInitial.isNotEmpty()) " $lastInitial" else ""}"
+    private fun buildDisplayName(interaction: IndividualInteraction?, index: Int): String {
+        if (interaction == null) return "Interaction ${index + 1}"
+        return if (interaction.firstName.isBlank()) {
+            "Interaction ${index + 1}"
+        } else {
+            val lastInitial = interaction.lastName?.firstOrNull()?.let { " ${it}." }.orEmpty()
+            "Interaction with ${interaction.firstName}$lastInitial"
+        }
     }
 
     /** Removes a committed interaction from the local list (no Firestore call needed before submission). */

@@ -9,16 +9,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ5Binding
+import org.brightmindenrichment.street_care.ui.widget.StepState
+import org.brightmindenrichment.street_care.ui.widget.StepValidator
 
-class InteractionQ5Fragment : Fragment() {
+class InteractionQ5Fragment : Fragment(), StepValidator {
 
     private var _binding: FragmentLogInteractionQ5Binding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    override val viewModel: InteractionLogViewModel by activityViewModels()
 
     private var helpedCount = 1
     private var joinedCount = 0
+    private var wasSkipped = false
+    private var isTouched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,33 +54,78 @@ class InteractionQ5Fragment : Fragment() {
         binding.btnPrevious.setOnClickListener {
             syncFromInput()
             viewModel.updateCounts(helpedCount, joinedCount)
-            viewModel.saveDraft()
-            findNavController().popBackStack()
+            viewModel.saveDraft {
+                findNavController().popBackStack()
+            }
         }
 
-        binding.btnSkip.setOnClickListener { navigateNext() }
+        binding.btnSkip.setOnClickListener {
+            wasSkipped = true
+            navigateNext()
+        }
         binding.btnNext.setOnClickListener { navigateNext() }
+
+        // Set up progress bar with current step and click handler
+        binding.progressBar.setCurrentStep(5)
+        binding.progressBar.onDotClicked = { step ->
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+            }
+        }
     }
 
     private fun syncFromInput() {
-        helpedCount = binding.tvCountHelped.text.toString().toIntOrNull() ?: helpedCount
-        joinedCount = binding.tvCountJoined.text.toString().toIntOrNull() ?: joinedCount
+        helpedCount = binding.etCountHelped.text.toString().toIntOrNull() ?: helpedCount
+        joinedCount = binding.etCountJoined.text.toString().toIntOrNull() ?: joinedCount
     }
 
     private fun updateUI() {
-        binding.tvCountHelped.setText(helpedCount.toString())
-        binding.tvCountJoined.setText(joinedCount.toString())
+        binding.etCountHelped.setText(helpedCount.toString())
+        binding.etCountJoined.setText(joinedCount.toString())
     }
 
     private fun navigateNext() {
         syncFromInput()
         viewModel.updateCounts(helpedCount, joinedCount)
-        viewModel.saveDraft()
-        findNavController().navigate(R.id.action_q5_to_q6)
+        viewModel.saveDraft {
+            findNavController().navigate(R.id.action_q5_to_q6)
+        }
+    }
+
+    override fun saveCurrentState() {
+        isTouched = true
+        syncFromInput()
+        viewModel.updateCounts(helpedCount, joinedCount)
+    }
+
+    override fun getStepState(): StepState {
+        return when {
+            wasSkipped -> StepState.SKIPPED
+            isCurrentStepValid() -> StepState.VALID
+            isTouched -> StepState.TOUCHED
+            else -> StepState.EMPTY
+        }
+    }
+
+    private fun isCurrentStepValid(): Boolean {
+        return helpedCount > 0 || joinedCount > 0
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private val DOT_DEST_IDS = listOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment
+        )
     }
 }

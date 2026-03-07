@@ -167,10 +167,22 @@ class IndividualInteractionQ1 : Fragment() {
                 binding.tvDate.text = dateFormatter.format(selectedDate)
             }
             saved.time?.let {
-                selectedTime = LocalTime.parse(it)
-                binding.tvTime.text = timeFormatter.format(
-                    selectedTime!!.atDate(LocalDate.now()).atZone(getInteractionTimezone())
-                )
+                try {
+                    // Try to parse as ZonedDateTime first (full timestamp with timezone)
+                    val zdt = ZonedDateTime.parse(it)
+                    selectedTime = zdt.toLocalTime()
+                    binding.tvTime.text = timeFormatter.format(zdt)
+                } catch (e: Exception) {
+                    // Fall back to LocalTime parsing if it's just a time string
+                    try {
+                        selectedTime = LocalTime.parse(it)
+                        binding.tvTime.text = timeFormatter.format(
+                            selectedTime!!.atDate(LocalDate.now()).atZone(getInteractionTimezone())
+                        )
+                    } catch (e2: Exception) {
+                        // Silently ignore if parsing fails
+                    }
+                }
             }
         }
 
@@ -309,10 +321,12 @@ class IndividualInteractionQ1 : Fragment() {
             }
         }
 
-        // Next -> validate -> go to Q2
+        // Next -> go to Q2 (validate only if editing with Q3 selections)
         binding.txtNext2.setOnClickListener {
             binding.tvDate.error = null
             binding.tvTime.error = null
+            binding.tilFirstName.error = null
+            binding.tilLocation.error = null
 
             val first = binding.etFirstName.text?.toString()?.trim().orEmpty()
             val last  = binding.etLastName.text?.toString()?.trim().orEmpty()
@@ -320,10 +334,22 @@ class IndividualInteractionQ1 : Fragment() {
             val state = binding.actState.text?.toString()?.trim().orEmpty()
             val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
 
-            if (first.isEmpty()) { binding.etFirstName.error = "Required"; return@setOnClickListener }
-            if (last.isEmpty())  { binding.etLastName.error  = "Required"; return@setOnClickListener }
-            if (loc.isEmpty())   { binding.etLocation.error  = "Required"; return@setOnClickListener }
-            if (state.isEmpty()) { binding.actState.error    = "Required"; return@setOnClickListener }
+            // If editing and Q3 has selections, require firstName and location
+            val isEditing = viewModel.editingIndex != null
+            val hasQ3Selections = viewModel.currentInteraction.value?.furtherHelpNeeded?.isNotEmpty() == true
+
+            if (isEditing && hasQ3Selections) {
+                var isValid = true
+                if (first.isEmpty()) {
+                    binding.tilFirstName.error = "Required"
+                    isValid = false
+                }
+                if (loc.isEmpty()) {
+                    binding.tilLocation.error = "Required"
+                    isValid = false
+                }
+                if (!isValid) return@setOnClickListener
+            }
 
             val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
             viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)

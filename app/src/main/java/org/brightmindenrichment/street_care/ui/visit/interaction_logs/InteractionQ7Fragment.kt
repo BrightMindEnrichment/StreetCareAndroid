@@ -12,22 +12,31 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.brightmindenrichment.street_care.R
+import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ7Binding
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
+import org.brightmindenrichment.street_care.ui.widget.StepState
+import org.brightmindenrichment.street_care.ui.widget.StepValidator
 
-class InteractionQ7Fragment : Fragment() {
+class InteractionQ7Fragment : Fragment(), StepValidator {
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    private var _binding: FragmentLogInteractionQ7Binding? = null
+    private val binding get() = _binding!!
+
+    override val viewModel: InteractionLogViewModel by activityViewModels()
     private val iiViewModel: IndividualInteractionViewModel by activityViewModels()
 
     private var selectedAnswer: Boolean? = null
+    private var wasSkipped = false
+    private var isTouched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_log_interaction_q7, container, false)
+        _binding = FragmentLogInteractionQ7Binding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,14 +50,6 @@ class InteractionQ7Fragment : Fragment() {
             ?.visibility = View.VISIBLE
 
         // -----------------------
-        // 3. Initialize Views
-        // -----------------------
-        val btnYes = view.findViewById<TextView>(R.id.txt_yes)
-        val btnNo = view.findViewById<TextView>(R.id.txt_no)
-        val btnSkip = view.findViewById<TextView>(R.id.txt_skip)
-        val btnPrevious = view.findViewById<TextView>(R.id.txt_previous5)
-
-        // -----------------------
         // 4. Restore Previous Value
         // -----------------------
         val current = viewModel.interactionLog.value ?: InteractionLog()
@@ -56,43 +57,54 @@ class InteractionQ7Fragment : Fragment() {
 
         fun updateUI() {
             if (selectedAnswer == true) {
-                btnYes.alpha = 1f
-                btnNo.alpha = 0.5f
+                binding.txtYes.alpha = 1f
+                binding.txtNo.alpha = 0.5f
             } else if (selectedAnswer == false) {
-                btnYes.alpha = 0.5f
-                btnNo.alpha = 1f
+                binding.txtYes.alpha = 0.5f
+                binding.txtNo.alpha = 1f
             } else {
-                btnYes.alpha = 1f
-                btnNo.alpha = 1f
+                binding.txtYes.alpha = 1f
+                binding.txtNo.alpha = 1f
             }
         }
 
         // -----------------------
         // 5. Button Logic
         // -----------------------
-        btnYes.setOnClickListener {
+        binding.txtYes.setOnClickListener {
             selectedAnswer = true
             updateUI()
             goToNext()
         }
 
-        btnNo.setOnClickListener {
+        binding.txtNo.setOnClickListener {
             selectedAnswer = false
             updateUI()
             goToNext()
         }
 
-        btnSkip.setOnClickListener {
+        binding.txtSkip.setOnClickListener {
+            wasSkipped = true
             goToNext()
         }
 
-        btnPrevious.setOnClickListener {
+        binding.txtPrevious5.setOnClickListener {
             viewModel.updateQ7Answer(selectedAnswer)
-            viewModel.saveDraft()
-            findNavController().popBackStack()
+            viewModel.saveDraft {
+                findNavController().popBackStack()
+            }
         }
 
         updateUI()
+
+        // Set up progress bar with current step and click handler
+        binding.progressBar.setCurrentStep(7)
+        binding.progressBar.onDotClicked = { step ->
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+            }
+        }
     }
 
     // -----------------------
@@ -101,28 +113,63 @@ class InteractionQ7Fragment : Fragment() {
     private fun goToNext() {
 
         viewModel.updateQ7Answer(selectedAnswer)
-        viewModel.saveDraft()
-
-        when (selectedAnswer) {
-            true -> {
-                val hasExisting = !iiViewModel.committedInteractions.value.isNullOrEmpty()
-                if (hasExisting) {
-                    findNavController().navigate(R.id.action_q7_yes_to_individualInteractionList)
-                } else {
-                    findNavController().navigate(R.id.action_q7_yes_to_individualInteraction1)
+        viewModel.saveDraft {
+            when (selectedAnswer) {
+                true -> {
+                    val hasExisting = !iiViewModel.committedInteractions.value.isNullOrEmpty()
+                    if (hasExisting) {
+                        findNavController().navigate(R.id.action_q7_yes_to_individualInteractionList)
+                    } else {
+                        findNavController().navigate(R.id.action_q7_yes_to_individualInteraction1)
+                    }
+                }
+                false -> {
+                    findNavController().navigate(
+                        R.id.action_q7_no_to_consentPage
+                    )
+                }
+                null -> {
+                    // If skipped, decide default behavior
+                    findNavController().navigate(
+                        R.id.action_q7_no_to_consentPage
+                    )
                 }
             }
-            false -> {
-                findNavController().navigate(
-                    R.id.action_q7_no_to_consentPage
-                )
-            }
-            null -> {
-                // If skipped, decide default behavior
-                findNavController().navigate(
-                    R.id.action_q7_no_to_consentPage
-                )
-            }
         }
+    }
+
+    override fun saveCurrentState() {
+        isTouched = true
+        viewModel.updateQ7Answer(selectedAnswer)
+    }
+
+    override fun getStepState(): StepState {
+        return when {
+            wasSkipped -> StepState.SKIPPED
+            isCurrentStepValid() -> StepState.VALID
+            isTouched -> StepState.TOUCHED
+            else -> StepState.EMPTY
+        }
+    }
+
+    private fun isCurrentStepValid(): Boolean {
+        return selectedAnswer != null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        private val DOT_DEST_IDS = listOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment
+        )
     }
 }

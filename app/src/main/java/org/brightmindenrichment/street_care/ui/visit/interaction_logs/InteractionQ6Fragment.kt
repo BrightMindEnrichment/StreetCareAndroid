@@ -15,36 +15,32 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.brightmindenrichment.street_care.R
+import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ6Binding
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
+import org.brightmindenrichment.street_care.ui.widget.StepState
+import org.brightmindenrichment.street_care.ui.widget.StepValidator
 
-class InteractionQ6Fragment : Fragment() {
+class InteractionQ6Fragment : Fragment(), StepValidator {
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    private var _binding: FragmentLogInteractionQ6Binding? = null
+    private val binding get() = _binding!!
+
+    override val viewModel: InteractionLogViewModel by activityViewModels()
     private var carePackageCount = 0
+    private var wasSkipped = false
+    private var isTouched = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_log_interaction_q6, container, false)
+        _binding = FragmentLogInteractionQ6Binding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // -----------------------
-        // 3. Initialize Views
-        // -----------------------
-        val btnSkip = view.findViewById<TextView>(R.id.btn_skip)
-        val btnPrevious = view.findViewById<TextView>(R.id.btn_previous)
-        val btnNext = view.findViewById<TextView>(R.id.btn_next)
-
-        val btnIncrease = view.findViewById<FrameLayout>(R.id.btn_increase)
-        val btnDecrease = view.findViewById<FrameLayout>(R.id.btn_decrease)
-
-        val tvCount = view.findViewById<TextView>(R.id.tv_count)
-        val etNotes = view.findViewById<EditText>(R.id.et_notes)
 
         // -----------------------
         // 4. Restore Previous Values
@@ -52,22 +48,26 @@ class InteractionQ6Fragment : Fragment() {
         val current = viewModel.interactionLog.value ?: InteractionLog()
 
         carePackageCount = current.carePackagesDistributed
-        tvCount.text = carePackageCount.toString()
-        etNotes.setText(current.carePackageContents.joinToString(", "))
+        android.util.Log.d("Q6_DEBUG", "Restored carePackageCount from ViewModel: $carePackageCount (full value: ${current.carePackagesDistributed})")
+        binding.etCount.setText(carePackageCount.toString())
+        val notes = current.carePackageContents.joinToString(", ")
+        binding.etNotes.setText(notes)
 
         fun updateUI() {
-            tvCount.text = carePackageCount.toString()
+            binding.etCount.setText(carePackageCount.toString())
         }
 
         // -----------------------
         // 5. Counter Logic
         // -----------------------
-        btnIncrease.setOnClickListener {
+        binding.btnIncrease.setOnClickListener {
+            syncFromInput()
             carePackageCount++
             updateUI()
         }
 
-        btnDecrease.setOnClickListener {
+        binding.btnDecrease.setOnClickListener {
+            syncFromInput()
             if (carePackageCount > 0) {
                 carePackageCount--
                 updateUI()
@@ -77,39 +77,91 @@ class InteractionQ6Fragment : Fragment() {
         // -----------------------
         // 6. Previous Button
         // -----------------------
-        btnPrevious.setOnClickListener {
-            viewModel.updateCarePackage(carePackageCount, etNotes.text.toString())
-            viewModel.saveDraft()
-            findNavController().popBackStack()
+        binding.btnPrevious.setOnClickListener {
+            syncFromInput()
+            viewModel.updateCarePackage(carePackageCount, binding.etNotes.text.toString())
+            viewModel.saveDraft {
+                findNavController().popBackStack()
+            }
         }
 
         // -----------------------
         // 7. Skip Button
         // -----------------------
-        btnSkip.setOnClickListener {
-            goToNext(etNotes.text.toString())
+        binding.btnSkip.setOnClickListener {
+            wasSkipped = true
+            goToNext(binding.etNotes.text.toString())
         }
 
         // -----------------------
         // 8. Next Button
         // -----------------------
-        btnNext.setOnClickListener {
-            goToNext(etNotes.text.toString())
+        binding.btnNext.setOnClickListener {
+            goToNext(binding.etNotes.text.toString())
         }
 
         updateUI()
+
+        // Set up progress bar with current step and click handler
+        binding.progressBar.setCurrentStep(6)
+        binding.progressBar.onDotClicked = { step ->
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+            }
+        }
     }
 
     // -----------------------
     // Save Data + Navigate
     // -----------------------
-    private fun goToNext(notes: String) {
+    private fun syncFromInput() {
+        carePackageCount = binding.etCount.text.toString().toIntOrNull() ?: carePackageCount
+    }
 
+    private fun goToNext(notes: String) {
+        syncFromInput()
         viewModel.updateCarePackage(carePackageCount, notes)
 
-        viewModel.saveDraft()
-        findNavController().navigate(
-            R.id.action_q6_to_q7
+        viewModel.saveDraft {
+            findNavController().navigate(
+                R.id.action_q6_to_q7
+            )
+        }
+    }
+
+    override fun saveCurrentState() {
+        isTouched = true
+        viewModel.updateCarePackage(carePackageCount, binding.etNotes.text.toString())
+    }
+
+    override fun getStepState(): StepState {
+        return when {
+            wasSkipped -> StepState.SKIPPED
+            isCurrentStepValid() -> StepState.VALID
+            isTouched -> StepState.TOUCHED
+            else -> StepState.EMPTY
+        }
+    }
+
+    private fun isCurrentStepValid(): Boolean {
+        return carePackageCount > 0
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        private val DOT_DEST_IDS = listOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment
         )
     }
 }

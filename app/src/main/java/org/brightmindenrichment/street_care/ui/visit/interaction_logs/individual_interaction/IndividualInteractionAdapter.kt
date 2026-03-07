@@ -46,14 +46,14 @@ class IndividualInteractionAdapter(
             )
 
             details.joinToString(" | ")
-
-            // Outputs:
-            // "John K. | 123 Main St | 6:30 PM"
-            // "John K. | 123 Main St"
-            // "John K. | 6:30 PM"
-            // "John K."
         } else {
-            "IndividualInteraction${position + 1}"
+            val details = listOfNotNull(
+                "Interaction ${position + 1}",
+                item.locationLandmark?.takeIf { it.isNotBlank() },
+                formatTimeWithTimezone(item.time)
+            )
+
+            details.joinToString(" | ")
         }
         binding.tvInteractionTitle.text = displayName
 

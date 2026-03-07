@@ -24,15 +24,19 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import org.brightmindenrichment.street_care.BuildConfig
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ3Binding
+import org.brightmindenrichment.street_care.ui.widget.StepState
+import org.brightmindenrichment.street_care.ui.widget.StepValidator
 import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
 import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
 
-class InteractionQ3Fragment : Fragment() {
+class InteractionQ3Fragment : Fragment(), StepValidator {
 
     private var _binding: FragmentLogInteractionQ3Binding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    override val viewModel: InteractionLogViewModel by activityViewModels()
+    private var wasSkipped = false
+    private var isTouched = false
 
     // ---- Places Autocomplete launcher ----
     private val placesLauncher = registerForActivityResult(
@@ -127,6 +131,15 @@ class InteractionQ3Fragment : Fragment() {
         }
 
         setupClickListeners()
+
+        // Set up progress bar with current step and click handler
+        binding.progressBar.setCurrentStep(3)
+        binding.progressBar.onDotClicked = { step ->
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+            }
+        }
     }
 
     private fun setupClickListeners() {
@@ -144,8 +157,9 @@ class InteractionQ3Fragment : Fragment() {
             viewModel.updateZipcode(zip)
 
             Log.d("Q3_DEBUG", "After Q3 Save: ${viewModel.interactionLog.value}")
-            viewModel.saveDraft()
-            findNavController().navigate(R.id.action_q3_to_q4)
+            viewModel.saveDraft {
+                findNavController().navigate(R.id.action_q3_to_q4)
+            }
         }
 
         binding.btnPrevious.setOnClickListener {
@@ -157,14 +171,43 @@ class InteractionQ3Fragment : Fragment() {
             viewModel.updateCity(city)
             viewModel.updateState(state)
             viewModel.updateZipcode(zip)
-            viewModel.saveDraft()
-            findNavController().popBackStack()
+            viewModel.saveDraft {
+                findNavController().popBackStack()
+            }
         }
 
         binding.skipBtn.setOnClickListener {
-            viewModel.saveDraft()
-            findNavController().navigate(R.id.action_q3_to_q4)
+            wasSkipped = true
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().navigate(R.id.action_q3_to_q4)
+            }
         }
+    }
+
+    override fun saveCurrentState() {
+        isTouched = true
+        val address = binding.inputAddress.text.toString().trim()
+        val city = binding.inputCity.text.toString().trim()
+        val state = binding.inputState.text.toString().trim()
+        val zip = binding.inputZip.text.toString().trim()
+        viewModel.updateAddress(address)
+        viewModel.updateCity(city)
+        viewModel.updateState(state)
+        viewModel.updateZipcode(zip)
+    }
+
+    override fun getStepState(): StepState {
+        return when {
+            wasSkipped -> StepState.SKIPPED
+            isCurrentStepValid() -> StepState.VALID
+            isTouched -> StepState.TOUCHED
+            else -> StepState.EMPTY
+        }
+    }
+
+    private fun isCurrentStepValid(): Boolean {
+        return binding.inputAddress.text.isNotEmpty()
     }
 
     private fun startVoiceInput() {
@@ -208,5 +251,17 @@ class InteractionQ3Fragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object {
+        private val DOT_DEST_IDS = listOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment
+        )
     }
 }

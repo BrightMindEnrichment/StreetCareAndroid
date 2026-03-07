@@ -9,13 +9,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ4Binding
+import org.brightmindenrichment.street_care.ui.widget.StepState
+import org.brightmindenrichment.street_care.ui.widget.StepValidator
 
-class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
+class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), StepValidator {
 
     private var _binding: FragmentLogInteractionQ4Binding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: InteractionLogViewModel by activityViewModels()
+    override val viewModel: InteractionLogViewModel by activityViewModels()
+    private var wasSkipped = false
+    private var isTouched = false
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -26,6 +30,15 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
         initializeViews()
         setupClickListeners()
         restoreSelections()
+
+        // Set up progress bar with current step and click handler
+        binding.progressBar.setCurrentStep(4)
+        binding.progressBar.onDotClicked = { step ->
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+            }
+        }
     }
 
     private fun initializeViews() {
@@ -70,9 +83,10 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
                 "After Q4 Save: ${viewModel.interactionLog.value}"
             )
 
-            viewModel.saveDraft()
-            // Navigate
-            findNavController().navigate(R.id.action_q4_to_q5)
+            viewModel.saveDraft {
+                // Navigate
+                findNavController().navigate(R.id.action_q4_to_q5)
+            }
         }
 
 
@@ -82,13 +96,17 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
             if (selectedOptions.isNotEmpty()) {
                 viewModel.setSupportsProvided(selectedOptions)
             }
-            viewModel.saveDraft()
-            findNavController().popBackStack()
+            viewModel.saveDraft {
+                findNavController().popBackStack()
+            }
         }
 
         binding.skipBtn.setOnClickListener {
-            viewModel.saveDraft()
-            findNavController().navigate(R.id.action_q4_to_q5)
+            wasSkipped = true
+            saveCurrentState()
+            viewModel.saveDraft {
+                findNavController().navigate(R.id.action_q4_to_q5)
+            }
         }
     }
 
@@ -152,8 +170,41 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4) {
         return selected
     }
 
+    override fun saveCurrentState() {
+        isTouched = true
+        val selectedOptions = getSelectedOptions()
+        if (selectedOptions.isNotEmpty()) {
+            viewModel.setSupportsProvided(selectedOptions)
+        }
+    }
+
+    override fun getStepState(): StepState {
+        return when {
+            wasSkipped -> StepState.SKIPPED
+            isCurrentStepValid() -> StepState.VALID
+            isTouched -> StepState.TOUCHED
+            else -> StepState.EMPTY
+        }
+    }
+
+    private fun isCurrentStepValid(): Boolean {
+        return getSelectedOptions().isNotEmpty()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private val DOT_DEST_IDS = listOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment
+        )
     }
 }
