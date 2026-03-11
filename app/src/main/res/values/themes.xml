@@ -46,9 +46,10 @@
 <!--        <item name="android:colorAccent">@color/accent_yellow</item></style>-->
 
     <style name="MyDatePickerDialogTheme"
-        parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        parent="Theme.MaterialComponents.Light.Dialog">
         <item name="colorPrimary">@color/dark_green</item>
-        <item name="colorOnPrimary">@color/accent_yellow</item>
+        <item name="colorAccent">@color/dark_green</item>
+        <item name="android:textColorPrimary">@color/black</item>
         <item name="materialButtonStyle">@style/DatePickerTextButton</item>
     </style>
 

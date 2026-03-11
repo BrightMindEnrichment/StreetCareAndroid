@@ -50,7 +50,6 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
     private val endCalendar = Calendar.getInstance()
 
     private val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-    private val timeFormatter = SimpleDateFormat("hh:mm a z", Locale.getDefault())
 
     private var selectedTimezone: TimeZone = TimeZone.getDefault()
     private var wasSkipped = false
@@ -120,20 +119,43 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         endCalendar.timeZone = selectedTimezone
 
         binding.startDate.text = dateFormatter.format(startCalendar.time)
-        binding.startTime.text = timeFormatter.format(startCalendar.time)
+        binding.startTime.text = formatTime(startCalendar)
         binding.endDate.text = dateFormatter.format(endCalendar.time)
-        binding.endTime.text = timeFormatter.format(endCalendar.time)
+        binding.endTime.text = formatTime(endCalendar)
         binding.timezoneText.text = formatTimezone(selectedTimezone)
+    }
+
+    /** Format time with DST-aware timezone abbreviation for the given calendar's date */
+    private fun formatTime(calendar: Calendar): String {
+        val abbrev = getTimezoneAbbreviation(selectedTimezone, calendar.timeInMillis)
+        val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        sdf.timeZone = selectedTimezone
+        return "${sdf.format(calendar.time)} $abbrev"
+    }
+
+    /** Get DST-aware timezone abbreviation for a specific timestamp */
+    private fun getTimezoneAbbreviation(tz: TimeZone, timeInMillis: Long): String {
+        return tz.getDisplayName(tz.inDaylightTime(java.util.Date(timeInMillis)), TimeZone.SHORT)
     }
 
 
     // ---------------- Start Date ----------------
     private fun setStartDatePicker() {
         binding.datePickerCard.setOnClickListener {
-            val picker = MaterialDatePicker.Builder.datePicker()
+            val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.MyDatePickerDialogTheme)
                 .setTitleText("Select Start Date")
+
+            // Set date constraints: disable dates beyond 12 hours in the future
+            val nowInTz = Calendar.getInstance(selectedTimezone)
+            val maxFutureMillis = nowInTz.timeInMillis + (12 * 60 * 60 * 1000)
+            val validator = com.google.android.material.datepicker.DateValidatorPointBackward.before(maxFutureMillis)
+            val constraints = com.google.android.material.datepicker.CalendarConstraints.Builder()
+                .setValidator(validator)
                 .build()
+            pickerBuilder.setCalendarConstraints(constraints)
+
+            val picker = pickerBuilder.build()
 
             picker.addOnPositiveButtonClickListener { selection ->
                 val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
@@ -147,6 +169,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
                 )
 
                 binding.startDate.text = dateFormatter.format(startCalendar.time)
+                binding.startTime.text = formatTime(startCalendar)
                 viewModel.updateStartDate(startCalendar.time)
             }
 
@@ -163,7 +186,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
                     startCalendar.timeZone = selectedTimezone
                     startCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     startCalendar.set(Calendar.MINUTE, minute)
-                    binding.startTime.text = timeFormatter.format(startCalendar.time)
+                    binding.startTime.text = formatTime(startCalendar)
                     viewModel.updateStartDate(startCalendar.time)
                 },
                 startCalendar.get(Calendar.HOUR_OF_DAY),
@@ -177,10 +200,20 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
     // ---------------- End Date ----------------
     private fun setEndDatePicker() {
         binding.datePickerCard1.setOnClickListener {
-            val picker = MaterialDatePicker.Builder.datePicker()
+            val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.MyDatePickerDialogTheme)
                 .setTitleText("Select End Date")
+
+            // Set date constraints: disable dates beyond 12 hours in the future
+            val nowInTz = Calendar.getInstance(selectedTimezone)
+            val maxFutureMillis = nowInTz.timeInMillis + (12 * 60 * 60 * 1000)
+            val validator = com.google.android.material.datepicker.DateValidatorPointBackward.before(maxFutureMillis)
+            val constraints = com.google.android.material.datepicker.CalendarConstraints.Builder()
+                .setValidator(validator)
                 .build()
+            pickerBuilder.setCalendarConstraints(constraints)
+
+            val picker = pickerBuilder.build()
 
             picker.addOnPositiveButtonClickListener { selection ->
                 val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
@@ -194,6 +227,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
                 )
 
                 binding.endDate.text = dateFormatter.format(endCalendar.time)
+                binding.endTime.text = formatTime(endCalendar)
                 viewModel.updateEndDate(endCalendar.time)
             }
 
@@ -210,7 +244,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
                     endCalendar.timeZone = selectedTimezone
                     endCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     endCalendar.set(Calendar.MINUTE, minute)
-                    binding.endTime.text = timeFormatter.format(endCalendar.time)
+                    binding.endTime.text = formatTime(endCalendar)
                     viewModel.updateEndDate(endCalendar.time)
                 },
                 endCalendar.get(Calendar.HOUR_OF_DAY),
@@ -232,9 +266,40 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         val ctx = requireContext()
         val density = resources.displayMetrics.density
 
-        val allZones = TimeZone.getAvailableIDs()
-            .map { TimeZone.getTimeZone(it) }
-            .sortedBy { it.rawOffset }
+        // Filter to only proper IANA timezone IDs, exclude POSIX and special Etc/ timezones
+        val ianaIds = TimeZone.getAvailableIDs()
+            .filter { it.contains('/') && !it.startsWith("Etc/") && !it.startsWith("SystemV/") }
+
+        // Group timezones by GMT offset and create a list with headers
+        data class TimezoneItem(val isHeader: Boolean, val offset: Int = 0, val zone: TimeZone? = null)
+
+        val groupedItems = mutableListOf<TimezoneItem>()
+        val offsetGroups = mutableMapOf<Int, MutableList<TimeZone>>()
+
+        // Group by current offset (DST-aware)
+        for (id in ianaIds) {
+            val tz = TimeZone.getTimeZone(id)
+            val offset = tz.getOffset(System.currentTimeMillis())
+            offsetGroups.getOrPut(offset) { mutableListOf() }.add(tz)
+        }
+
+        // Sort by offset and build items list with headers
+        offsetGroups.entries
+            .sortedBy { it.key }
+            .forEach { (offset, zones) ->
+                // Add header for this offset group
+                val offsetHours = offset / 3_600_000
+                val offsetMinutes = (abs(offset) % 3_600_000) / 60_000
+                val sign = if (offset >= 0) "+" else "-"
+                val headerText = "GMT$sign${abs(offsetHours).toString().padStart(2, '0')}:${offsetMinutes.toString().padStart(2, '0')}"
+                groupedItems.add(TimezoneItem(isHeader = true, offset = offset))
+
+                // Add zones in this group, sorted alphabetically by city
+                zones.sortedBy { it.id.substringAfterLast('/') }
+                    .forEach { zone ->
+                        groupedItems.add(TimezoneItem(isHeader = false, zone = zone))
+                    }
+            }
 
         val pad = (16 * density).toInt()
         val layout = LinearLayout(ctx).apply {
@@ -266,17 +331,41 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
             )
         )
 
-        val adapter = object : ArrayAdapter<TimeZone>(
+        val adapter = object : ArrayAdapter<TimezoneItem>(
             ctx,
             android.R.layout.simple_list_item_1,
-            allZones.toMutableList()
+            groupedItems.toMutableList()
         ) {
-            private val fullList = allZones.toList()
+            private val fullList = groupedItems.toList()
 
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getView(position, convertView, parent) as TextView
-                getItem(position)?.let { v.text = formatTimezone(it) }
-                return v
+                val item = getItem(position)!!
+
+                return if (item.isHeader) {
+                    // Header view
+                    val headerView = convertView as? TextView ?: TextView(ctx).apply {
+                        setPadding(20, 16, 20, 8)
+                        textSize = 14f
+                        setTypeface(null, android.graphics.Typeface.BOLD)
+                        setTextColor(android.graphics.Color.GRAY)
+                    }
+                    val offset = item.offset
+                    val offsetHours = offset / 3_600_000
+                    val offsetMinutes = (abs(offset) % 3_600_000) / 60_000
+                    val sign = if (offset >= 0) "+" else "-"
+                    headerView.text = "GMT$sign${abs(offsetHours).toString().padStart(2, '0')}:${offsetMinutes.toString().padStart(2, '0')}"
+                    headerView
+                } else {
+                    // Regular timezone item - just show city name (offset is in header)
+                    val v = super.getView(position, convertView, parent) as TextView
+                    item.zone?.let { zone ->
+                        val abbrev = getTimezoneAbbreviation(zone, System.currentTimeMillis())
+                        val city = zone.id.substringAfterLast('/').replace('_', ' ')
+                        v.text = "($abbrev) $city"
+                        v.setPadding(40, 12, 20, 12)
+                    }
+                    v
+                }
             }
 
             override fun getFilter(): Filter = object : Filter() {
@@ -284,9 +373,15 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
                     val filtered = if (constraint.isNullOrBlank()) {
                         fullList
                     } else {
-                        fullList.filter {
-                            formatTimezone(it).contains(constraint, ignoreCase = true) ||
-                                it.id.contains(constraint, ignoreCase = true)
+                        fullList.filter { item ->
+                            if (item.isHeader) {
+                                false // Don't show headers when searching
+                            } else {
+                                item.zone?.let {
+                                    formatTimezone(it).contains(constraint, ignoreCase = true) ||
+                                        it.id.contains(constraint, ignoreCase = true)
+                                } ?: false
+                            }
                         }
                     }
                     return FilterResults().apply {
@@ -298,13 +393,21 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
                 @Suppress("UNCHECKED_CAST")
                 override fun publishResults(constraint: CharSequence?, results: FilterResults) {
                     clear()
-                    addAll(results.values as List<TimeZone>)
+                    addAll(results.values as List<TimezoneItem>)
                     notifyDataSetChanged()
                 }
             }
         }
 
         listView.adapter = adapter
+
+        // Scroll to current timezone by default
+        val currentTimezonePosition = groupedItems.indexOfFirst {
+            !it.isHeader && it.zone?.id == selectedTimezone.id
+        }
+        if (currentTimezonePosition >= 0) {
+            listView.setSelection(currentTimezonePosition)
+        }
 
         val dialog = AlertDialog.Builder(ctx)
             .setTitle("Select Timezone")
@@ -321,7 +424,10 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         })
 
         listView.setOnItemClickListener { _, _, position, _ ->
-            val zone = adapter.getItem(position) ?: return@setOnItemClickListener
+            val item = adapter.getItem(position) ?: return@setOnItemClickListener
+            if (item.isHeader) return@setOnItemClickListener  // Ignore header clicks
+
+            val zone = item.zone ?: return@setOnItemClickListener
             selectedTimezone = zone
 
             // Preserve displayed time values by extracting them before timezone change
@@ -345,8 +451,8 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
             endCalendar.set(endYear, endMonth, endDay, endHour, endMinute)
 
             binding.timezoneText.text = formatTimezone(zone)
-            binding.startTime.text = timeFormatter.format(startCalendar.time)
-            binding.endTime.text = timeFormatter.format(endCalendar.time)
+            binding.startTime.text = formatTime(startCalendar)
+            binding.endTime.text = formatTime(endCalendar)
             viewModel.updateTimezone(zone.id)
             viewModel.updateStartDate(startCalendar.time)
             viewModel.updateEndDate(endCalendar.time)
@@ -357,13 +463,9 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
     }
 
     private fun formatTimezone(tz: TimeZone): String {
-        val offsetMs = tz.rawOffset
-        val sign = if (offsetMs >= 0) "+" else "-"
-        val absMs = abs(offsetMs)
-        val hours = absMs / 3_600_000
-        val minutes = (absMs % 3_600_000) / 60_000
         val city = tz.id.substringAfterLast('/').replace('_', ' ')
-        return "(UTC$sign${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}) $city"
+        val abbrev = getTimezoneAbbreviation(tz, System.currentTimeMillis())
+        return "($abbrev) $city"
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

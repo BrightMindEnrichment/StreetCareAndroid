@@ -706,7 +706,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="hygiene">Hygiene Products</string>
     <string name="support">Wellness/Emotional Support</string>
     <string name="medical_help">Medical Help/Doctor</string>
-    <string name="social_worker_psychiatrist">Social Worker/Psychiatrist</string>
+    <string name="social_work_psychiatrist">Social Work/Psychiatrist</string>
     <string name="lawyer_legal">Lawyer/Legal</string>
     <string name="other">Other</string>
     <string name="question_2">What kind of help was provided?</string>
@@ -732,7 +732,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="what_items_were_included_in_the_care_package">What items were included\nin the care package?</string>
     <string name="increase_count_btn_txt">Increase count</string>
     <string name="decrease_count_btn_txt">Decrease count</string>
-    <string name="number_of_care_packages_given_out">Number of care\npackages given out</string>
+    <string name="number_of_care_packages_given_out">Number of care items given out</string>
     <string name="skip_btn_txt">Skip</string>
     <string name="interaction_log_question_6_7">Question 6/7</string>
     <string name="interaction_log_question_of_7">Question {0}/7</string>

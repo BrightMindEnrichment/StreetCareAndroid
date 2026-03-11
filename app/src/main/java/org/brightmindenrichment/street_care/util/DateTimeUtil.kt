@@ -8,6 +8,7 @@ import java.time.ZonedDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.TimeZone
 
 /** Returns today's date in the device's local timezone. */
 fun localDateNow(): LocalDate = LocalDate.now(ZoneId.systemDefault())
@@ -121,4 +122,23 @@ fun formatTimeWithTimezone(timeString: String?): String? {
             timeString
         }
     }
+}
+
+/**
+ * Formats a LocalTime with a LocalDate in a specific timezone, showing the time with DST-aware timezone abbreviation.
+ * Format: "h:mm a ABBREV" (e.g., "3:45 PM CDT")
+ *
+ * @param date The date to determine DST status
+ * @param time The time to format
+ * @param zoneId The timezone to use for formatting
+ * @return Formatted time string with timezone abbreviation (e.g., "3:45 PM CDT")
+ */
+fun formatTimeWithTz(date: LocalDate, time: LocalTime, zoneId: ZoneId): String {
+    val zdt = time.atDate(date).atZone(zoneId)
+    val timeStr = DateTimeFormatter.ofPattern("h:mm a", Locale.getDefault()).format(zdt)
+    // Get DST-aware abbreviation using TimeZone
+    val tz = TimeZone.getTimeZone(zoneId)
+    val isDst = tz.inDaylightTime(java.util.Date(zdt.toInstant().toEpochMilli()))
+    val tzAbbrev = tz.getDisplayName(isDst, TimeZone.SHORT)
+    return "$timeStr $tzAbbrev"
 }

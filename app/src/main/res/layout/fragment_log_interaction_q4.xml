@@ -214,7 +214,7 @@
                                 android:drawableStart="@drawable/cb_square_green"
                                 android:drawablePadding="9dp"
                                 android:minHeight="36dp"
-                                android:text="@string/social_worker_psychiatrist"
+                                android:text="@string/social_work_psychiatrist"
                                 android:textColor="@color/black"
                                 android:textSize="16sp"
                                 app:fontFamily="@font/poppins_regular"/>

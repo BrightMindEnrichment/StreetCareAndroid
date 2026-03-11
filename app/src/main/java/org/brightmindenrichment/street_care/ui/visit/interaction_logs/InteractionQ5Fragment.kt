@@ -46,10 +46,10 @@ class InteractionQ5Fragment : Fragment(), StepValidator {
         updateUI()
 
         binding.btnIncreaseHelped.setOnClickListener { syncFromInput(); helpedCount++; updateUI() }
-        binding.btnDecreaseHelped.setOnClickListener { syncFromInput(); if (helpedCount > 0) { helpedCount--; updateUI() } }
+        binding.btnDecreaseHelped.setOnClickListener { syncFromInput(); if (helpedCount > 1) { helpedCount--; updateUI() } }
 
         binding.btnIncreaseJoined.setOnClickListener { syncFromInput(); joinedCount++; updateUI() }
-        binding.btnDecreaseJoined.setOnClickListener { syncFromInput(); if (joinedCount > 0) { joinedCount--; updateUI() } }
+        binding.btnDecreaseJoined.setOnClickListener { syncFromInput(); if (joinedCount > 0) { joinedCount--; updateUI() } else binding.btnDecreaseJoined.isEnabled = false }
 
         binding.btnPrevious.setOnClickListener {
             syncFromInput()
@@ -83,6 +83,12 @@ class InteractionQ5Fragment : Fragment(), StepValidator {
     private fun updateUI() {
         binding.etCountHelped.setText(helpedCount.toString())
         binding.etCountJoined.setText(joinedCount.toString())
+        // Disable minus button when helpedCount is 1 (minimum)
+        binding.btnDecreaseHelped.isEnabled = helpedCount > 1
+        binding.btnDecreaseHelped.alpha = if (helpedCount > 1) 1f else 0.5f
+        // Disable minus button when joinedCount is 0 (minimum)
+        binding.btnDecreaseJoined.isEnabled = joinedCount > 0
+        binding.btnDecreaseJoined.alpha = if (joinedCount > 0) 1f else 0.5f
     }
 
     private fun navigateNext() {

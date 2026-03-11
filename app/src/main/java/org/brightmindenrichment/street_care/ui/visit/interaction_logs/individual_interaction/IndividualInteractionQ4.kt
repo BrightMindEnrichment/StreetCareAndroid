@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -22,11 +20,10 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import org.brightmindenrichment.street_care.util.localDateNow
-import org.brightmindenrichment.street_care.util.localTimeNow
 import org.brightmindenrichment.street_care.util.toLocalDateFromPicker
 import org.brightmindenrichment.street_care.util.toPickerMillis
 import org.brightmindenrichment.street_care.util.toZonedString
+import org.brightmindenrichment.street_care.util.formatTimeWithTz
 
 class IndividualInteractionQ4 : Fragment() {
 
@@ -37,7 +34,6 @@ class IndividualInteractionQ4 : Fragment() {
     private var selectedTime: LocalTime? = null
 
     private val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-    private val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a z")
 
     private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
     private val viewModel: IndividualInteractionViewModel by activityViewModels()
@@ -55,6 +51,7 @@ class IndividualInteractionQ4 : Fragment() {
             }
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,10 +80,8 @@ class IndividualInteractionQ4 : Fragment() {
 
         // Observe timezone changes and refresh time display
         interactionLogViewModel.interactionLog.observe(viewLifecycleOwner) { _ ->
-            if (selectedTime != null) {
-                binding.tvTime.text = timeFormatter.format(
-                    selectedTime!!.atDate(LocalDate.now()).atZone(getInteractionTimezone())
-                )
+            if (selectedTime != null && selectedDate != null) {
+                binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
             }
         }
 
@@ -97,10 +92,24 @@ class IndividualInteractionQ4 : Fragment() {
                 binding.tvDate.text = dateFormatter.format(selectedDate)
             }
             saved.followUpTime?.let {
-                selectedTime = LocalTime.parse(it)
-                binding.tvTime.text = timeFormatter.format(
-                    selectedTime!!.atDate(LocalDate.now()).atZone(getInteractionTimezone())
-                )
+                try {
+                    // Try to parse as ZonedDateTime first (full timestamp with timezone)
+                    val zdt = ZonedDateTime.parse(it)
+                    selectedTime = zdt.toLocalTime()
+                    if (selectedDate != null) {
+                        binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
+                    }
+                } catch (e: Exception) {
+                    // Fall back to LocalTime parsing if it's just a time string
+                    try {
+                        selectedTime = LocalTime.parse(it)
+                        if (selectedDate != null) {
+                            binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
+                        }
+                    } catch (e2: Exception) {
+                        // Silently ignore if parsing fails
+                    }
+                }
             }
             saved.additionalDetails?.let { binding.etNotes.setText(it) }
         }
@@ -125,6 +134,12 @@ class IndividualInteractionQ4 : Fragment() {
                 val pickedDate = millis.toLocalDateFromPicker()
                 selectedDate = pickedDate
                 binding.tvDate.text = dateFormatter.format(pickedDate)
+
+                // If time is already selected, update its display with new timezone abbrev for this date
+                if (selectedTime != null) {
+                    binding.tvTime.text = formatTimeWithTz(pickedDate, selectedTime!!, getInteractionTimezone())
+                }
+
                 // Restore keyboard state
                 if (!keyboardWasVisible) {
                     imm.hideSoftInputFromWindow(view?.windowToken, 0)
@@ -150,11 +165,10 @@ class IndividualInteractionQ4 : Fragment() {
                 .setTheme(R.style.ThemeOverlay_StreetCare_TimePicker)
                 .setTimeFormat(TimeFormat.CLOCK_12H)
 
-            // Only set time if one was previously selected; otherwise leave unset (00:00)
-            if (selectedTime != null) {
-                pickerBuilder.setHour(selectedTime!!.hour)
-                pickerBuilder.setMinute(selectedTime!!.minute)
-            }
+            // Default to selected timezone's current time if no time selected yet
+            val defaultTime = selectedTime ?: LocalTime.now(getInteractionTimezone())
+            pickerBuilder.setHour(defaultTime.hour)
+            pickerBuilder.setMinute(defaultTime.minute)
 
             val picker = pickerBuilder
                 .setTitleText(getString(R.string.select_interaction_time))
@@ -163,9 +177,9 @@ class IndividualInteractionQ4 : Fragment() {
             picker.addOnPositiveButtonClickListener {
                 val pickedTime = LocalTime.of(picker.hour, picker.minute)
                 selectedTime = pickedTime
-                binding.tvTime.text = timeFormatter.format(
-                    pickedTime.atDate(LocalDate.now()).atZone(getInteractionTimezone())
-                )
+                if (selectedDate != null) {
+                    binding.tvTime.text = formatTimeWithTz(selectedDate!!, pickedTime, getInteractionTimezone())
+                }
                 // Restore keyboard state
                 if (!keyboardWasVisible) {
                     imm.hideSoftInputFromWindow(view?.windowToken, 0)

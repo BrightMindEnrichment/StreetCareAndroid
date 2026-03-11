@@ -55,6 +55,9 @@ class InteractionQ6Fragment : Fragment(), StepValidator {
 
         fun updateUI() {
             binding.etCount.setText(carePackageCount.toString())
+            // Disable minus button when carePackageCount is 0 (minimum)
+            binding.btnDecrease.isEnabled = carePackageCount > 0
+            binding.btnDecrease.alpha = if (carePackageCount > 0) 1f else 0.5f
         }
 
         // -----------------------
