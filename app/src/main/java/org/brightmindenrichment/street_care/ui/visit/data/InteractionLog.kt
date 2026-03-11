@@ -55,6 +55,25 @@ data class InteractionLog(
     var createdAt: Timestamp? = null,
     var lastModifiedTimestamp: Timestamp? = null,
 
-    var wantsToProvideDetails: Boolean? = null
+    var wantsToProvideDetails: Boolean? = null,
 
-) : Parcelable
+    // ================= AUTOFILL TRACKING =================
+    // Q2 and Q3 autofill from Firebase Auth and GPS; only count as filled if user edited them
+    var q2WasUserEdited: Boolean = false,
+    var q3WasUserEdited: Boolean = false
+
+) : Parcelable {
+    /**
+     * True when no user-meaningful data has been entered beyond auto-filled defaults.
+     * Q2 & Q3: only count as filled if user actually edited them (not just autofilled)
+     * Excludes Q1 (auto-filled date/time) from the check.
+     */
+    val isPristine: Boolean get() =
+        !q2WasUserEdited &&                          // Q2: autofilled but not edited
+        !q3WasUserEdited &&                          // Q3: autofilled but not edited
+        listOfSupportsProvided.isEmpty() &&          // Q4: no support selected
+        numPeopleHelped <= 1 && numPeopleJoined == 0 && // Q5: at defaults (1 is fragment default)
+        carePackagesDistributed == 0 && carePackageContents.isEmpty() && // Q6
+        wantsToProvideDetails == null &&             // Q7: skipped/unanswered
+        individualInteractions.isEmpty()             // IIs: none entered
+}

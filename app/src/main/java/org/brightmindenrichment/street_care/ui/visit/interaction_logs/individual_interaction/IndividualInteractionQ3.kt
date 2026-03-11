@@ -137,12 +137,7 @@ class IndividualInteractionQ3 : Fragment() {
 
         // Skip: save empty and proceed
         binding.txtSkip.setOnClickListener {
-            viewModel.saveQ3(emptyList())
-            mergeIntoILAndSave(viewModel.editingIndex) {
-                findNavController().navigate(
-                    R.id.action_individualInteractionQ3_to_individualInteractionQ4
-                )
-            }
+            performSkip()
         }
 
         // Next: must select at least one, and Q1 must be filled
@@ -153,7 +148,7 @@ class IndividualInteractionQ3 : Fragment() {
                     binding.cbLegal.isChecked || binding.cbOther.isChecked
 
             if (!anyChecked) {
-                binding.tilOther.error = "Select at least one option"
+                performSkip()
                 return@setOnClickListener
             }
 
@@ -187,6 +182,15 @@ class IndividualInteractionQ3 : Fragment() {
         }
         interactionLogViewModel.saveDraft {
             onComplete()
+        }
+    }
+
+    private fun performSkip() {
+        viewModel.saveQ3(emptyList())
+        mergeIntoILAndSave(viewModel.editingIndex) {
+            findNavController().navigate(
+                R.id.action_individualInteractionQ3_to_individualInteractionQ4
+            )
         }
     }
 

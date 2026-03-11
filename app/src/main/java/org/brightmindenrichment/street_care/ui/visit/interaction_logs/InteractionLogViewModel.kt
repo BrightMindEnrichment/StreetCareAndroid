@@ -129,6 +129,16 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
         _interactionLog.value = current.copy(zipcode = zip)
     }
 
+    fun updateQ2WasUserEdited(wasEdited: Boolean) {
+        val current = interactionLog.value!!
+        _interactionLog.value = current.copy(q2WasUserEdited = wasEdited)
+    }
+
+    fun updateQ3WasUserEdited(wasEdited: Boolean) {
+        val current = interactionLog.value!!
+        _interactionLog.value = current.copy(q3WasUserEdited = wasEdited)
+    }
+
     // =========================================================
     // -------------------- Q4 (Session Supports) --------------
     // =========================================================

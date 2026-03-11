@@ -77,7 +77,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
             val selectedOptions = getSelectedOptions()
 
             if (selectedOptions.isEmpty()) {
-                Snackbar.make(binding.root, "Please select at least one option", Snackbar.LENGTH_SHORT).show()
+                performSkip()
                 return@setOnClickListener
             }
 
@@ -116,11 +116,15 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
         }
 
         binding.skipBtn.setOnClickListener {
-            wasSkipped = true
-            saveCurrentState()
-            viewModel.saveDraft {
-                findNavController().navigate(R.id.action_q4_to_q5)
-            }
+            performSkip()
+        }
+    }
+
+    private fun performSkip() {
+        wasSkipped = true
+        saveCurrentState()
+        viewModel.saveDraft {
+            findNavController().navigate(R.id.action_q4_to_q5)
         }
     }
 

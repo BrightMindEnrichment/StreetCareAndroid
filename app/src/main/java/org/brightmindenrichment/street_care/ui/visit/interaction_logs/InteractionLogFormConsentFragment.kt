@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -64,6 +65,18 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
 
         submit.setOnClickListener {
             if (!cb.isChecked) return@setOnClickListener
+
+            // Pristine form guard
+            val log = ilViewModel.interactionLog.value
+            if (log?.isPristine == true) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.il_pristine_dialog_title)
+                    .setMessage(R.string.il_pristine_dialog_message)
+                    .setPositiveButton(R.string.il_pristine_dialog_go_back) { dialog, _ -> dialog.dismiss() }
+                    .show()
+                return@setOnClickListener
+            }
+
             submit.isEnabled = false
 
             // Update isPublic based on consent checkbox state

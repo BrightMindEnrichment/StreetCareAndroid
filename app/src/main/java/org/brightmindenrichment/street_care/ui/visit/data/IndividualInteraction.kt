@@ -38,4 +38,11 @@ data class IndividualInteraction(
     var interactionLogFirstName: String? = null
 
 
-) : Parcelable
+) : Parcelable {
+    val isPristine: Boolean get() =
+        firstName.isEmpty() &&
+        listOf(lastName, state, zip, locationLandmark, date, time,
+               followUpDate, followUpTime, additionalDetails).all { it.isNullOrEmpty() } &&
+        supportsProvided.isEmpty() &&
+        furtherHelpNeeded.isEmpty()
+}

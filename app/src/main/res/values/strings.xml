@@ -755,4 +755,9 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="leave_form_message">Save your progress and continue later, or keep editing?</string>
     <string name="save_and_exit">Save &amp; Exit</string>
 
+    <!-- Pristine form guard -->
+    <string name="il_pristine_dialog_title">Nothing to submit</string>
+    <string name="il_pristine_dialog_message">It looks like you haven\'t filled in any details about your interaction. Please go back and add information before submitting.</string>
+    <string name="il_pristine_dialog_go_back">Go Back</string>
+
 </resources>

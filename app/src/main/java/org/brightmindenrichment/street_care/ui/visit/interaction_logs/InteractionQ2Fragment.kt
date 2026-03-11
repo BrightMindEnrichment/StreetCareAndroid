@@ -150,6 +150,12 @@ class InteractionQ2Fragment : Fragment(), StepValidator {
             val email = binding.inputEmail.text.toString().trim()
             val phone = binding.inputPhoneNumber.text.toString().trim()
 
+            // Next-as-Skip: if both names are empty, delegate to skip logic
+            if (firstName.isEmpty() && lastName.isEmpty()) {
+                performSkip()
+                return@setOnClickListener
+            }
+
             // ---- Validation ----
             if (firstName.isEmpty()) {
                 binding.inputFirstName.error = "Please enter first name"
@@ -182,6 +188,9 @@ class InteractionQ2Fragment : Fragment(), StepValidator {
             viewModel.updateEmail(email)
             viewModel.updatePhone(phone)
 
+            // Mark Q2 as user-edited (they entered data beyond autofill)
+            viewModel.updateQ2WasUserEdited(true)
+
             // ---- DEBUG PRINT ----
             android.util.Log.d(
                 "Q2_DEBUG",
@@ -197,11 +206,15 @@ class InteractionQ2Fragment : Fragment(), StepValidator {
 
     private fun setSkipButton() {
         binding.txtSkip3.setOnClickListener {
-            wasSkipped = true
-            saveCurrentState()
-            viewModel.saveDraft {
-                findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
-            }
+            performSkip()
+        }
+    }
+
+    private fun performSkip() {
+        wasSkipped = true
+        saveCurrentState()
+        viewModel.saveDraft {
+            findNavController().navigate(R.id.action_interactionQ2_to_visitForm3)
         }
     }
 

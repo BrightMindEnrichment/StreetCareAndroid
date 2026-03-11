@@ -168,6 +168,12 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
             val state = binding.inputState.text.toString().trim()
             val zip = binding.inputZip.text.toString().trim()
 
+            // Next-as-Skip: if all location fields are empty, delegate to skip logic
+            if (address.isEmpty() && city.isEmpty() && state.isEmpty() && zip.isEmpty()) {
+                performSkip()
+                return@setOnClickListener
+            }
+
             // ZIP format validation (only if non-empty)
             if (zip.isInvalidZip()) {
                 binding.inputZip.showFormatError("Enter a valid 5-digit ZIP (e.g. 90210)")
@@ -179,6 +185,9 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
             viewModel.updateCity(city)
             viewModel.updateState(state)
             viewModel.updateZipcode(zip)
+
+            // Mark Q3 as user-edited (they entered location data)
+            viewModel.updateQ3WasUserEdited(true)
 
             Log.d("Q3_DEBUG", "After Q3 Save: ${viewModel.interactionLog.value}")
             viewModel.saveDraft {
@@ -201,11 +210,15 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
         }
 
         binding.skipBtn.setOnClickListener {
-            wasSkipped = true
-            saveCurrentState()
-            viewModel.saveDraft {
-                findNavController().navigate(R.id.action_q3_to_q4)
-            }
+            performSkip()
+        }
+    }
+
+    private fun performSkip() {
+        wasSkipped = true
+        saveCurrentState()
+        viewModel.saveDraft {
+            findNavController().navigate(R.id.action_q3_to_q4)
         }
     }
 
