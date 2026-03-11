@@ -10,3 +10,8 @@ fun String.isValidEmail(): Boolean =
 
 /** True if the string is non-empty AND not a valid e-mail address. */
 fun String.isInvalidEmail(): Boolean = isNotEmpty() && !isValidEmail()
+
+fun String.isValidPhone(): Boolean = matches(Regex("^\\+[0-9]{7,15}$"))
+
+/** True if the string is non-empty AND not a valid phone. */
+fun String.isInvalidPhone(): Boolean = isNotEmpty() && !isValidPhone()

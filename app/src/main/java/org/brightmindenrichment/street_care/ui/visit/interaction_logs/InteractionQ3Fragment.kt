@@ -10,8 +10,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +30,8 @@ import org.brightmindenrichment.street_care.ui.widget.StepState
 import org.brightmindenrichment.street_care.ui.widget.StepValidator
 import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
 import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
+import org.brightmindenrichment.street_care.util.isInvalidZip
+import org.brightmindenrichment.street_care.util.isValidZip
 
 class InteractionQ3Fragment : Fragment(), StepValidator {
 
@@ -130,6 +134,19 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
             true
         }
 
+        // ZIP focus-loss and dynamic validation
+        binding.inputZip.setOnFocusChangeListener { _, hasFocus ->
+            val text = binding.inputZip.text.toString()
+            if (!hasFocus && text.isInvalidZip())
+                binding.inputZip.showFormatError("Enter a valid 5-digit ZIP (e.g. 90210)")
+            else if (hasFocus)
+                binding.inputZip.clearFormatError()
+        }
+
+        binding.inputZip.doAfterTextChanged { s ->
+            if (s.toString().isValidZip()) binding.inputZip.clearFormatError()
+        }
+
         setupClickListeners()
 
         // Set up progress bar with current step and click handler
@@ -150,6 +167,13 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
             val city = binding.inputCity.text.toString().trim()
             val state = binding.inputState.text.toString().trim()
             val zip = binding.inputZip.text.toString().trim()
+
+            // ZIP format validation (only if non-empty)
+            if (zip.isInvalidZip()) {
+                binding.inputZip.showFormatError("Enter a valid 5-digit ZIP (e.g. 90210)")
+                binding.inputZip.requestFocus()
+                return@setOnClickListener
+            }
 
             viewModel.updateAddress(address)
             viewModel.updateCity(city)
@@ -215,6 +239,16 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         }
         voiceLauncher.launch(intent)
+    }
+
+    private fun EditText.showFormatError(msg: String) {
+        background = ContextCompat.getDrawable(requireContext(), R.drawable.edittext_rounded_error)
+        error = msg
+    }
+
+    private fun EditText.clearFormatError() {
+        background = ContextCompat.getDrawable(requireContext(), R.drawable.edittext_rounded)
+        error = null
     }
 
     // ---- GPS prefill ----

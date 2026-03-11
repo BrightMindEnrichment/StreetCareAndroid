@@ -1,10 +1,14 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -14,6 +18,10 @@ import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ2
 import org.brightmindenrichment.street_care.ui.user.UserSingleton
 import org.brightmindenrichment.street_care.ui.widget.StepState
 import org.brightmindenrichment.street_care.ui.widget.StepValidator
+import org.brightmindenrichment.street_care.util.isInvalidEmail
+import org.brightmindenrichment.street_care.util.isInvalidPhone
+import org.brightmindenrichment.street_care.util.isValidEmail
+import org.brightmindenrichment.street_care.util.isValidPhone
 
 class InteractionQ2Fragment : Fragment(), StepValidator {
 
@@ -67,6 +75,43 @@ class InteractionQ2Fragment : Fragment(), StepValidator {
             binding.inputPhoneNumber.setText(log?.phoneNumber.orEmpty())
         }
 
+        // Phone InputFilter: prevent non-digit and non-+ characters
+        // Length is enforced via android:maxLength="17" in XML (best practice for UI constraints)
+        binding.inputPhoneNumber.filters = arrayOf(InputFilter { src, start, end, dest, dstart, _ ->
+            for (i in start until end) {
+                val c = src[i]
+                if (!c.isDigit() && c != '+') return@InputFilter ""
+                if (c == '+' && dstart > 0) return@InputFilter ""
+            }
+            null
+        })
+
+        // Email and phone focus-loss validation
+        binding.inputEmail.setOnFocusChangeListener { _, hasFocus ->
+            val text = binding.inputEmail.text.toString().trim()
+            if (!hasFocus && text.isInvalidEmail())
+                binding.inputEmail.showFormatError("Enter a valid email (e.g. name@example.com)")
+            else if (hasFocus)
+                binding.inputEmail.clearFormatError()
+        }
+
+        binding.inputPhoneNumber.setOnFocusChangeListener { _, hasFocus ->
+            val text = binding.inputPhoneNumber.text.toString().trim()
+            if (!hasFocus && text.isInvalidPhone())
+                binding.inputPhoneNumber.showFormatError("Format: +12025550123 (7–15 digits after +)")
+            else if (hasFocus)
+                binding.inputPhoneNumber.clearFormatError()
+        }
+
+        // Dynamic error clearing as user types
+        binding.inputEmail.doAfterTextChanged { s ->
+            if (s.toString().trim().isValidEmail()) binding.inputEmail.clearFormatError()
+        }
+
+        binding.inputPhoneNumber.doAfterTextChanged { s ->
+            if (s.toString().trim().isValidPhone()) binding.inputPhoneNumber.clearFormatError()
+        }
+
         setPreviousButton()
         setNextButton()
         setSkipButton()
@@ -115,6 +160,19 @@ class InteractionQ2Fragment : Fragment(), StepValidator {
             if (lastName.isEmpty()) {
                 binding.inputLastName.error = "Please enter last name"
                 binding.inputLastName.requestFocus()
+                return@setOnClickListener
+            }
+
+            // Format validation (only if non-empty)
+            if (email.isInvalidEmail()) {
+                binding.inputEmail.showFormatError("Enter a valid email (e.g. name@example.com)")
+                binding.inputEmail.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (phone.isInvalidPhone()) {
+                binding.inputPhoneNumber.showFormatError("Format: +12025550123 (7–15 digits after +)")
+                binding.inputPhoneNumber.requestFocus()
                 return@setOnClickListener
             }
 
@@ -172,6 +230,16 @@ class InteractionQ2Fragment : Fragment(), StepValidator {
         val firstName = binding.inputFirstName.text.toString().trim()
         val lastName = binding.inputLastName.text.toString().trim()
         return firstName.isNotEmpty() && lastName.isNotEmpty()
+    }
+
+    private fun EditText.showFormatError(msg: String) {
+        background = ContextCompat.getDrawable(requireContext(), R.drawable.edittext_rounded_error)
+        error = msg
+    }
+
+    private fun EditText.clearFormatError() {
+        background = ContextCompat.getDrawable(requireContext(), R.drawable.edittext_rounded)
+        error = null
     }
 
     override fun onDestroyView() {

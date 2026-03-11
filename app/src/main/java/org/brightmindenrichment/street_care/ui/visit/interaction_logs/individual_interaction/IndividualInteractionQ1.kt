@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -38,6 +39,8 @@ import org.brightmindenrichment.street_care.util.toLocalDateFromPicker
 import org.brightmindenrichment.street_care.util.toPickerMillis
 import org.brightmindenrichment.street_care.util.toZonedString
 import org.brightmindenrichment.street_care.util.formatTimeWithTz
+import org.brightmindenrichment.street_care.util.isInvalidZip
+import org.brightmindenrichment.street_care.util.isValidZip
 
 class IndividualInteractionQ1 : Fragment() {
 
@@ -188,6 +191,19 @@ class IndividualInteractionQ1 : Fragment() {
             binding.actState.setSimpleItems(states)
         } catch (_: Exception) {
             // ignore if array not present
+        }
+
+        // ZIP focus-loss and dynamic validation (TIL automatically shows outline red)
+        binding.etZip.setOnFocusChangeListener { _, hasFocus ->
+            val text = binding.etZip.text.toString()
+            if (!hasFocus && text.isInvalidZip())
+                binding.tilZip.error = "Enter a valid 5-digit ZIP (e.g. 90210)"
+            else if (hasFocus)
+                binding.tilZip.error = null
+        }
+
+        binding.etZip.doAfterTextChanged { s ->
+            if (s.toString().isValidZip()) binding.tilZip.error = null
         }
 
         // GPS prefill if location is blank

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -51,36 +52,59 @@ class IndividualInteractionQ3 : Fragment() {
         fun refreshOtherVisibility() {
             val isChecked = binding.cbOther.isChecked
             binding.etOther.visibility = if (isChecked) View.VISIBLE else View.GONE
-            if (!isChecked) binding.etOther.setText("")
+            if (!isChecked) {
+                binding.etOther.setText("")
+                binding.tilOther.error = null
+            }
         }
         binding.cbOther.setOnCheckedChangeListener { _, _ -> refreshOtherVisibility() }
         refreshOtherVisibility()
 
+        // Clear error when Other input is focused or text changes
+        binding.etOther.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilOther.error = null
+        }
+
+        binding.etOther.doAfterTextChanged {
+            if (it.toString().isNotEmpty()) binding.tilOther.error = null
+        }
+
+        // Build map of checkbox ID to string resource ID (single source of truth)
+        val checkboxStringMap = mapOf(
+            R.id.cb_food to R.string.food_drinks,
+            R.id.cb_clothes to R.string.clothes,
+            R.id.cb_hygiene to R.string.hygiene,
+            R.id.cb_wellness to R.string.wellness_emotional_support,
+            R.id.cb_medical to R.string.medical_help,
+            R.id.cb_social_work to R.string.social_work_psychiatrist,
+            R.id.cb_legal to R.string.lawyer_legal
+        )
+
         // Restore previously selected further-help items when navigating back
         viewModel.currentInteraction.value?.furtherHelpNeeded?.forEach { item ->
-            when (item) {
-                "Food"          -> binding.cbFood.isChecked = true
-                "Clothes"       -> binding.cbClothes.isChecked = true
-                "Hygiene"       -> binding.cbHygiene.isChecked = true
-                "Wellness"      -> binding.cbWellness.isChecked = true
-                "Medical"       -> binding.cbMedical.isChecked = true
-                "Social Worker" -> binding.cbSocialWorker.isChecked = true
-                "Legal"         -> binding.cbLegal.isChecked = true
-                else -> { binding.cbOther.isChecked = true; binding.etOther.setText(item) }
+            val matchedCheckbox = checkboxStringMap.entries.firstOrNull { (_, stringResId) ->
+                getString(stringResId) == item
+            }
+            if (matchedCheckbox != null) {
+                binding.root.findViewById<androidx.appcompat.widget.AppCompatCheckBox>(matchedCheckbox.key).isChecked = true
+            } else {
+                // Unknown/custom further help goes to Other
+                binding.cbOther.isChecked = true
+                binding.etOther.setText(item)
             }
         }
         refreshOtherVisibility()
 
-        // Helper to build the selected list
+        // Helper to build the selected list using string resources
         fun collectFurtherHelp(): List<String> {
             val list = mutableListOf<String>()
-            if (binding.cbFood.isChecked)        list.add("Food")
-            if (binding.cbClothes.isChecked)     list.add("Clothes")
-            if (binding.cbHygiene.isChecked)     list.add("Hygiene")
-            if (binding.cbWellness.isChecked)    list.add("Wellness")
-            if (binding.cbMedical.isChecked)     list.add("Medical")
-            if (binding.cbSocialWorker.isChecked) list.add("Social Worker")
-            if (binding.cbLegal.isChecked)       list.add("Legal")
+            if (binding.cbFood.isChecked)       list.add(getString(R.string.food_drinks))
+            if (binding.cbClothes.isChecked)    list.add(getString(R.string.clothes))
+            if (binding.cbHygiene.isChecked)    list.add(getString(R.string.hygiene))
+            if (binding.cbWellness.isChecked)   list.add(getString(R.string.wellness_emotional_support))
+            if (binding.cbMedical.isChecked)    list.add(getString(R.string.medical_help))
+            if (binding.cbSocialWork.isChecked) list.add(getString(R.string.social_work_psychiatrist))
+            if (binding.cbLegal.isChecked)      list.add(getString(R.string.lawyer_legal))
             if (binding.cbOther.isChecked) binding.etOther.text?.toString()?.trim()
                 ?.takeUnless { it.isEmpty() }?.let { list.add(it) }
             return list
@@ -125,19 +149,21 @@ class IndividualInteractionQ3 : Fragment() {
         binding.txtNext2.setOnClickListener {
             val anyChecked = binding.cbFood.isChecked || binding.cbClothes.isChecked ||
                     binding.cbHygiene.isChecked || binding.cbWellness.isChecked ||
-                    binding.cbMedical.isChecked || binding.cbSocialWorker.isChecked ||
+                    binding.cbMedical.isChecked || binding.cbSocialWork.isChecked ||
                     binding.cbLegal.isChecked || binding.cbOther.isChecked
 
             if (!anyChecked) {
-                Toast.makeText(requireContext(), "Select at least one option.", Toast.LENGTH_SHORT).show()
+                binding.tilOther.error = "Select at least one option"
                 return@setOnClickListener
             }
 
             if (binding.cbOther.isChecked && binding.etOther.text?.toString()?.trim().isNullOrEmpty()) {
-                Toast.makeText(requireContext(), "Please specify Other.", Toast.LENGTH_SHORT).show()
+                binding.tilOther.error = "Please specify what further help is needed"
+                binding.etOther.requestFocus()
                 return@setOnClickListener
             }
 
+            binding.tilOther.error = null
             viewModel.saveQ3(collectFurtherHelp())
 
             if (!requireQ1()) return@setOnClickListener

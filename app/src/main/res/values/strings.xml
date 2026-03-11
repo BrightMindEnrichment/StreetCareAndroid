@@ -738,5 +738,21 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="interaction_log_question_of_7">Question {0}/7</string>
     <string name="question_x_of_y">Question {0}/{1}</string>
 
+    <!-- Dialog Strings - Interaction Log -->
+    <string name="delete_interaction_title">Delete Interaction</string>
+    <string name="delete_interaction_message">Are you sure you want to delete this interaction?</string>
+    <string name="delete_interaction_confirm">Delete</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="select_start_date">Select Start Date</string>
+    <string name="select_end_date">Select End Date</string>
+    <string name="search_timezone_hint">Search timezone</string>
+    <string name="select_timezone_title">Select Timezone</string>
+    <string name="discard_changes_title">Discard changes?</string>
+    <string name="discard_changes_message">Your progress will be lost if you leave now.</string>
+    <string name="discard_changes_confirm">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="leave_form_title">Leave form?</string>
+    <string name="leave_form_message">Save your progress and continue later, or keep editing?</string>
+    <string name="save_and_exit">Save &amp; Exit</string>
 
 </resources>

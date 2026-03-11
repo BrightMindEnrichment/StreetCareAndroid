@@ -144,7 +144,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         binding.datePickerCard.setOnClickListener {
             val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.MyDatePickerDialogTheme)
-                .setTitleText("Select Start Date")
+                .setTitleText(getString(R.string.select_start_date))
 
             // Set date constraints: disable dates beyond 12 hours in the future
             val nowInTz = Calendar.getInstance(selectedTimezone)
@@ -202,7 +202,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         binding.datePickerCard1.setOnClickListener {
             val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.MyDatePickerDialogTheme)
-                .setTitleText("Select End Date")
+                .setTitleText(getString(R.string.select_end_date))
 
             // Set date constraints: disable dates beyond 12 hours in the future
             val nowInTz = Calendar.getInstance(selectedTimezone)
@@ -308,7 +308,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         }
 
         val searchField = EditText(ctx).apply {
-            hint = "Search timezone"
+            hint = getString(R.string.search_timezone_hint)
             setSingleLine(true)
             setCompoundDrawablesWithIntrinsicBounds(
                 android.R.drawable.ic_menu_search, 0, 0, 0
@@ -410,9 +410,9 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         }
 
         val dialog = AlertDialog.Builder(ctx)
-            .setTitle("Select Timezone")
+            .setTitle(getString(R.string.select_timezone_title))
             .setView(layout)
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.dialog_cancel), null)
             .create()
 
         searchField.addTextChangedListener(object : TextWatcher {
@@ -490,24 +490,24 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         if (FeatureFlagManager.isEnabled(FeatureFlag.CLEAR_FORM_ON_WORKFLOW_EXIT)) {
             // Case 2: simple 2-button dialog
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Discard changes?")
-                .setMessage("Your progress will be lost if you leave now.")
-                .setPositiveButton("Discard") { _, _ -> clearAndNavigateBack() }
-                .setNegativeButton("Keep editing", null)
+                .setTitle(getString(R.string.discard_changes_title))
+                .setMessage(getString(R.string.discard_changes_message))
+                .setPositiveButton(getString(R.string.discard_changes_confirm)) { _, _ -> clearAndNavigateBack() }
+                .setNegativeButton(getString(R.string.keep_editing), null)
                 .show()
         } else {
             // Case 1: 2-button dialog — state can be preserved
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Leave form?")
-                .setMessage("Save your progress and continue later, or keep editing?")
-                .setPositiveButton("Save & Exit") { _, _ ->
+                .setTitle(getString(R.string.leave_form_title))
+                .setMessage(getString(R.string.leave_form_message))
+                .setPositiveButton(getString(R.string.save_and_exit)) { _, _ ->
                     viewModel.saveDraft {
                         if (isAdded) {
                             findNavController().popBackStack()
                         }
                     }
                 }
-                .setNegativeButton("Keep editing", null)
+                .setNegativeButton(getString(R.string.keep_editing), null)
                 .show()
         }
     }

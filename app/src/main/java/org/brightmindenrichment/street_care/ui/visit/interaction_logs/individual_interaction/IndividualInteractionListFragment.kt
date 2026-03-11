@@ -92,9 +92,9 @@ class IndividualInteractionListFragment : Fragment() {
 
         override fun onDeleteClicked(item: IndividualInteraction) {
             AlertDialog.Builder(requireContext())
-                .setTitle("Delete Interaction")
-                .setMessage("Are you sure you want to delete this interaction?")
-                .setPositiveButton("Delete") { _, _ ->
+                .setTitle(getString(R.string.delete_interaction_title))
+                .setMessage(getString(R.string.delete_interaction_message))
+                .setPositiveButton(getString(R.string.delete_interaction_confirm)) { _, _ ->
                     val idx = viewModel.committedInteractions.value?.indexOf(item) ?: -1
                     viewModel.deleteCommittedInteraction(item)
                     if (idx >= 0) {
@@ -102,7 +102,7 @@ class IndividualInteractionListFragment : Fragment() {
                         ilViewModel.saveDraft()
                     }
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.dialog_cancel), null)
                 .show()
         }
     }

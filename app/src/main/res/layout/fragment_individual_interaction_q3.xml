@@ -191,7 +191,7 @@
                                 app:fontFamily="@font/poppins_regular"/>
 
                             <androidx.appcompat.widget.AppCompatCheckBox
-                                android:id="@+id/cb_social_worker"
+                                android:id="@+id/cb_social_work"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:button="@null"

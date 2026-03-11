@@ -3,10 +3,11 @@ package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 import android.os.Bundle
 import android.view.View
 import android.widget.CheckBox
-import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ4Binding
 import org.brightmindenrichment.street_care.ui.widget.StepState
@@ -58,6 +59,16 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
         binding.otherCheckbox.setOnCheckedChangeListener { _, isChecked ->
             binding.tilOther.visibility =
                 if (isChecked) View.VISIBLE else View.GONE
+            if (!isChecked) binding.tilOther.error = null
+        }
+
+        // Clear error when Other input is focused or text changes
+        binding.otherInput.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilOther.error = null
+        }
+
+        binding.otherInput.doAfterTextChanged {
+            if (it.toString().isNotEmpty()) binding.tilOther.error = null
         }
 
         // Next button → navigate forward
@@ -66,11 +77,14 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
             val selectedOptions = getSelectedOptions()
 
             if (selectedOptions.isEmpty()) {
-                Toast.makeText(
-                    requireContext(),
-                    "Please select at least one option",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Snackbar.make(binding.root, "Please select at least one option", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Other field validation if checkbox is checked
+            if (binding.otherCheckbox.isChecked && binding.otherInput.text.toString().trim().isEmpty()) {
+                binding.tilOther.error = "Please describe what you provided"
+                binding.otherInput.requestFocus()
                 return@setOnClickListener
             }
 
@@ -114,10 +128,16 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
         val saved = viewModel.interactionLog.value?.listOfSupportsProvided ?: return
         if (saved.isEmpty()) return
 
+        // Build standard text set from string resources (single source of truth)
         val standardTexts = setOf(
-            "Food & Drinks", "Clothes", "Hygiene Products",
-            "Wellness/Emotional Support", "Medical Help/Doctor",
-            "Social Worker/Psychiatrist", "Lawyer/Legal", "Other"
+            getString(R.string.food_drinks),
+            getString(R.string.clothes),
+            getString(R.string.hygiene),
+            getString(R.string.wellness_emotional_support),
+            getString(R.string.medical_help),
+            getString(R.string.social_work_psychiatrist),
+            getString(R.string.lawyer_legal),
+            getString(R.string.other)
         )
 
         for (i in 0 until binding.checkboxList.childCount) {
@@ -132,7 +152,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
                         binding.tilOther.visibility = View.VISIBLE
                         binding.otherInput.setText(customOther)
                     }
-                    "Other" in saved -> {
+                    getString(R.string.other) in saved -> {
                         child.isChecked = true
                         binding.tilOther.visibility = View.VISIBLE
                     }
@@ -158,7 +178,7 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
                     val otherText = binding.otherInput.text.toString()
 
                     selected.add(
-                        if (otherText.isNotBlank()) otherText else "Other"
+                        if (otherText.isNotBlank()) otherText else getString(R.string.other)
                     )
 
                 } else {
