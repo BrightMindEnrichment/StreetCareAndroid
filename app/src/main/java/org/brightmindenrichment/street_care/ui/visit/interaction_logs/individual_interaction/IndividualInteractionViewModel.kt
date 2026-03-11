@@ -64,12 +64,8 @@ class IndividualInteractionViewModel : ViewModel() {
             interactionLogFirstName = firstName.trim(),
         )
 
-        saveInteractions(updated)
-
         // Update LiveData
         _currentInteraction.value = updated
-
-
     }
 
     fun saveQ2(supportsProvided: List<String>) {
@@ -141,49 +137,6 @@ class IndividualInteractionViewModel : ViewModel() {
         val current = _committedInteractions.value?.toMutableList() ?: return
         current.remove(item)
         _committedInteractions.value = current
-    }
-
-    fun saveInteractions(interaction: IndividualInteraction) {
-
-        val helpRequestPayload: Map<String, Any?> = mapOf(
-            // --- Required contextual fields ---
-            "interactionLogDocId" to "dummyInteractionLogId123",
-
-            // --- Public / personal info ---
-            "firstName" to "John",
-            //"lastName" to "Doe",
-            "locationLandmark" to "Near Central Park",
-
-            // --- Timestamps (dummy ISO strings or Firestore timestamp string equivalents) ---
-            "timestampOfInteraction" to "2025-01-10T14:32:00Z",
-            "followUpTimestamp" to "2025-01-20T15:00:00Z",
-            "lastModifiedTimestamp" to "2025-01-10T14:35:00Z",
-            "completedTimestamp" to "2025-02-01T10:00:00Z",
-
-            // --- Help categories ---
-            "helpProvidedCategory" to listOf("Food", "Housing Assistance"),
-            "furtherHelpCategory" to listOf("Job Search Support", "Legal Aid"),
-
-            // --- Additional info ---
-            "additionalDetails" to "Provided food and temporary housing referral.",
-            "interactionLogFirstName" to "John",
-            "isPublic" to true,
-
-            // --- Status fields ---
-            "status" to "Approved",               // could be Pending / Approved / Rejected etc.
-            "lastActionPerformed" to "Edited",    // using a placeholder instead of null
-            "isCompleted" to false
-        )
-
-
-
-//        db.collection(FirestoreCollections.HELP_REQUEST).document().set(helpRequestPayload).addOnSuccessListener {
-//            Log.d(
-//                "TAG",
-//                "saveInteractions: "
-//            )  }.addOnFailureListener { e->
-//            Log.d("TAG", "failure: ${e.message}")
-//        }
     }
 
     fun fetchInteractions(interactionId: String) {

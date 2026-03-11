@@ -47,7 +47,7 @@ class IndividualInteractionListFragment : Fragment() {
         binding.listViewInteractions.adapter = adapter
 
         viewModel.committedInteractions.observe(viewLifecycleOwner) { list ->
-            "Your Interactions".also { binding.sectionHeading.text = it }
+            binding.sectionHeading.text = getString(R.string.your_interactions)
             adapter.updateList(list)
         }
 

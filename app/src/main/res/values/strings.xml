@@ -692,6 +692,7 @@ If needed, you may fill out  one log \n for your entire day.
     <!-- Main Title - Interactive Interaction -->
     <string name="individual_interaction_title_base">Individual Interaction</string>
     <string name="individual_interaction_title_numbered">Individual Interaction %1$d</string>
+    <string name="your_interactions">Your Interactions</string>
 
     <!--Individual Interaction Question 1 -->
     <string name="Individual_Interaction_Question_1">Question 1/4</string>
