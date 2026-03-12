@@ -11,7 +11,8 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorOnSecondary">@color/gray900</item>
 
-        <!-- Status bar color. -->
+
+                    <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
         <!-- Customize your theme here. -->
@@ -24,8 +25,37 @@
     </style>
 
     <style name="Theme.StreetCare.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.StreetCare.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorAccent">@color/accent_yellow</item></style>
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">#004D40</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Indicator</item>
+    </style>
+
+    <style name="ShapeAppearance.App.Indicator" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">0dp</item>
+    </style>
+
+    <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="buttonTint">#1D271D</item>
+        <item name="colorControlActivated">#FFD700</item>
+    </style>
+<!--    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">-->
+<!--        <item name="android:colorAccent">@color/accent_yellow</item></style>-->
+
+    <style name="MyDatePickerDialogTheme"
+        parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorAccent">@color/dark_green</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="materialButtonStyle">@style/DatePickerTextButton</item>
+    </style>
+
+    <style name="DatePickerTextButton"
+        parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
+        <item name="android:textColor">@color/date_picker_button_text</item>
+    </style>
+
 </resources>

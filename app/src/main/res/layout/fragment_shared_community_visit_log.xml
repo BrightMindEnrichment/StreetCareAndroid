@@ -30,7 +30,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:context=".ui.visit.visit_forms.SurveySubmittedFragment"
+                    tools:context=".ui.visit.interaction_logs.InteractionLogFormSubmittedFragment"
                     android:orientation="vertical"
                     android:layout_margin="@dimen/margin_16dp"
                     android:layout_gravity="center">

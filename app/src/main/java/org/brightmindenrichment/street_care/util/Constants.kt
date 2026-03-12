@@ -10,5 +10,6 @@ object Constants {
     const val IS_APP_ON_BACKGROUND = "is_app_on_background"
     const val EVENTS_NOTIFICATION = "events_notification"
     const val DEFAULT_CAPACITY = 1000
+    const val IL_DRAFT_JSON = "il_draft_json"
 
 }

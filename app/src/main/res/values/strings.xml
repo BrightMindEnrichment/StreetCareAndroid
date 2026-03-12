@@ -9,6 +9,23 @@
     <string name="action_settings">Settings</string>
     <string name="like">Like</string>
     <string name="share">Share</string>
+    <string name="help_needed">Help needed</string>
+    <string name="btn_close_description">Close</string>
+    <string name="header_interaction_log">Interaction Log</string>
+    <string name="title_log_interaction">Log Your Interaction</string>
+    <string name="question_progress_2">Question 3/7</string>
+    <string name="question_progress_3">Question 4/7</string>
+    <string name="action_skip">Skip</string>
+    <string name="label_interaction_location_question">Where was your Interaction?</string>
+    <string name="desc_search_icon">Search</string>
+    <string name="hint_address_example">Search for address</string>
+    <string name="desc_mic_icon">Voice search</string>
+    <string name="hint_city_example">City</string>
+    <string name="hint_state_example">State</string>
+    <string name="hint_zip_example">ZipCode</string>
+    <string name="hint_description">Describe the location/landmark</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
 
 
     <!-- ChapterMembership -->
@@ -165,7 +182,7 @@
     <string name="outreach_quiz4">What kind of support \n\t\t did you provide?</string>
     <string name="outreach_quiz5">How would you rate your \noutreach experience?</string>
     <string name="description_example">\n Example: Tom, wheelchair user,\n wearing a navy blue shirt or Helped \n 26 people on the South Side.</string>
-    <string name="description_example_q2">E.g, My Aunt Mary helped prepare (mary@gmail.com), and my brothers Bob and Bill went out with me (bob@gmail.com, bill@gmail.com, 702-506-6101).</string>
+    <string name="description_example_q2">E.g, My Aunt Mary helped prepare (mary@gmail.com), and my brothers Bob and Bill went out with me (bob@gmail.com, bill@gmail.com, 702–506–6101).</string>
     <string name="description_example_q3">E.g, Jill — a 15-year-old girl who ran away and was wearing a blue dress.</string>
     <string name="description_example_q6">E.g, Tom has diabetes and prefers no sugary snacks</string>
     <string name="location_description">E.g, 187 Hambridge Street, NY</string>
@@ -173,8 +190,8 @@
     <string name="guest"> Guest</string>
     <string name="warning_new">Warning!</string>
     <string name="login_required">Login Required</string>
-    <string name="provided_help">I provided help!</string>
-    <string name="provided_help_msg">\n Please fill out this form each time you\n perform an outreach. This helps you\n track your contributions and allows\n StreetCare to bring more support \n and services to help the community!</string>
+    <string name="provided_help">Thanks for helping out!</string>
+    <string name="provided_help_msg">Each entry helps us understand community needs better. It’s really helpful if you can document interactions with each homeless person you meet—just a quick log per person goes a long way in helping us better understand community needs.</string>
     <string name="login_enter">Log in to enter an interaction.</string>
     <string name="warning_dialogue">You will be unable to view or edit\n your interaction logs without \nsigning in</string>
     <string name="button_image">Image Button</string>
@@ -323,8 +340,9 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="title_with_star">Title*</string>
     <string name="enter_email">Enter email address</string>
     <string name="contact_number">Contact Number</string>
+    <string name="phone_number">Phone Number</string>
     <string name="enter_contact_number">Enter contact number</string>
-    <string name="consent_text">By selecting this checkbox, I consent to sharing my contact details and event address publicly on this platform / community space to facilitate participation in the outreach event. I understand that this information will be visible to others and acknowledge the associated privacy considerations. \n</string>
+    <string name="consent_text">By selecting this checkbox, I consent to sharing my contact details and event address publicly on this platform community space. I understand that this information will be visible to others and acknowledge the associated privacy considerations.</string>
     <string name="publish_event">Publish</string>
     <string name="help_request_identification">How can we identify this person?*</string>
     <string name="location_with_star">Location*</string>
@@ -377,6 +395,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="back_to_visit_log">Back to Visit Log</string>
     <string name="history">HISTORY</string>
     <string name="add_new">ADD NEW+</string>
+    <string name="continue_draft">CONTINUE DRAFT</string>
     <string name="people_helped">People Helped</string>
     <string name="outreaches">Outreaches</string>
     <string name="items_donated">Items Donated</string>
@@ -553,6 +572,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="first_name">First Name *</string>
     <string name="last_name">Last Name *</string>
     <string name="phoneField">Phone</string>
+    <string name="interaction_log_question_1">How do we contact you?</string>
     <string name="address">Address</string>
     <string name="address_line_1">Address Line 1 *</string>
     <string name="address_line_2">Address Line 2</string>
@@ -601,12 +621,12 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="account_holder_badge">Account Holder Badge</string>
     <string name="account_holder">Account holder</string>
 
-<!--    visit log details section -->
+    <!--    visit log details section -->
 
     <string name="when_was_your_interaction" translatable="false">When was your Interaction?</string>
     <string name="where_was_your_interaction" translatable="false">Where was your Interaction?</string>
     <string name="how_many_you_helped" translatable="false">Describe who you supported and how\nmany individuals were involved.</string>
-    <string name="what_support_you_provided" translatable="false">What type of support did you provide?</string>
+    <string name="what_support_you_provided" translatable="false">What kind of support did you provide?</string>
 
     <string name="how_many_items_donated" translatable="false">What and how many items did you share?</string>
     <string name="how_much_rating" translatable="false">How would you rate your outreach experience?</string>
@@ -666,5 +686,73 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="please_login_title">Please Log In</string>
     <string name="please_login_message">You need to be logged in to like this event. Would you like to login now?</string>
 
+    <!--Interaction Log Question 7 -->
+    <string name="provide_details_prompt">Would you like to provide\ndetails for each person\nyou supported?</string>
+
+    <!-- Main Title - Interactive Interaction -->
+    <string name="individual_interaction_title_base">Individual Interaction</string>
+    <string name="individual_interaction_title_numbered">Individual Interaction %1$d</string>
+
+    <!--Individual Interaction Question 1 -->
+    <string name="Individual_Interaction_Question_1">Question 1/4</string>
+    <string name="hint_first_name">First Name(Person You Interacted)</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_location">Location or Landmark</string>
+
+    <!-- Individual Interaction Question 2 -->
+    <string name="Individual_Interaction_Question_2">Question 2/4</string>
+    <string name="food_drinks">Food &amp; Drinks</string>
+    <string name="clothes">Clothes</string>
+    <string name="hygiene">Hygiene Products</string>
+    <string name="support">Wellness/Emotional Support</string>
+    <string name="medical_help">Medical Help/Doctor</string>
+    <string name="social_work_psychiatrist">Social Work/Psychiatrist</string>
+    <string name="lawyer_legal">Lawyer/Legal</string>
+    <string name="other">Other</string>
+    <string name="question_2">What kind of help was provided?</string>
+
+    <!-- Individual Interaction Question 3 -->
+    <string name="Individual_Interaction_Question_3">Question 3/4</string>
+    <string name="Individual_Interaction_Question_of_4">Question {0}/4</string>
+    <string name="question_3">"What kind of further help is needed?</string>
+
+    <!-- Individual Interaction Question 4 -->
+    <string name="Individual_Interaction_Question_4">Question 4/4</string>
+    <string name="default_date" translatable="false">MM/DD/YYYY</string>
+    <string name="default_time" translatable="false">HH:MM AA</string>
+    <string name="select_interaction_date">Select date of interaction</string>
+    <string name="select_interaction_time">Select time of interaction</string>
+    <string name="question_4">Follow-up Date and Time</string>
+    <string name="search_for_address">Search for address</string>
+    <string name="wellness_emotional_support">Wellness/Emotional Support</string>
+    <string name="if_other_please_specify_here">If Other, please specify here.</string>
+    <string name="items_in_care_package_examples">Blankets, Socks, ...</string>
+    <string name="previous_btn_txt">Previous</string>
+    <string name="next_btn_txt">Next</string>
+    <string name="what_items_were_included_in_the_care_package">What items were included\nin the care package?</string>
+    <string name="increase_count_btn_txt">Increase count</string>
+    <string name="decrease_count_btn_txt">Decrease count</string>
+    <string name="number_of_care_packages_given_out">Number of care items given out</string>
+    <string name="skip_btn_txt">Skip</string>
+    <string name="interaction_log_question_6_7">Question 6/7</string>
+    <string name="interaction_log_question_of_7">Question {0}/7</string>
+    <string name="question_x_of_y">Question {0}/{1}</string>
+
+    <!-- Dialog Strings - Interaction Log -->
+    <string name="delete_interaction_title">Delete Interaction</string>
+    <string name="delete_interaction_message">Are you sure you want to delete this interaction?</string>
+    <string name="delete_interaction_confirm">Delete</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="select_start_date">Select Start Date</string>
+    <string name="select_end_date">Select End Date</string>
+    <string name="search_timezone_hint">Search timezone</string>
+    <string name="select_timezone_title">Select Timezone</string>
+    <string name="discard_changes_title">Discard changes?</string>
+    <string name="discard_changes_message">Your progress will be lost if you leave now.</string>
+    <string name="discard_changes_confirm">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="leave_form_title">Leave form?</string>
+    <string name="leave_form_message">Save your progress and continue later, or keep editing?</string>
+    <string name="save_and_exit">Save &amp; Exit</string>
 
 </resources>
