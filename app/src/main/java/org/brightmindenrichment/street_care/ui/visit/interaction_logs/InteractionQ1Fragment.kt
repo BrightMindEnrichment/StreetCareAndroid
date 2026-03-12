@@ -29,6 +29,7 @@ import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ1
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 import org.brightmindenrichment.street_care.ui.widget.StepState
 import org.brightmindenrichment.street_care.ui.widget.StepValidator
+import org.brightmindenrichment.street_care.util.Constants
 import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
 import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
 import java.text.SimpleDateFormat
@@ -99,7 +100,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         binding.progressBar.onDotClicked = { step ->
             saveCurrentState()
             viewModel.saveDraft {
-                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+                findNavController().popBackStack(Constants.INTERACTION_LOG_DEST_IDS[step - 1], false)
             }
         }
     }
@@ -555,17 +556,5 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private val DOT_DEST_IDS = listOf(
-            R.id.interactionQ1Fragment,
-            R.id.interactionQ2Fragment,
-            R.id.interactionQ3Fragment,
-            R.id.interactionQ4Fragment,
-            R.id.interactionQ5Fragment,
-            R.id.interactionQ6Fragment,
-            R.id.interactionQ7Fragment
-        )
     }
 }

@@ -19,6 +19,7 @@ import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ6
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
 import org.brightmindenrichment.street_care.ui.widget.StepState
 import org.brightmindenrichment.street_care.ui.widget.StepValidator
+import org.brightmindenrichment.street_care.util.Constants
 
 class InteractionQ6Fragment : Fragment(), StepValidator {
 
@@ -110,7 +111,7 @@ class InteractionQ6Fragment : Fragment(), StepValidator {
         binding.progressBar.onDotClicked = { step ->
             saveCurrentState()
             viewModel.saveDraft {
-                findNavController().popBackStack(DOT_DEST_IDS[step - 1], false)
+                findNavController().popBackStack(Constants.INTERACTION_LOG_DEST_IDS[step - 1], false)
             }
         }
     }
@@ -156,15 +157,4 @@ class InteractionQ6Fragment : Fragment(), StepValidator {
         _binding = null
     }
 
-    companion object {
-        private val DOT_DEST_IDS = listOf(
-            R.id.interactionQ1Fragment,
-            R.id.interactionQ2Fragment,
-            R.id.interactionQ3Fragment,
-            R.id.interactionQ4Fragment,
-            R.id.interactionQ5Fragment,
-            R.id.interactionQ6Fragment,
-            R.id.interactionQ7Fragment
-        )
-    }
 }
