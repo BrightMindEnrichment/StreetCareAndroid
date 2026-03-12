@@ -143,7 +143,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
     private fun setStartDatePicker() {
         binding.datePickerCard.setOnClickListener {
             val pickerBuilder = MaterialDatePicker.Builder.datePicker()
-                .setTheme(R.style.MyDatePickerDialogTheme)
+                .setTheme(R.style.ThemeOverlay_StreetCare_DatePicker)
                 .setTitleText(getString(R.string.select_start_date))
 
             // Set date constraints: disable dates beyond 12 hours in the future
@@ -201,7 +201,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
     private fun setEndDatePicker() {
         binding.datePickerCard1.setOnClickListener {
             val pickerBuilder = MaterialDatePicker.Builder.datePicker()
-                .setTheme(R.style.MyDatePickerDialogTheme)
+                .setTheme(R.style.ThemeOverlay_StreetCare_DatePicker)
                 .setTitleText(getString(R.string.select_end_date))
 
             // Set date constraints: disable dates beyond 12 hours in the future
