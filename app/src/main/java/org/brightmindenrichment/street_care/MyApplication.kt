@@ -14,6 +14,7 @@ import dagger.hilt.android.HiltAndroidApp
 import org.brightmindenrichment.data.local.EventsDatabase
 import org.brightmindenrichment.street_care.notification.NotificationWorker
 import org.brightmindenrichment.street_care.notification.NotificationWorkerFactory
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -25,6 +26,7 @@ class MyApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
+        FeatureFlagManager.fetch()
     }
 
     override fun getWorkManagerConfiguration() =

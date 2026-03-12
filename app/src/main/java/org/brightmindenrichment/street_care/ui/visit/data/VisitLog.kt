@@ -79,6 +79,7 @@ data class VisitLog(
     var stillNeedSupport: Int=0,
     var supportTypeNeeded: String ="",
     var peopleNeedFurtherHelpLocation: String ="",
+    var peopleJoined: Int = 0,
     var futureNotes: String ="",
     //document ID for updating
     var documentId: String? = null,
@@ -87,7 +88,9 @@ data class VisitLog(
     var peopleHelped: Int = 0,
     var whatGiven: String? = null,
     var whatGivenFurther: String? = null,
-    var whoJoinedDescription: String? = null
+    var whoJoinedDescription: String? = null,
+    var carePackagesGiven: Int? = 0,
+    var carePackageNotes: String? = ""
 
 
 

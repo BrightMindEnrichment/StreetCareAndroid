@@ -244,7 +244,7 @@
                     android:id="@+id/eventCard_detailsButton"
                     android:layout_width="70dp"
                     android:layout_height="28dp"
-                    android:text="Details"
+                    android:text="@string/details"
                     android:textColor="#FFDE00"
                     android:gravity="center"
                     android:textSize="12sp"

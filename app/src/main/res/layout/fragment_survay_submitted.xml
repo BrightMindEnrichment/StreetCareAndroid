@@ -10,108 +10,101 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="vertical">
-
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_margin="10dp"
-            app:cardCornerRadius="5dp"
-            app:cardMaxElevation="5dp"
-            app:cardUseCompatPadding="true"
-            app:strokeColor="@color/gray700"
-            app:strokeWidth="1.2dp">
+            android:padding="16dp"
+            android:orientation="vertical">
 
-
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="@dimen/margin_16dp"
-                android:orientation="vertical"
-                tools:context=".ui.visit.visit_forms.SurveySubmittedFragment">
+                android:layout_marginTop="10dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="5dp"
+                app:cardMaxElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:strokeColor="@color/gray700"
+                app:strokeWidth="1.2dp">
 
 
-                <TextView
-                    android:id="@+id/thank_you_message"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_margin="@dimen/margin_16dp"
-                    android:gravity="center_horizontal"
-                    android:letterSpacing="0.03"
-                    android:lineSpacingMultiplier="1.2"
-                    android:text="@string/completed_with_exclamation"
-                    android:textColor="@color/gray900"
-                    android:textFontWeight="700"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:fontFamily="Poppins" />
+                    android:orientation="vertical"
+                    tools:context=".ui.visit.interaction_logs.InteractionLogFormSubmittedFragment">
 
-                <Button
-                    android:id="@+id/btn_another_visit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/margin_10dp"
-                    android:text="@string/another_visit"
-                    android:textAllCaps="false"
-                    android:textColor="@color/accent1"
-                    android:textSize="14sp" />
 
-                <Button
-                    android:id="@+id/btn_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="4sp"
-                    android:text="@string/Share"
-                    android:textAllCaps="false"
-                    android:textColor="@color/accent1"
-                    android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/thank_you_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_16dp"
+                        android:gravity="center_horizontal"
+                        android:letterSpacing="0.03"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="@string/completed_with_exclamation"
+                        android:textColor="@color/gray900"
+                        android:textFontWeight="700"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:fontFamily="Poppins" />
 
-                <Button
-                    android:id="@+id/btn_return_home"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="4sp"
-                    android:text="@string/return_home"
-                    android:textAllCaps="false"
-                    android:textColor="@color/accent1"
-                    android:textSize="14sp" />
+                    <!-- Button: Add Another Interaction -->
+                    <Button
+                        android:id="@+id/btn_another_visit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/margin_10dp"
+                        android:text="@string/another_visit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/accent1"
+                        android:textSize="14sp"
+                        app:cornerRadius="35dp"/>
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    <!-- Button: Back to Interaction Log -->
+                    <Button
+                        android:id="@+id/btn_return_home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="4sp"
+                        android:text="@string/return_home"
+                        android:textAllCaps="false"
+                        android:textColor="@color/accent1"
+                        android:textSize="14sp"
+                        app:cornerRadius="35dp"/>
 
-        <ProgressBar
-            android:id="@+id/simpleProgressBar"
-            android:layout_width="300dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="2dp"
-            android:max="100"
-            android:layout_gravity="center"
-            android:progressDrawable="@drawable/custom_progressbar"
-            android:progress="100"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
-        <TextView
-            android:id="@+id/txt_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:layout_marginBottom="@dimen/margin_16dp"
-            android:paddingBottom="@dimen/padding_24dp"
-            android:layout_marginTop="2sp"
-            android:gravity="center"
-            android:text="@string/completed"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            app:fontFamily="Poppins"/>
-    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <ProgressBar
+                android:id="@+id/simpleProgressBar"
+                android:layout_width="300dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="2dp"
+                android:max="100"
+                android:layout_gravity="center"
+                android:progressDrawable="@drawable/custom_progressbar"
+                android:progress="100"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            <TextView
+                android:id="@+id/txt_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:layout_marginBottom="@dimen/margin_16dp"
+                android:paddingBottom="@dimen/padding_24dp"
+                android:layout_marginTop="2sp"
+                android:gravity="center"
+                android:text="@string/completed"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:fontFamily="Poppins"/>
+        </LinearLayout>
     </RelativeLayout>
 </ScrollView>

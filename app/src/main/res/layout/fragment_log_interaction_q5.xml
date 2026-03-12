@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize"
+    android:background="@android:color/white">
+
+    <ScrollView
+        android:id="@+id/scroll_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/root_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/visit_log_inside"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:includeFontPadding="false"
+                app:fontFamily="@font/poppins_bold_new" />
+
+            <org.brightmindenrichment.street_care.ui.widget.StepProgressView
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
+
+            <!-- Card Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true"
+                app:strokeColor="@color/gray700"
+                app:strokeWidth="1.2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <!-- Question header -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_question"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Question 5/7"
+                            android:textSize="14sp"
+                            android:textColor="#424242"
+                            app:fontFamily="@font/poppins_regular" />
+
+                        <TextView
+                            android:id="@+id/btn_skip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:background="@drawable/rounded_btn"
+                            android:text="Skip"
+                            android:textColor="@color/black"
+                            android:gravity="center"
+                            android:textSize="13sp"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="6dp"
+                            android:textAllCaps="false"
+                            app:fontFamily="@font/poppins_bold_new" />
+                    </RelativeLayout>
+
+                    <!-- Divider -->
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="0.7dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:dividerColor="@color/gray700"/>
+
+                    <!-- Section 1: Number of people helped -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="Number of people helped"
+                        android:textSize="22sp"
+                        app:fontFamily="@font/poppins_bold_new"
+                        android:textColor="@color/black"
+                        android:gravity="center" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp">
+
+                        <FrameLayout
+                            android:id="@+id/btn_decrease_helped"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp">
+
+                            <View
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/circle_button_bg"/>
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_minus"
+                                android:tint="#F4D03F"
+                                android:contentDescription="Decrease count"
+                                tools:ignore="UseAppTint" />
+                        </FrameLayout>
+
+                        <EditText
+                            android:id="@+id/et_count_helped"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:padding="12dp"
+                            android:text="1"
+                            android:textSize="26sp"
+                            android:textStyle="bold"
+                            app:fontFamily="Poppins"
+                            android:textColor="#000000"
+                            android:inputType="number"
+                            android:gravity="center"
+                            android:minWidth="48dp"
+                            android:selectAllOnFocus="true"
+                            android:background="@drawable/textfield_bg" />
+
+                        <FrameLayout
+                            android:id="@+id/btn_increase_helped"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp">
+
+                            <View
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/circle_button_bg"/>
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_plus"
+                                android:tint="#F4D03F"
+                                android:contentDescription="Increase count"
+                                tools:ignore="UseAppTint" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <!-- Section 2: How many people joined you -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        android:text="How many people have joined you?"
+                        android:textSize="24sp"
+                        app:fontFamily="@font/poppins_bold_new"
+                        android:textColor="@color/black"
+                        android:gravity="center" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp">
+
+                        <FrameLayout
+                            android:id="@+id/btn_decrease_joined"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp">
+
+                            <View
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/circle_button_bg"/>
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_minus"
+                                android:tint="#F4D03F"
+                                android:contentDescription="Decrease count"
+                                tools:ignore="UseAppTint" />
+                        </FrameLayout>
+
+                        <EditText
+                            android:id="@+id/et_count_joined"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:padding="12dp"
+                            android:text="0"
+                            android:textSize="26sp"
+                            android:textStyle="bold"
+                            app:fontFamily="Poppins"
+                            android:textColor="#000000"
+                            android:inputType="number"
+                            android:gravity="center"
+                            android:minWidth="48dp"
+                            android:selectAllOnFocus="true"
+                            android:background="@drawable/textfield_bg" />
+
+                        <FrameLayout
+                            android:id="@+id/btn_increase_joined"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp">
+
+                            <View
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/circle_button_bg"/>
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_plus"
+                                android:tint="#F4D03F"
+                                android:contentDescription="Increase count"
+                                tools:ignore="UseAppTint" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <!-- Navigation buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="24dp">
+
+                        <TextView
+                            android:id="@+id/btn_previous"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Previous"
+                            android:textColor="@color/dark_green"
+                            android:background="@drawable/button_previous"
+                            android:textStyle="bold"
+                            android:paddingVertical="6dp"
+                            android:paddingHorizontal="18dp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/btn_next"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Next"
+                            android:textColor="@color/accent1"
+                            android:background="@drawable/button_next"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="22dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

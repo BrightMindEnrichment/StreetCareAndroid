@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -28,6 +29,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,7 +39,12 @@ import com.google.firebase.firestore.Query
 //import com.google.firebase.firestore.ktx.firestore
 //import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
@@ -53,6 +60,7 @@ import org.brightmindenrichment.street_care.notification.NotificationWorker
 import org.brightmindenrichment.street_care.ui.community.model.DatabaseEvent
 import org.brightmindenrichment.street_care.ui.user.UserSingleton
 import org.brightmindenrichment.street_care.ui.user.UserRepository
+import org.brightmindenrichment.street_care.ui.visit.InteractionLogDialog
 import org.brightmindenrichment.street_care.util.Constants.NOTIFICATION_WORKER
 import org.brightmindenrichment.street_care.util.DataStoreManager
 import org.brightmindenrichment.street_care.util.Extensions
@@ -209,66 +217,148 @@ class MainActivity : AppCompatActivity() {
     private fun initUI() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setSupportActionBar(binding.appBarMain.toolbar)
-        //val navView: NavigationView = binding.navView
+
         val navController = findNavController(R.id.nav_host_fragment_content_main)
 
-        bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNavView = findViewById(R.id.bottomNav)
         bottomNavView.itemIconTintList = null
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.loginRedirectFragment, R.id.nav_community, R.id.nav_user
+                R.id.nav_home,
+                R.id.nav_visit,
+                R.id.loginVisitLogFragment,
+                R.id.loginRedirectFragment,
+                R.id.nav_community,
+                R.id.nav_profile
             )
         )
 
-
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-      //  bottomNavView.setupWithNavController(navController)
+        // Let Navigation handle bottom tabs
+        bottomNavView.setupWithNavController(navController)
+
+        val interactionLogDestinations = setOf(
+            R.id.interactionQ1Fragment,
+            R.id.interactionQ2Fragment,
+            R.id.interactionQ3Fragment,
+            R.id.interactionQ4Fragment,
+            R.id.interactionQ5Fragment,
+            R.id.interactionQ6Fragment,
+            R.id.interactionQ7Fragment,
+            R.id.individualInteractionQ1,
+            R.id.individualInteractionQ2,
+            R.id.individualInteractionQ3,
+            R.id.individualInteractionQ4,
+            R.id.individualInteractionFragment,
+            R.id.consentFragment
+        )
+
         bottomNavView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    navController.navigate(R.id.nav_home)
-                    true
-                }
+            val currentDestId = navController.currentDestination?.id
+            if (currentDestId in interactionLogDestinations) {
 
-                R.id.loginRedirectFragment -> {
-                    if (FirebaseAuth.getInstance().currentUser != null) {
-                        navController.navigate(R.id.nav_visit)
-                    } else {
-                        navController.navigate(R.id.loginVisitLogFragment)
+                fun navigateToItem() {
+                    // Pop the IL back stack back to nav_visit (where IL was launched from),
+                    // then navigate to the target tab using standard NavigationUI behaviour.
+                    navController.popBackStack(R.id.nav_visit, false)
+                    if (item.itemId == R.id.loginRedirectFragment) {
+                        val opts = NavOptions.Builder()
+                            .setLaunchSingleTop(true)
+                            .setRestoreState(true)
+                            .setPopUpTo(navController.graph.startDestinationId, false, true)
+                            .build()
+                        if (FirebaseAuth.getInstance().currentUser != null) {
+                            navController.navigate(R.id.nav_visit, null, opts)
+                        } else {
+                            navController.navigate(R.id.loginVisitLogFragment, null, opts)
+                        }
+                    } else if (item.itemId != R.id.nav_visit) {
+                        NavigationUI.onNavDestinationSelected(item, navController)
                     }
-                    true
+                    // if item is nav_visit, popBackStack already landed us there
                 }
 
-                R.id.nav_community -> {
-                    navController.navigate(R.id.nav_community)
-                    true
+                fun clearAndNavigate() {
+                    ViewModelProvider(this)[InteractionLogViewModel::class.java].resetInteractionLog {
+                        ViewModelProvider(this)[IndividualInteractionViewModel::class.java].reset()
+                        navigateToItem()
+                    }
                 }
 
-                R.id.profile -> {
-                    navController.navigate(R.id.profile)
-                    true
+                if (FeatureFlagManager.isEnabled(FeatureFlag.CLEAR_FORM_ON_WORKFLOW_EXIT)) {
+                    // Case 2: simple 2-button dialog
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Discard changes?")
+                        .setMessage("Your progress will be lost if you leave now.")
+                        .setPositiveButton("Discard") { _, _ -> clearAndNavigate() }
+                        .setNegativeButton("Keep editing", null)
+                        .show()
+                } else {
+                    // Case 1: 2-button dialog — state can be preserved
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Leave form?")
+                        .setMessage("Save your progress and continue later, or keep editing?")
+                        .setPositiveButton("Save & Exit") { _, _ ->
+                            ViewModelProvider(this)[InteractionLogViewModel::class.java].saveDraft {
+                                navigateToItem()
+                            }
+                        }
+                        .setNegativeButton("Keep editing", null)
+                        .show()
                 }
 
-                else -> false
+                false
+            } else if (item.itemId == R.id.loginRedirectFragment) {
+                val visitNavOptions = NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .setPopUpTo(navController.graph.startDestinationId, false, true)
+                    .build()
+                if (FirebaseAuth.getInstance().currentUser != null) {
+                    navController.navigate(R.id.nav_visit, null, visitNavOptions)
+                } else {
+                    navController.navigate(R.id.loginVisitLogFragment, null, visitNavOptions)
+                }
+                true
+            } else {
+                NavigationUI.onNavDestinationSelected(item, navController)
+                true
             }
-
         }
 
 
-
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.nav_home,R.id.loginVisitLogFragment,R.id.loginRedirectFragment, R.id.nav_visit, R.id.nav_community, R.id.nav_profile -> {
-                    bottomNavView.visibility = View.VISIBLE
-                }
-                else -> {
-                    bottomNavView.visibility = View.GONE
-                }
-            }
+            bottomNavView.visibility =
+                if (destination.id in setOf(
+                    R.id.nav_home,
+                    R.id.loginVisitLogFragment,
+                    R.id.loginRedirectFragment,
+                    R.id.nav_visit,
+                    R.id.nav_community,
+                    R.id.nav_profile,
+                    // IL form screens
+                    R.id.interactionQ1Fragment,
+                    R.id.interactionQ2Fragment,
+                    R.id.interactionQ3Fragment,
+                    R.id.interactionQ4Fragment,
+                    R.id.interactionQ5Fragment,
+                    R.id.interactionQ6Fragment,
+                    R.id.interactionQ7Fragment,
+                    // II sub-form screens
+                    R.id.individualInteractionQ1,
+                    R.id.individualInteractionQ2,
+                    R.id.individualInteractionQ3,
+                    R.id.individualInteractionQ4,
+                    R.id.individualInteractionFragment,
+                    // tail screens
+                    R.id.consentFragment,
+                    R.id.surveySubmittedFragment,
+                )
+            ) { View.VISIBLE } else { View.GONE }
         }
     }
 
