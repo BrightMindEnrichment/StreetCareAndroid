@@ -66,13 +66,20 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
         submit.setOnClickListener {
             if (!cb.isChecked) return@setOnClickListener
 
-            // Pristine form guard
-            val log = ilViewModel.interactionLog.value
-            if (log?.isPristine == true) {
+            // Pristine form guard - check if user has modified any form fields
+            if (ilViewModel.isPristine) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(R.string.il_pristine_dialog_title)
                     .setMessage(R.string.il_pristine_dialog_message)
                     .setPositiveButton(R.string.il_pristine_dialog_go_back) { dialog, _ -> dialog.dismiss() }
+                    .setNegativeButton(R.string.il_pristine_dialog_quit) { _, _ ->
+                        ilViewModel.resetInteractionLog {
+                            if (isAdded) {
+                                iiViewModel.reset()
+                                findNavController().navigate(R.id.nav_home)
+                            }
+                        }
+                    }
                     .show()
                 return@setOnClickListener
             }

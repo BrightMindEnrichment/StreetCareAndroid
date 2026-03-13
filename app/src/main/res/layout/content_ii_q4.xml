@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="0dp">
+
+    <TextView
+        android:id="@+id/tvQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/question_4"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        app:fontFamily="@font/poppins_bold_new"/>
+
+    <!-- DATE + TIME ROW -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- DATE -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/datePickerCard"
+            android:layout_width="0dp"
+            android:layout_height="47dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/black">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:id="@+id/ivDate"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/baseline_calendar_month_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/default_date"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toEndOf="@id/ivDate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- TIME -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/timePickerCard"
+            android:layout_width="0dp"
+            android:layout_height="47dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/black">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:id="@+id/ivTime"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/baseline_access_time_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/default_time"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/ivTime"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Any additional details"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="10dp"
+        app:fontFamily="@font/poppins_bold_new"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxCornerRadiusTopStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxStrokeWidth="1dp"
+        app:boxStrokeColor="@color/gray700">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="80dp"
+            android:gravity="top|start"
+            android:inputType="textMultiLine"
+            android:textSize="14sp"
+            android:includeFontPadding="false"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

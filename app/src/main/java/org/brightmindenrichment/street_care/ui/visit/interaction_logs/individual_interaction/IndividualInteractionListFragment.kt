@@ -2,6 +2,7 @@ package org.brightmindenrichment.street_care.ui.visit.interaction_logs.individua
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -67,10 +68,13 @@ class IndividualInteractionListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                // Back button navigates to Q7 (consent page)
-                findNavController().navigate(
-                    R.id.action_individualInteractionFragment_to_consentPage
-                )
+                // Back button pops back to Q7
+                Log.d("IIListNav", "Back pressed from list, current dest=${findNavController().currentDestination?.id}, backStackSize=${findNavController().backQueue.size}")
+                findNavController().backQueue.forEach {
+                    Log.d("IIListNav", "  BackStack entry: ${it.destination.id} - ${it.destination.label}")
+                }
+                val result = findNavController().popBackStack()
+                Log.d("IIListNav", "popBackStack result: $result, new dest=${findNavController().currentDestination?.id}")
                 true
             }
             else -> super.onOptionsItemSelected(item)

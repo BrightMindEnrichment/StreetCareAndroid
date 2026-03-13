@@ -25,16 +25,6 @@
         tools:targetApi="28">
 
         <activity
-            android:name=".ui.visit.visit_forms.InteractionLogActivityq4"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-
-        </activity>
-        <activity
-            android:name=".ui.visit.visit_forms.InteractionLogActivityq3"
-            android:exported="true"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustPan" />
-        <activity
             android:name=".MainActivity"
             android:configChanges="locale|layoutDirection"
             android:exported="false"

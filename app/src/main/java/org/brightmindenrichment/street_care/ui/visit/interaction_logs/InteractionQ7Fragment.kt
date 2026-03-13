@@ -1,141 +1,100 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ7Binding
 import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 import org.brightmindenrichment.street_care.ui.widget.StepState
-import org.brightmindenrichment.street_care.ui.widget.StepValidator
-import org.brightmindenrichment.street_care.util.Constants
+import androidx.fragment.app.activityViewModels
 
-class InteractionQ7Fragment : Fragment(), StepValidator {
+class InteractionQ7Fragment : BaseILQuestionFragment() {
 
-    private var _binding: FragmentLogInteractionQ7Binding? = null
-    private val binding get() = _binding!!
-
-    override val viewModel: InteractionLogViewModel by activityViewModels()
     private val iiViewModel: IndividualInteractionViewModel by activityViewModels()
 
     private var selectedAnswer: Boolean? = null
     private var wasSkipped = false
     private var isTouched = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLogInteractionQ7Binding.inflate(inflater, container, false)
-        return binding.root
+    // Content view references
+    private lateinit var txtYes: TextView
+    private lateinit var txtNo: TextView
+
+    override val stepNumber = 7
+
+    override fun showSkipButton() = false
+    override fun showNextButton() = false
+    override fun showYesNoButtons() = true
+    override fun showPreviousButton() = true
+
+    override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.content_il_q7, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // -----------------------
-        // 1. Show Bottom Navigation
-        // -----------------------
+    override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {
+        // Show Bottom Navigation
         requireActivity()
             .findViewById<BottomNavigationView>(R.id.bottomNav)
             ?.visibility = View.VISIBLE
 
-        // -----------------------
-        // 4. Restore Previous Value
-        // -----------------------
+        // Restore previous value
         val current = viewModel.interactionLog.value ?: InteractionLog()
         selectedAnswer = current.wantsToProvideDetails
 
         fun updateUI() {
             if (selectedAnswer == true) {
-                binding.txtYes.alpha = 1f
-                binding.txtNo.alpha = 0.5f
+                binding.btnYes.alpha = 1f
+                binding.btnNo.alpha = 0.5f
             } else if (selectedAnswer == false) {
-                binding.txtYes.alpha = 0.5f
-                binding.txtNo.alpha = 1f
+                binding.btnYes.alpha = 0.5f
+                binding.btnNo.alpha = 1f
             } else {
-                binding.txtYes.alpha = 1f
-                binding.txtNo.alpha = 1f
+                binding.btnYes.alpha = 1f
+                binding.btnNo.alpha = 1f
             }
         }
 
-        // -----------------------
-        // 5. Button Logic
-        // -----------------------
-        binding.txtYes.setOnClickListener {
+        // Wire yes/no buttons
+        binding.btnYes.setOnClickListener {
             selectedAnswer = true
             updateUI()
-            goToNext()
+            onYesSelected()
         }
 
-        binding.txtNo.setOnClickListener {
+        binding.btnNo.setOnClickListener {
             selectedAnswer = false
             updateUI()
-            goToNext()
-        }
-
-        binding.txtSkip.setOnClickListener {
-            wasSkipped = true
-            goToNext()
-        }
-
-        binding.txtPrevious5.setOnClickListener {
-            viewModel.updateQ7Answer(selectedAnswer)
-            viewModel.saveDraft {
-                findNavController().popBackStack()
-            }
+            onNoSelected()
         }
 
         updateUI()
+    }
 
-        // Set up progress bar with current step and click handler
-        binding.progressBar.setCurrentStep(7)
-        binding.progressBar.onDotClicked = { step ->
-            saveCurrentState()
-            viewModel.saveDraft {
-                findNavController().popBackStack(Constants.INTERACTION_LOG_DEST_IDS[step - 1], false)
+    private fun onYesSelected() {
+        viewModel.updateQ7Answer(selectedAnswer)
+        viewModel.saveDraft {
+            val hasExisting = !iiViewModel.committedInteractions.value.isNullOrEmpty()
+            Log.d("Q7Navigation", "onYesSelected: hasExisting=$hasExisting, backStackId=${findNavController().currentDestination?.id}")
+            if (hasExisting) {
+                Log.d("Q7Navigation", "Navigating to IndividualInteractionList")
+                findNavController().navigate(R.id.action_q7_yes_to_individualInteractionList)
+            } else {
+                Log.d("Q7Navigation", "Navigating to IndividualInteractionQ1 (new)")
+                findNavController().navigate(R.id.action_q7_yes_to_individualInteraction1)
             }
         }
     }
 
-    // -----------------------
-    // Save + Navigate
-    // -----------------------
-    private fun goToNext() {
-
+    private fun onNoSelected() {
         viewModel.updateQ7Answer(selectedAnswer)
         viewModel.saveDraft {
-            when (selectedAnswer) {
-                true -> {
-                    val hasExisting = !iiViewModel.committedInteractions.value.isNullOrEmpty()
-                    if (hasExisting) {
-                        findNavController().navigate(R.id.action_q7_yes_to_individualInteractionList)
-                    } else {
-                        findNavController().navigate(R.id.action_q7_yes_to_individualInteraction1)
-                    }
-                }
-                false -> {
-                    findNavController().navigate(
-                        R.id.action_q7_no_to_consentPage
-                    )
-                }
-                null -> {
-                    // If skipped, decide default behavior
-                    findNavController().navigate(
-                        R.id.action_q7_no_to_consentPage
-                    )
-                }
-            }
+            findNavController().navigate(R.id.action_q7_no_to_consentPage)
         }
     }
 
@@ -155,11 +114,6 @@ class InteractionQ7Fragment : Fragment(), StepValidator {
 
     private fun isCurrentStepValid(): Boolean {
         return selectedAnswer != null
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

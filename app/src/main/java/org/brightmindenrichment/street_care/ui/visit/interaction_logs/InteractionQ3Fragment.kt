@@ -11,11 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.LocationServices
@@ -25,23 +24,30 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import org.brightmindenrichment.street_care.BuildConfig
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ3Binding
 import org.brightmindenrichment.street_care.ui.widget.StepState
-import org.brightmindenrichment.street_care.ui.widget.StepValidator
-import org.brightmindenrichment.street_care.util.Constants
 import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
 import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
 import org.brightmindenrichment.street_care.util.isInvalidZip
 import org.brightmindenrichment.street_care.util.isValidZip
 
-class InteractionQ3Fragment : Fragment(), StepValidator {
+class InteractionQ3Fragment : BaseILQuestionFragment() {
 
-    private var _binding: FragmentLogInteractionQ3Binding? = null
-    private val binding get() = _binding!!
-
-    override val viewModel: InteractionLogViewModel by activityViewModels()
     private var wasSkipped = false
     private var isTouched = false
+
+    // Content view references
+    private lateinit var inputAddress: EditText
+    private lateinit var inputCity: EditText
+    private lateinit var inputState: EditText
+    private lateinit var inputZip: EditText
+    private lateinit var inputDescription: EditText
+    private lateinit var iconMic: ImageView
+
+    override val stepNumber = 3
+
+    override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.content_il_q3, container, false)
+    }
 
     // ---- Places Autocomplete launcher ----
     private val placesLauncher = registerForActivityResult(
@@ -68,10 +74,11 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
                         }
                     }
 
-                    binding.inputAddress.setText(street)
-                    binding.inputCity.setText(city.orEmpty())
-                    binding.inputState.setText(state.orEmpty())
-                    binding.inputZip.setText(zipCode.orEmpty())
+                    inputAddress.setText(street)
+                    inputCity.setText(city.orEmpty())
+                    inputState.setText(state.orEmpty())
+                    inputZip.setText(zipCode.orEmpty())
+                    markFormDirty()
                 }
             }
             AutocompleteActivity.RESULT_ERROR -> {
@@ -90,7 +97,8 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
                     ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     ?.firstOrNull()
                 if (!spokenText.isNullOrBlank()) {
-                    binding.inputAddress.setText(spokenText)
+                    inputAddress.setText(spokenText)
+                    markFormDirty()
                     launchPlacesAutocomplete(placesLauncher, requireContext(), spokenText)
                 }
             }
@@ -103,119 +111,93 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLogInteractionQ3Binding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {
+        // Get view references
+        inputAddress = contentView.findViewById(R.id.input_address)
+        inputCity = contentView.findViewById(R.id.input_city)
+        inputState = contentView.findViewById(R.id.input_state)
+        inputZip = contentView.findViewById(R.id.input_zip)
+        inputDescription = contentView.findViewById(R.id.input_description)
+        iconMic = contentView.findViewById(R.id.icon_mic)
 
         val log = viewModel.interactionLog.value
-        binding.inputAddress.setText(log?.addr1.orEmpty())
-        binding.inputCity.setText(log?.city.orEmpty())
-        binding.inputState.setText(log?.state.orEmpty())
-        binding.inputZip.setText(log?.zipcode.orEmpty())
+        inputAddress.setText(log?.addr1.orEmpty())
+        inputCity.setText(log?.city.orEmpty())
+        inputState.setText(log?.state.orEmpty())
+        inputZip.setText(log?.zipcode.orEmpty())
 
         if (log?.addr1.isNullOrEmpty()) {
             tryPrefillFromLocation()
         }
 
-        binding.inputAddress.setOnClickListener {
-            if (binding.inputAddress.text.isNullOrBlank()) launchPlacesAutocomplete(placesLauncher, requireContext())
+        inputAddress.setOnClickListener {
+            if (inputAddress.text.isNullOrBlank()) launchPlacesAutocomplete(placesLauncher, requireContext())
         }
 
-        binding.inputAddress.setOnEditorActionListener { _, _, _ ->
-            val query = binding.inputAddress.text.toString().trim()
+        inputAddress.setOnEditorActionListener { _, _, _ ->
+            val query = inputAddress.text.toString().trim()
             launchPlacesAutocomplete(placesLauncher, requireContext(), query)
             true
         }
 
         // ZIP focus-loss and dynamic validation
-        binding.inputZip.setOnFocusChangeListener { _, hasFocus ->
-            val text = binding.inputZip.text.toString()
+        inputZip.setOnFocusChangeListener { _, hasFocus ->
+            val text = inputZip.text.toString()
             if (!hasFocus && text.isInvalidZip())
-                binding.inputZip.showFormatError("Enter a valid 5-digit ZIP (e.g. 90210)")
+                inputZip.showFormatError("Enter a valid 5-digit ZIP (e.g. 90210)")
             else if (hasFocus)
-                binding.inputZip.clearFormatError()
+                inputZip.clearFormatError()
         }
 
-        binding.inputZip.doAfterTextChanged { s ->
-            if (s.toString().isValidZip()) binding.inputZip.clearFormatError()
+        inputZip.doAfterTextChanged { s ->
+            if (s.toString().isValidZip()) inputZip.clearFormatError()
+            markFormDirty()
         }
+
+        // Mark form dirty on any address field change
+        inputAddress.doAfterTextChanged { markFormDirty() }
+        inputCity.doAfterTextChanged { markFormDirty() }
+        inputState.doAfterTextChanged { markFormDirty() }
+        inputDescription.doAfterTextChanged { markFormDirty() }
 
         setupClickListeners()
-
-        // Set up progress bar with current step and click handler
-        binding.progressBar.setCurrentStep(3)
-        binding.progressBar.onDotClicked = { step ->
-            saveCurrentState()
-            viewModel.saveDraft {
-                findNavController().popBackStack(Constants.INTERACTION_LOG_DEST_IDS[step - 1], false)
-            }
-        }
     }
 
     private fun setupClickListeners() {
-        binding.iconMic.setOnClickListener { startVoiceInput() }
+        iconMic.setOnClickListener { startVoiceInput() }
+    }
 
-        binding.btnNext.setOnClickListener {
-            val address = binding.inputAddress.text.toString().trim()
-            val city = binding.inputCity.text.toString().trim()
-            val state = binding.inputState.text.toString().trim()
-            val zip = binding.inputZip.text.toString().trim()
+    override fun onNextNavigate() {
+        val address = inputAddress.text.toString().trim()
+        val city = inputCity.text.toString().trim()
+        val state = inputState.text.toString().trim()
+        val zip = inputZip.text.toString().trim()
 
-            // Next-as-Skip: if all location fields are empty, delegate to skip logic
-            if (address.isEmpty() && city.isEmpty() && state.isEmpty() && zip.isEmpty()) {
-                performSkip()
-                return@setOnClickListener
-            }
-
-            // ZIP format validation (only if non-empty)
-            if (zip.isInvalidZip()) {
-                binding.inputZip.showFormatError("Enter a valid 5-digit ZIP (e.g. 90210)")
-                binding.inputZip.requestFocus()
-                return@setOnClickListener
-            }
-
-            viewModel.updateAddress(address)
-            viewModel.updateCity(city)
-            viewModel.updateState(state)
-            viewModel.updateZipcode(zip)
-
-            // Mark Q3 as user-edited (they entered location data)
-            viewModel.updateQ3WasUserEdited(true)
-
-            Log.d("Q3_DEBUG", "After Q3 Save: ${viewModel.interactionLog.value}")
-            viewModel.saveDraft {
-                findNavController().navigate(R.id.action_q3_to_q4)
-            }
+        // Next-as-Skip: if all location fields are empty, delegate to skip logic
+        if (address.isEmpty() && city.isEmpty() && state.isEmpty() && zip.isEmpty()) {
+            onSkipNavigate()
+            return
         }
 
-        binding.btnPrevious.setOnClickListener {
-            val address = binding.inputAddress.text.toString().trim()
-            val city = binding.inputCity.text.toString().trim()
-            val state = binding.inputState.text.toString().trim()
-            val zip = binding.inputZip.text.toString().trim()
-            viewModel.updateAddress(address)
-            viewModel.updateCity(city)
-            viewModel.updateState(state)
-            viewModel.updateZipcode(zip)
-            viewModel.saveDraft {
-                findNavController().popBackStack()
-            }
+        // ZIP format validation (only if non-empty)
+        if (zip.isInvalidZip()) {
+            inputZip.showFormatError("Enter a valid 5-digit ZIP (e.g. 90210)")
+            inputZip.requestFocus()
+            return
         }
 
-        binding.skipBtn.setOnClickListener {
-            performSkip()
+        viewModel.updateAddress(address)
+        viewModel.updateCity(city)
+        viewModel.updateState(state)
+        viewModel.updateZipcode(zip)
+
+        Log.d("Q3_DEBUG", "After Q3 Save: ${viewModel.interactionLog.value}")
+        viewModel.saveDraft {
+            findNavController().navigate(R.id.action_q3_to_q4)
         }
     }
 
-    private fun performSkip() {
+    override fun onSkipNavigate() {
         wasSkipped = true
         saveCurrentState()
         viewModel.saveDraft {
@@ -223,12 +205,13 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
         }
     }
 
+
     override fun saveCurrentState() {
         isTouched = true
-        val address = binding.inputAddress.text.toString().trim()
-        val city = binding.inputCity.text.toString().trim()
-        val state = binding.inputState.text.toString().trim()
-        val zip = binding.inputZip.text.toString().trim()
+        val address = inputAddress.text.toString().trim()
+        val city = inputCity.text.toString().trim()
+        val state = inputState.text.toString().trim()
+        val zip = inputZip.text.toString().trim()
         viewModel.updateAddress(address)
         viewModel.updateCity(city)
         viewModel.updateState(state)
@@ -245,7 +228,7 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
     }
 
     private fun isCurrentStepValid(): Boolean {
-        return binding.inputAddress.text.isNotEmpty()
+        return inputAddress.text.isNotEmpty()
     }
 
     private fun startVoiceInput() {
@@ -286,19 +269,14 @@ class InteractionQ3Fragment : Fragment(), StepValidator {
                     location.latitude, location.longitude,
                     requireContext(),
                     viewLifecycleOwner.lifecycleScope,
-                    { _binding != null }
+                    { ::inputAddress.isInitialized }
                 ) { street, city, state, zip ->
-                    binding.inputAddress.setText(street)
-                    binding.inputCity.setText(city)
-                    binding.inputState.setText(state)
-                    binding.inputZip.setText(zip)
+                    inputAddress.setText(street)
+                    inputCity.setText(city)
+                    inputState.setText(state)
+                    inputZip.setText(zip)
                 }
             }
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 
 }

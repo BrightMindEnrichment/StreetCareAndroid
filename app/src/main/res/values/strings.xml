@@ -310,7 +310,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="facebook_app_id">683179469569215</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb683179469569215</string>
     <string name="facebook_client_token">c78ca933cb65b513c29cd9f76e596d47</string>
-    <string name="save">Save Changes</string>
+    <string name="save">Save</string>
     <string name="save_plain">Save</string>
     <string name="cancel">Cancel</string>
     <string name="editUserName">Enter User Name</string>
@@ -480,14 +480,14 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="log_saved_successfully">Log saved successfully</string>
-    <string name="additional_6_7">Question 6/7</string>
     <string name="additional_1_7">Question 1/7</string>
-    <string name="additional_7_7">Question 7/7</string>
-    <string name="additional_8_7">Additional 8/8</string>
     <string name="additional_2_7">Question 2/7</string>
     <string name="additional_3_7">Question 3/7</string>
     <string name="additional_4_7">Question 4/7</string>
     <string name="additional_5_7">Question 5/7</string>
+    <string name="additional_6_7">Question 6/7</string>
+    <string name="additional_7_7">Question 7/7</string>
+    <string name="additional_8_7">Additional 8/8</string>
     <string name="registered">Registered</string>
     <string name="location">Location</string>
     <string name="time">Time</string>
@@ -730,14 +730,12 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="items_in_care_package_examples">Blankets, Socks, ...</string>
     <string name="previous_btn_txt">Previous</string>
     <string name="next_btn_txt">Next</string>
-    <string name="what_items_were_included_in_the_care_package">What items were included\nin the care package?</string>
+    <string name="what_items_were_included_in_the_care_package">What were the care items included?</string>
     <string name="increase_count_btn_txt">Increase count</string>
     <string name="decrease_count_btn_txt">Decrease count</string>
     <string name="number_of_care_packages_given_out">Number of care items given out</string>
     <string name="skip_btn_txt">Skip</string>
-    <string name="interaction_log_question_6_7">Question 6/7</string>
-    <string name="interaction_log_question_of_7">Question {0}/7</string>
-    <string name="question_x_of_y">Question {0}/{1}</string>
+    <string name="question_x_of_y">Question %1$d/%2$d</string>
 
     <!-- Dialog Strings - Interaction Log -->
     <string name="delete_interaction_title">Delete Interaction</string>
@@ -760,5 +758,19 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="il_pristine_dialog_title">Nothing to submit</string>
     <string name="il_pristine_dialog_message">It looks like you haven\'t filled in any details about your interaction. Please go back and add information before submitting.</string>
     <string name="il_pristine_dialog_go_back">Go Back</string>
+    <string name="il_pristine_dialog_quit">Quit</string>
+
+    <!-- Missing Interaction Log Questions -->
+    <string name="interaction_log_question_5">How many people did you help?</string>
+    <string name="interaction_log_question_6">How many care packages did you distribute?</string>
+    <string name="interaction_log_question_7">Would you like to provide details for each person you supported?</string>
+
+    <!-- Counter and Action Labels -->
+    <string name="number_of_people_helped">Number of people helped</string>
+    <string name="how_many_people_joined_you">How many people joined you?</string>
+    <string name="care_packages">Care packages</string>
+    <string name="care_package_contents">Care package contents</string>
+    <string name="increase">Increase</string>
+    <string name="decrease">Decrease</string>
 
 </resources>

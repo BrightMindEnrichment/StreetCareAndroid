@@ -43,6 +43,9 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
     /** Set to true when a draft is pre-loaded before navigating to Q1 so Q1 can skip the resume dialog. */
     var draftPreLoaded = false
 
+    /** Tracks if form is in pristine state (no user modifications). Set to false when user changes data. */
+    var isPristine = true
+
     fun nextInteraction() {
         val cur = _interactionIndex.value ?: 1
         _interactionIndex.value = cur + 1
@@ -55,7 +58,16 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
     fun resetInteractionLog(onCleared: (() -> Unit)? = null) {
         _interactionLog.value = InteractionLog()
         resetInteractions()
+        isPristine = true
         clearDraft(onCleared)
+    }
+
+    /**
+     * Mark the form as modified (not pristine).
+     * Called whenever user changes any input field.
+     */
+    fun markAsDirty() {
+        isPristine = false
     }
 
     // =========================================================
@@ -227,6 +239,11 @@ class InteractionLogViewModel(application: Application) : AndroidViewModel(appli
     // =========================================================
 
     fun saveDraft(onSaved: (() -> Unit)? = null) {
+        // Don't save pristine forms (no user modifications)
+        if (isPristine) {
+            onSaved?.invoke()
+            return
+        }
         viewModelScope.launch {
             val json = InteractionLogDraftSerializer.serialize(_interactionLog.value ?: return@launch)
             dataStoreManager.saveILDraft(json)

@@ -13,8 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.LocationServices
@@ -26,7 +24,6 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import org.brightmindenrichment.street_care.BuildConfig
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionQ1Binding
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 import org.brightmindenrichment.street_care.util.launchPlacesAutocomplete
 import org.brightmindenrichment.street_care.util.reverseGeocodeAndFill
@@ -42,18 +39,34 @@ import org.brightmindenrichment.street_care.util.formatTimeWithTz
 import org.brightmindenrichment.street_care.util.isInvalidZip
 import org.brightmindenrichment.street_care.util.isValidZip
 
-class IndividualInteractionQ1 : Fragment() {
+class IndividualInteractionQ1 : BaseIIQuestionFragment() {
 
-    private var _binding: FragmentIndividualInteractionQ1Binding? = null
-    private val binding get() = _binding!!
+    companion object {
+        private const val TAG = "IIQ1Nav"
+    }
+
+    override val questionNumber = 1
 
     private var selectedDate: LocalDate? = null
     private var selectedTime: LocalTime? = null
 
     private val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
-    private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
-    private val viewModel: IndividualInteractionViewModel by activityViewModels()
+    // Content view references
+    private lateinit var tilFirstName: com.google.android.material.textfield.TextInputLayout
+    private lateinit var etFirstName: com.google.android.material.textfield.TextInputEditText
+    private lateinit var tilLastName: com.google.android.material.textfield.TextInputLayout
+    private lateinit var etLastName: com.google.android.material.textfield.TextInputEditText
+    private lateinit var tilLocation: com.google.android.material.textfield.TextInputLayout
+    private lateinit var etLocation: com.google.android.material.textfield.TextInputEditText
+    private lateinit var tilState: com.google.android.material.textfield.TextInputLayout
+    private lateinit var actState: com.google.android.material.textfield.MaterialAutoCompleteTextView
+    private lateinit var tilZip: com.google.android.material.textfield.TextInputLayout
+    private lateinit var etZip: com.google.android.material.textfield.TextInputEditText
+    private lateinit var datePickerCard: com.google.android.material.card.MaterialCardView
+    private lateinit var timePickerCard: com.google.android.material.card.MaterialCardView
+    private lateinit var tvDate: android.widget.TextView
+    private lateinit var tvTime: android.widget.TextView
 
     /** Get the timezone from the InteractionLogViewModel (set in ILq1). */
     private fun getInteractionTimezone(): ZoneId {
@@ -76,7 +89,6 @@ class IndividualInteractionQ1 : Fragment() {
     ) { result ->
         when (result.resultCode) {
             Activity.RESULT_OK -> {
-                val b = _binding ?: return@registerForActivityResult
                 result.data?.let {
                     val place = Autocomplete.getPlaceFromIntent(it)
                     val street = place.address?.split(',')?.firstOrNull()?.trim().orEmpty()
@@ -101,9 +113,10 @@ class IndividualInteractionQ1 : Fragment() {
                         city
                     ).joinToString(", ")
 
-                    b.etLocation.setText(location)
-                    state?.let { s -> b.actState.setText(s, false) }
-                    zipCode?.let { z -> b.etZip.setText(z) }
+                    etLocation.setText(location)
+                    state?.let { s -> actState.setText(s, false) }
+                    zipCode?.let { z -> etZip.setText(z) }
+                    markFormDirty()
                 }
             }
             AutocompleteActivity.RESULT_ERROR -> {
@@ -121,48 +134,47 @@ class IndividualInteractionQ1 : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentIndividualInteractionQ1Binding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.content_ii_q1, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {
+        val editingIdx = viewModel.editingIndex
+        Log.d(TAG, "onContentViewCreated: editingIndex=$editingIdx, editingHeaderText=${viewModel.editingHeaderText()}, committedCount=${viewModel.committedInteractions.value?.size ?: 0}")
 
-        val editHeader = viewModel.editingHeaderText()
-        if (editHeader != null) {
-            binding.tvHeader.text = editHeader
-        } else {
-            interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
-                binding.tvHeader.text = if (idx <= 1) {
-                    getString(R.string.individual_interaction_title_base)
-                } else {
-                    getString(R.string.individual_interaction_title_numbered, idx)
-                }
-            }
-        }
+        // Initialize view references from content
+        tilFirstName = contentView.findViewById(R.id.tilFirstName)
+        etFirstName = contentView.findViewById(R.id.etFirstName)
+        tilLastName = contentView.findViewById(R.id.tilLastName)
+        etLastName = contentView.findViewById(R.id.etLastName)
+        tilLocation = contentView.findViewById(R.id.tilLocation)
+        etLocation = contentView.findViewById(R.id.etLocation)
+        tilState = contentView.findViewById(R.id.tilState)
+        actState = contentView.findViewById(R.id.actState)
+        tilZip = contentView.findViewById(R.id.tilZip)
+        etZip = contentView.findViewById(R.id.etZip)
+        datePickerCard = contentView.findViewById(R.id.datePickerCard)
+        timePickerCard = contentView.findViewById(R.id.timePickerCard)
+        tvDate = contentView.findViewById(R.id.tvDate)
+        tvTime = contentView.findViewById(R.id.tvTime)
 
         // Observe timezone changes and refresh time display
         interactionLogViewModel.interactionLog.observe(viewLifecycleOwner) { _ ->
             if (selectedTime != null && selectedDate != null) {
-                binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
+                tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
             }
         }
 
         // Restore previously entered values when navigating back
         viewModel.currentInteraction.value?.let { saved ->
-            if (saved.firstName.isNotBlank()) binding.etFirstName.setText(saved.firstName)
-            saved.lastName?.let { binding.etLastName.setText(it) }
-            saved.locationLandmark?.let { binding.etLocation.setText(it) }
-            saved.state?.let { binding.actState.setText(it, false) }
-            saved.zip?.let { binding.etZip.setText(it) }
+            if (saved.firstName.isNotBlank()) etFirstName.setText(saved.firstName)
+            saved.lastName?.let { etLastName.setText(it) }
+            saved.locationLandmark?.let { etLocation.setText(it) }
+            saved.state?.let { actState.setText(it, false) }
+            saved.zip?.let { etZip.setText(it) }
             saved.date?.let {
                 selectedDate = LocalDate.parse(it)
-                binding.tvDate.text = dateFormatter.format(selectedDate)
+                tvDate.text = dateFormatter.format(selectedDate)
             }
             saved.time?.let {
                 try {
@@ -170,14 +182,14 @@ class IndividualInteractionQ1 : Fragment() {
                     val zdt = ZonedDateTime.parse(it)
                     selectedTime = zdt.toLocalTime()
                     if (selectedDate != null) {
-                        binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
+                        tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
                     }
                 } catch (e: Exception) {
                     // Fall back to LocalTime parsing if it's just a time string
                     try {
                         selectedTime = LocalTime.parse(it)
                         if (selectedDate != null) {
-                            binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
+                            tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
                         }
                     } catch (e2: Exception) {
                         // Silently ignore if parsing fails
@@ -188,45 +200,64 @@ class IndividualInteractionQ1 : Fragment() {
 
         try {
             val states = resources.getStringArray(R.array.us_states)
-            binding.actState.setSimpleItems(states)
+            actState.setSimpleItems(states)
         } catch (_: Exception) {
             // ignore if array not present
         }
 
         // ZIP focus-loss and dynamic validation (TIL automatically shows outline red)
-        binding.etZip.setOnFocusChangeListener { _, hasFocus ->
-            val text = binding.etZip.text.toString()
+        etZip.setOnFocusChangeListener { _, hasFocus ->
+            val text = etZip.text.toString()
             if (!hasFocus && text.isInvalidZip())
-                binding.tilZip.error = "Enter a valid 5-digit ZIP (e.g. 90210)"
+                tilZip.error = "Enter a valid 5-digit ZIP (e.g. 90210)"
             else if (hasFocus)
-                binding.tilZip.error = null
+                tilZip.error = null
         }
 
-        binding.etZip.doAfterTextChanged { s ->
-            if (s.toString().isValidZip()) binding.tilZip.error = null
+        etZip.doAfterTextChanged { s ->
+            if (s.toString().isValidZip()) tilZip.error = null
+            markFormDirty()
         }
+
+        // Mark form dirty on any text field change, and clear errors when user types
+        etFirstName.doAfterTextChanged {
+            if (it.toString().isNotBlank()) {
+                tilFirstName.helperText = null
+                tilFirstName.setBoxStrokeColor(ContextCompat.getColor(requireContext(), R.color.gray700))
+            }
+            markFormDirty()
+        }
+        etLastName.doAfterTextChanged { markFormDirty() }
+        etLocation.doAfterTextChanged {
+            if (it.toString().isNotBlank()) {
+                tilLocation.helperText = null
+                tilLocation.setBoxStrokeColor(ContextCompat.getColor(requireContext(), R.color.gray700))
+            }
+            markFormDirty()
+        }
+        actState.doAfterTextChanged { markFormDirty() }
 
         // GPS prefill if location is blank
-        if (binding.etLocation.text.isNullOrBlank()) {
+        if (etLocation.text.isNullOrBlank()) {
             tryPrefillFromLocation()
         }
 
         // Launch Places autocomplete on tap when field is blank
-        binding.etLocation.setOnClickListener {
-            if (binding.etLocation.text.isNullOrBlank()) {
+        etLocation.setOnClickListener {
+            if (etLocation.text.isNullOrBlank()) {
                 launchPlacesAutocomplete(placesLauncher, requireContext())
             }
         }
 
         // Launch Places autocomplete on editor action (e.g. search key)
-        binding.etLocation.setOnEditorActionListener { _, _, _ ->
-            val query = binding.etLocation.text.toString().trim()
+        etLocation.setOnEditorActionListener { _, _, _ ->
+            val query = etLocation.text.toString().trim()
             launchPlacesAutocomplete(placesLauncher, requireContext(), query)
             true
         }
 
         // Date picker
-        binding.datePickerCard.setOnClickListener {
+        datePickerCard.setOnClickListener {
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             val keyboardWasVisible = imm.isActive
 
@@ -254,13 +285,15 @@ class IndividualInteractionQ1 : Fragment() {
                 val pickedDate = millis.toLocalDateFromPicker()
 
                 selectedDate = pickedDate
-                binding.tvDate.error = null
-                binding.tvDate.text = dateFormatter.format(pickedDate)
+                tvDate.error = null
+                tvDate.text = dateFormatter.format(pickedDate)
 
                 // If time is already selected, update its display with new timezone abbrev for this date
                 if (selectedTime != null) {
-                    binding.tvTime.text = formatTimeWithTz(pickedDate, selectedTime!!, getInteractionTimezone())
+                    tvTime.text = formatTimeWithTz(pickedDate, selectedTime!!, getInteractionTimezone())
                 }
+
+                markFormDirty()
 
                 // Restore keyboard state
                 if (!keyboardWasVisible) {
@@ -279,7 +312,7 @@ class IndividualInteractionQ1 : Fragment() {
         }
 
         // Time picker
-        binding.timePickerCard.setOnClickListener {
+        timePickerCard.setOnClickListener {
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             val keyboardWasVisible = imm.isActive
 
@@ -306,16 +339,17 @@ class IndividualInteractionQ1 : Fragment() {
                     val maxFutureDateTime = nowInTz.plusHours(12)
 
                     if (pickedDateTime.isAfter(maxFutureDateTime)) {
-                        binding.tvTime.error = "Cannot select more than 12 hours in the future"
+                        tvTime.error = "Cannot select more than 12 hours in the future"
                         return@addOnPositiveButtonClickListener
                     }
                 }
 
                 selectedTime = pickedTime
-                binding.tvTime.error = null
+                tvTime.error = null
                 if (selectedDate != null) {
-                    binding.tvTime.text = formatTimeWithTz(selectedDate!!, pickedTime, getInteractionTimezone())
+                    tvTime.text = formatTimeWithTz(selectedDate!!, pickedTime, getInteractionTimezone())
                 }
+                markFormDirty()
                 // Restore keyboard state
                 if (!keyboardWasVisible) {
                     imm.hideSoftInputFromWindow(view?.windowToken, 0)
@@ -331,74 +365,101 @@ class IndividualInteractionQ1 : Fragment() {
 
             picker.show(parentFragmentManager, "time_picker_q1")
         }
+    }
 
-        // Previous -> back stack
-        binding.txtPrevious2.setOnClickListener {
-            val first = binding.etFirstName.text?.toString()?.trim().orEmpty()
-            val last  = binding.etLastName.text?.toString()?.trim().orEmpty()
-            val loc   = binding.etLocation.text?.toString()?.trim().orEmpty()
-            val state = binding.actState.text?.toString()?.trim().orEmpty()
-            val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
-            val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
-            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
-            mergeIntoILAndSave(viewModel.editingIndex) {
-                findNavController().popBackStack()
-            }
+    override fun onPreviousClicked() {
+        val first = etFirstName.text?.toString()?.trim().orEmpty()
+        val last  = etLastName.text?.toString()?.trim().orEmpty()
+        val loc   = etLocation.text?.toString()?.trim().orEmpty()
+        val state = actState.text?.toString()?.trim().orEmpty()
+        val zip   = etZip.text?.toString()?.trim().orEmpty()
+        val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+        viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
+
+        // Update header immediately if name is not empty
+        if (first.isNotBlank()) {
+            val lastInitial = last.takeIf { it.isNotBlank() }?.firstOrNull()?.let { " ${it}." }.orEmpty()
+            binding.tvHeader.text = "Interaction with ${first}$lastInitial"
         }
 
-        // Skip -> go to Q2 (no validation)
-        binding.txtSkip.setOnClickListener {
-            val first = binding.etFirstName.text?.toString()?.trim().orEmpty()
-            val last  = binding.etLastName.text?.toString()?.trim().orEmpty()
-            val loc   = binding.etLocation.text?.toString()?.trim().orEmpty()
-            val state = binding.actState.text?.toString()?.trim().orEmpty()
-            val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
-            val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
-            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
-            mergeIntoILAndSave(viewModel.editingIndex) {
-                findNavController().navigate(
-                    R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
-                )
+        mergeIntoILAndSave(viewModel.editingIndex) {
+            findNavController().popBackStack()
+        }
+    }
+
+    override fun onNextClicked() {
+        tvDate.error = null
+        tvTime.error = null
+        tilFirstName.helperText = null
+        tilLocation.helperText = null
+
+        val first = etFirstName.text?.toString()?.trim().orEmpty()
+        val last  = etLastName.text?.toString()?.trim().orEmpty()
+        val loc   = etLocation.text?.toString()?.trim().orEmpty()
+        val state = actState.text?.toString()?.trim().orEmpty()
+        val zip   = etZip.text?.toString()?.trim().orEmpty()
+
+        // If Q3 has selections, require firstName and location (applies to both new and editing)
+        val hasQ3Selections = viewModel.currentInteraction.value?.furtherHelpNeeded?.isNotEmpty() == true
+
+        if (hasQ3Selections) {
+            var isValid = true
+            val redColor = ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark)
+
+            if (first.isEmpty()) {
+                tilFirstName.apply {
+                    helperText = "Required - volunteers need to know who to reach out to"
+                    setHelperTextColor(android.content.res.ColorStateList.valueOf(redColor))
+                    setBoxStrokeColor(redColor)
+                }
+                isValid = false
             }
+            if (loc.isEmpty()) {
+                tilLocation.apply {
+                    helperText = "Required - volunteers need to know where to find this person"
+                    setHelperTextColor(android.content.res.ColorStateList.valueOf(redColor))
+                    setBoxStrokeColor(redColor)
+                }
+                isValid = false
+            }
+            if (!isValid) return
         }
 
-        // Next -> go to Q2 (validate only if editing with Q3 selections)
-        binding.txtNext2.setOnClickListener {
-            binding.tvDate.error = null
-            binding.tvTime.error = null
-            binding.tilFirstName.error = null
-            binding.tilLocation.error = null
+        val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+        viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
 
-            val first = binding.etFirstName.text?.toString()?.trim().orEmpty()
-            val last  = binding.etLastName.text?.toString()?.trim().orEmpty()
-            val loc   = binding.etLocation.text?.toString()?.trim().orEmpty()
-            val state = binding.actState.text?.toString()?.trim().orEmpty()
-            val zip   = binding.etZip.text?.toString()?.trim().orEmpty()
+        // Update header immediately if name is not empty
+        if (first.isNotBlank()) {
+            val lastInitial = last.takeIf { it.isNotBlank() }?.firstOrNull()?.let { " ${it}." }.orEmpty()
+            binding.tvHeader.text = "Interaction with ${first}$lastInitial"
+        }
 
-            // If editing and Q3 has selections, require firstName and location
-            val isEditing = viewModel.editingIndex != null
-            val hasQ3Selections = viewModel.currentInteraction.value?.furtherHelpNeeded?.isNotEmpty() == true
+        mergeIntoILAndSave(viewModel.editingIndex) {
+            findNavController().navigate(
+                R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
+            )
+        }
+    }
 
-            if (isEditing && hasQ3Selections) {
-                var isValid = true
-                if (first.isEmpty()) {
-                    binding.tilFirstName.error = "Required"
-                    isValid = false
-                }
-                if (loc.isEmpty()) {
-                    binding.tilLocation.error = "Required"
-                    isValid = false
-                }
-                if (!isValid) return@setOnClickListener
-            }
+    override fun onSkipClicked() {
+        val first = etFirstName.text?.toString()?.trim().orEmpty()
+        val last  = etLastName.text?.toString()?.trim().orEmpty()
+        val loc   = etLocation.text?.toString()?.trim().orEmpty()
+        val state = actState.text?.toString()?.trim().orEmpty()
+        val zip   = etZip.text?.toString()?.trim().orEmpty()
+        val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+        viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
 
-            val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
-            viewModel.saveQ1(first, last, loc, state, zip, selectedDate, selectedTime, timeWithTz)
-            mergeIntoILAndSave(viewModel.editingIndex) {
-                findNavController().navigate(
-                    R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
-                )
-            }
+        // Update header immediately if name is not empty
+        if (first.isNotBlank()) {
+            val lastInitial = last.takeIf { it.isNotBlank() }?.firstOrNull()?.let { " ${it}." }.orEmpty()
+            binding.tvHeader.text = "Interaction with ${first}$lastInitial"
+        }
+
+        mergeIntoILAndSave(viewModel.editingIndex) {
+            findNavController().navigate(
+                R.id.action_individualInteractionQ1_to_visitIndividualInteractionQ2
+            )
         }
     }
 
@@ -437,21 +498,17 @@ class IndividualInteractionQ1 : Fragment() {
                     location.latitude, location.longitude,
                     requireContext(),
                     viewLifecycleOwner.lifecycleScope,
-                    { _binding != null }
+                    { this.isAdded }
                 ) { street, city, state, zip ->
                     val location = listOfNotNull(
                         street.takeUnless { it.isEmpty() },
                         city.takeUnless { it.isEmpty() }
                     ).joinToString(", ")
-                    binding.etLocation.setText(location)
-                    binding.actState.setText(state, false)
-                    binding.etZip.setText(zip)
+                    etLocation.setText(location)
+                    actState.setText(state, false)
+                    etZip.setText(zip)
                 }
             }
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
 }

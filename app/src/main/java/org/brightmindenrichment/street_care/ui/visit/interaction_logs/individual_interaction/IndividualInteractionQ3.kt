@@ -5,68 +5,65 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionQ3Binding
-import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 
-class IndividualInteractionQ3 : Fragment() {
+class IndividualInteractionQ3 : BaseIIQuestionFragment() {
 
-    private var _binding: FragmentIndividualInteractionQ3Binding? = null
-    private val binding get() = _binding!!
+    override val questionNumber = 3
 
-    private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
-    private val viewModel: IndividualInteractionViewModel by activityViewModels()
+    // Content view references
+    private lateinit var cbFood: AppCompatCheckBox
+    private lateinit var cbClothes: AppCompatCheckBox
+    private lateinit var cbHygiene: AppCompatCheckBox
+    private lateinit var cbWellness: AppCompatCheckBox
+    private lateinit var cbMedical: AppCompatCheckBox
+    private lateinit var cbSocialWork: AppCompatCheckBox
+    private lateinit var cbLegal: AppCompatCheckBox
+    private lateinit var cbOther: AppCompatCheckBox
+    private lateinit var tilOther: TextInputLayout
+    private lateinit var etOther: TextInputEditText
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentIndividualInteractionQ3Binding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.content_ii_q3, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val editHeader = viewModel.editingHeaderText()
-        if (editHeader != null) {
-            binding.tvHeader.text = editHeader
-        } else {
-            interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
-                binding.tvHeader.text = if (idx <= 1) {
-                    getString(R.string.individual_interaction_title_base)
-                } else {
-                    getString(R.string.individual_interaction_title_numbered, idx)
-                }
-            }
-        }
+    override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {
+        // Initialize view references
+        cbFood = contentView.findViewById(R.id.cb_food)
+        cbClothes = contentView.findViewById(R.id.cb_clothes)
+        cbHygiene = contentView.findViewById(R.id.cb_hygiene)
+        cbWellness = contentView.findViewById(R.id.cb_wellness)
+        cbMedical = contentView.findViewById(R.id.cb_medical)
+        cbSocialWork = contentView.findViewById(R.id.cb_social_work)
+        cbLegal = contentView.findViewById(R.id.cb_legal)
+        cbOther = contentView.findViewById(R.id.cb_other)
+        tilOther = contentView.findViewById(R.id.tilOther)
+        etOther = contentView.findViewById(R.id.etOther)
 
         // Show/hide Other text
         fun refreshOtherVisibility() {
-            val isChecked = binding.cbOther.isChecked
-            binding.etOther.visibility = if (isChecked) View.VISIBLE else View.GONE
+            val isChecked = cbOther.isChecked
+            etOther.visibility = if (isChecked) View.VISIBLE else View.GONE
             if (!isChecked) {
-                binding.etOther.setText("")
-                binding.tilOther.error = null
+                etOther.setText("")
+                tilOther.error = null
             }
         }
-        binding.cbOther.setOnCheckedChangeListener { _, _ -> refreshOtherVisibility() }
+        cbOther.setOnCheckedChangeListener { _, _ -> refreshOtherVisibility() }
         refreshOtherVisibility()
 
         // Clear error when Other input is focused or text changes
-        binding.etOther.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tilOther.error = null
+        etOther.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) tilOther.error = null
         }
 
-        binding.etOther.doAfterTextChanged {
-            if (it.toString().isNotEmpty()) binding.tilOther.error = null
+        etOther.doAfterTextChanged {
+            if (it.toString().isNotEmpty()) tilOther.error = null
         }
 
         // Build map of checkbox ID to string resource ID (single source of truth)
@@ -86,99 +83,98 @@ class IndividualInteractionQ3 : Fragment() {
                 getString(stringResId) == item
             }
             if (matchedCheckbox != null) {
-                binding.root.findViewById<androidx.appcompat.widget.AppCompatCheckBox>(matchedCheckbox.key).isChecked = true
+                when (matchedCheckbox.key) {
+                    R.id.cb_food -> cbFood.isChecked = true
+                    R.id.cb_clothes -> cbClothes.isChecked = true
+                    R.id.cb_hygiene -> cbHygiene.isChecked = true
+                    R.id.cb_wellness -> cbWellness.isChecked = true
+                    R.id.cb_medical -> cbMedical.isChecked = true
+                    R.id.cb_social_work -> cbSocialWork.isChecked = true
+                    R.id.cb_legal -> cbLegal.isChecked = true
+                }
             } else {
                 // Unknown/custom further help goes to Other
-                binding.cbOther.isChecked = true
-                binding.etOther.setText(item)
+                cbOther.isChecked = true
+                etOther.setText(item)
             }
         }
         refreshOtherVisibility()
+    }
 
-        // Helper to build the selected list using string resources
-        fun collectFurtherHelp(): List<String> {
-            val list = mutableListOf<String>()
-            if (binding.cbFood.isChecked)       list.add(getString(R.string.food_drinks))
-            if (binding.cbClothes.isChecked)    list.add(getString(R.string.clothes))
-            if (binding.cbHygiene.isChecked)    list.add(getString(R.string.hygiene))
-            if (binding.cbWellness.isChecked)   list.add(getString(R.string.wellness_emotional_support))
-            if (binding.cbMedical.isChecked)    list.add(getString(R.string.medical_help))
-            if (binding.cbSocialWork.isChecked) list.add(getString(R.string.social_work_psychiatrist))
-            if (binding.cbLegal.isChecked)      list.add(getString(R.string.lawyer_legal))
-            if (binding.cbOther.isChecked) binding.etOther.text?.toString()?.trim()
-                ?.takeUnless { it.isEmpty() }?.let { list.add(it) }
-            return list
+    override fun onPreviousClicked() {
+        viewModel.saveQ3(collectFurtherHelp())
+        mergeIntoILAndSave(viewModel.editingIndex) {
+            findNavController().popBackStack()
         }
+    }
 
-        // Helper: Q1 basic details are filled
-        fun isQ1Filled() = viewModel.currentInteraction.value?.firstName?.isNotBlank() == true &&
-                viewModel.currentInteraction.value?.locationLandmark?.isNotBlank() == true
+    override fun onNextClicked() {
+        val anyChecked = cbFood.isChecked || cbClothes.isChecked ||
+                cbHygiene.isChecked || cbWellness.isChecked ||
+                cbMedical.isChecked || cbSocialWork.isChecked ||
+                cbLegal.isChecked || cbOther.isChecked
 
-        fun requireQ1(): Boolean {
-            if (!isQ1Filled()) {
-                Toast.makeText(
-                    requireContext(),
-                    "Please fill in the individual's details first.",
-                    Toast.LENGTH_SHORT
-                ).show()
-                findNavController().popBackStack(R.id.individualInteractionQ1, false)
-                return false
-            }
-            return true
-        }
-
-        // Previous: back to Q2
-        binding.txtPrevious2.setOnClickListener {
-            viewModel.saveQ3(collectFurtherHelp())
-            mergeIntoILAndSave(viewModel.editingIndex) {
-                findNavController().popBackStack()
-            }
-        }
-
-        // Skip: save empty and proceed
-        binding.txtSkip.setOnClickListener {
+        if (!anyChecked) {
             performSkip()
+            return
         }
 
-        // Next: must select at least one, and Q1 must be filled
-        binding.txtNext2.setOnClickListener {
-            val anyChecked = binding.cbFood.isChecked || binding.cbClothes.isChecked ||
-                    binding.cbHygiene.isChecked || binding.cbWellness.isChecked ||
-                    binding.cbMedical.isChecked || binding.cbSocialWork.isChecked ||
-                    binding.cbLegal.isChecked || binding.cbOther.isChecked
-
-            if (!anyChecked) {
-                performSkip()
-                return@setOnClickListener
-            }
-
-            if (binding.cbOther.isChecked && binding.etOther.text?.toString()?.trim().isNullOrEmpty()) {
-                binding.tilOther.error = "Please specify what further help is needed"
-                binding.etOther.requestFocus()
-                return@setOnClickListener
-            }
-
-            binding.tilOther.error = null
-            viewModel.saveQ3(collectFurtherHelp())
-
-            if (!requireQ1()) return@setOnClickListener
-
-            mergeIntoILAndSave(viewModel.editingIndex) {
-                findNavController().navigate(
-                    R.id.action_individualInteractionQ3_to_individualInteractionQ4
-                )
-            }
+        if (cbOther.isChecked && etOther.text?.toString()?.trim().isNullOrEmpty()) {
+            tilOther.error = "Please specify what further help is needed"
+            etOther.requestFocus()
+            return
         }
+
+        tilOther.error = null
+        viewModel.saveQ3(collectFurtherHelp())
+
+        if (!requireQ1()) return
+
+        mergeIntoILAndSave(viewModel.editingIndex) {
+            findNavController().navigate(
+                R.id.action_individualInteractionQ3_to_individualInteractionQ4
+            )
+        }
+    }
+
+    override fun onSkipClicked() {
+        performSkip()
+    }
+
+    private fun collectFurtherHelp(): List<String> {
+        val list = mutableListOf<String>()
+        if (cbFood.isChecked)       list.add(getString(R.string.food_drinks))
+        if (cbClothes.isChecked)    list.add(getString(R.string.clothes))
+        if (cbHygiene.isChecked)    list.add(getString(R.string.hygiene))
+        if (cbWellness.isChecked)   list.add(getString(R.string.wellness_emotional_support))
+        if (cbMedical.isChecked)    list.add(getString(R.string.medical_help))
+        if (cbSocialWork.isChecked) list.add(getString(R.string.social_work_psychiatrist))
+        if (cbLegal.isChecked)      list.add(getString(R.string.lawyer_legal))
+        if (cbOther.isChecked) etOther.text?.toString()?.trim()
+            ?.takeUnless { it.isEmpty() }?.let { list.add(it) }
+        return list
+    }
+
+    private fun isQ1Filled() = viewModel.currentInteraction.value?.firstName?.isNotBlank() == true &&
+            viewModel.currentInteraction.value?.locationLandmark?.isNotBlank() == true
+
+    private fun requireQ1(): Boolean {
+        if (!isQ1Filled()) {
+            Toast.makeText(
+                requireContext(),
+                "Name and location required for volunteers to reach this person",
+                Toast.LENGTH_LONG
+            ).show()
+            findNavController().popBackStack(R.id.individualInteractionQ1, false)
+            return false
+        }
+        return true
     }
 
     private fun mergeIntoILAndSave(editingIdx: Int?, onComplete: () -> Unit) {
         if (editingIdx != null) {
-            // Editing: use current interaction from ViewModel
             val current = viewModel.currentInteraction.value ?: return onComplete()
             interactionLogViewModel.replaceIndividualInteraction(editingIdx, current)
-        } else {
-            // New interaction: nothing to merge yet, just save the draft
-            // The actual merge happens in Q4 when the II is completed
         }
         interactionLogViewModel.saveDraft {
             onComplete()
@@ -192,10 +188,5 @@ class IndividualInteractionQ3 : Fragment() {
                 R.id.action_individualInteractionQ3_to_individualInteractionQ4
             )
         }
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 }

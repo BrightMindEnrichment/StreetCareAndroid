@@ -25,10 +25,8 @@ import kotlinx.coroutines.launch
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.datepicker.MaterialDatePicker
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ1Binding
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.individual_interaction.IndividualInteractionViewModel
 import org.brightmindenrichment.street_care.ui.widget.StepState
-import org.brightmindenrichment.street_care.ui.widget.StepValidator
 import org.brightmindenrichment.street_care.util.Constants
 import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
 import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
@@ -39,13 +37,23 @@ import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.abs
 
-class InteractionQ1Fragment : Fragment(), StepValidator {
+class InteractionQ1Fragment : BaseILQuestionFragment() {
 
-    private var _binding: FragmentLogInteractionQ1Binding? = null
-    private val binding get() = _binding!!
-
-    override val viewModel: InteractionLogViewModel by activityViewModels()
     private val iiViewModel: IndividualInteractionViewModel by activityViewModels()
+
+    // Content view references
+    private lateinit var startDate: TextView
+    private lateinit var startTime: TextView
+    private lateinit var endDate: TextView
+    private lateinit var endTime: TextView
+    private lateinit var dateErrorText: TextView
+    private lateinit var timeErrorText: TextView
+    private lateinit var timezoneText: TextView
+    private lateinit var datePickerCard: com.google.android.material.card.MaterialCardView
+    private lateinit var timePickerCard: com.google.android.material.card.MaterialCardView
+    private lateinit var datePickerCard1: com.google.android.material.card.MaterialCardView
+    private lateinit var timePickerCard1: com.google.android.material.card.MaterialCardView
+    private lateinit var timezonePickerCard: com.google.android.material.card.MaterialCardView
 
     private val startCalendar = Calendar.getInstance()
     private val endCalendar = Calendar.getInstance()
@@ -56,17 +64,30 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
     private var wasSkipped = false
     private var isTouched = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLogInteractionQ1Binding.inflate(inflater, container, false)
-        return binding.root
+    override val stepNumber = 1
+
+    override fun showPreviousButton() = false
+    override fun showSkipButton() = false
+    override fun showNextButton() = true
+
+    override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.content_il_q1, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {
+        // Get view references
+        startDate = contentView.findViewById(R.id.start_date)
+        startTime = contentView.findViewById(R.id.start_time)
+        endDate = contentView.findViewById(R.id.end_date)
+        endTime = contentView.findViewById(R.id.end_time)
+        dateErrorText = contentView.findViewById(R.id.date_error_text)
+        timeErrorText = contentView.findViewById(R.id.time_error_text)
+        timezoneText = contentView.findViewById(R.id.timezoneText)
+        datePickerCard = contentView.findViewById(R.id.date_picker_card)
+        timePickerCard = contentView.findViewById(R.id.time_picker_card)
+        datePickerCard1 = contentView.findViewById(R.id.date_picker_card1)
+        timePickerCard1 = contentView.findViewById(R.id.time_picker_card1)
+        timezonePickerCard = contentView.findViewById(R.id.timezonePickerCard)
 
         Log.d("Q1_DEBUG", "NEW Q1 FRAGMENT LOADED")
 
@@ -80,7 +101,6 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         setEndDatePicker()
         setEndTimePicker()
         setTimezonePicker()
-        setNextButton()
 
         // Restore in-memory ViewModel state (same session, e.g. back-navigation from Q2)
         val log = viewModel.interactionLog.value
@@ -93,15 +113,6 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
             restoreFromLog(log)
         } else {
             refreshUI()
-        }
-
-        // Set up progress bar with current step and click handler
-        binding.progressBar.setCurrentStep(1)
-        binding.progressBar.onDotClicked = { step ->
-            saveCurrentState()
-            viewModel.saveDraft {
-                findNavController().popBackStack(Constants.INTERACTION_LOG_DEST_IDS[step - 1], false)
-            }
         }
     }
 
@@ -119,11 +130,11 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         startCalendar.timeZone = selectedTimezone
         endCalendar.timeZone = selectedTimezone
 
-        binding.startDate.text = dateFormatter.format(startCalendar.time)
-        binding.startTime.text = formatTime(startCalendar)
-        binding.endDate.text = dateFormatter.format(endCalendar.time)
-        binding.endTime.text = formatTime(endCalendar)
-        binding.timezoneText.text = formatTimezone(selectedTimezone)
+        startDate.text = dateFormatter.format(startCalendar.time)
+        startTime.text = formatTime(startCalendar)
+        endDate.text = dateFormatter.format(endCalendar.time)
+        endTime.text = formatTime(endCalendar)
+        timezoneText.text = formatTimezone(selectedTimezone)
     }
 
     /** Format time with DST-aware timezone abbreviation for the given calendar's date */
@@ -142,7 +153,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
 
     // ---------------- Start Date ----------------
     private fun setStartDatePicker() {
-        binding.datePickerCard.setOnClickListener {
+        datePickerCard.setOnClickListener {
             val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.MyDatePickerDialogTheme)
                 .setTitleText(getString(R.string.select_start_date))
@@ -169,9 +180,10 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
                     utcCalendar.get(Calendar.DAY_OF_MONTH)
                 )
 
-                binding.startDate.text = dateFormatter.format(startCalendar.time)
-                binding.startTime.text = formatTime(startCalendar)
+                startDate.text = dateFormatter.format(startCalendar.time)
+                startTime.text = formatTime(startCalendar)
                 viewModel.updateStartDate(startCalendar.time)
+                markFormDirty()
             }
 
             picker.show(parentFragmentManager, "START_DATE_PICK")
@@ -180,15 +192,16 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
 
     // ---------------- Start Time ----------------
     private fun setStartTimePicker() {
-        binding.timePickerCard.setOnClickListener {
+        timePickerCard.setOnClickListener {
             val dialog = TimePickerDialog(
                 requireContext(),
                 { _, hour, minute ->
                     startCalendar.timeZone = selectedTimezone
                     startCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     startCalendar.set(Calendar.MINUTE, minute)
-                    binding.startTime.text = formatTime(startCalendar)
+                    startTime.text = formatTime(startCalendar)
                     viewModel.updateStartDate(startCalendar.time)
+                    markFormDirty()
                 },
                 startCalendar.get(Calendar.HOUR_OF_DAY),
                 startCalendar.get(Calendar.MINUTE),
@@ -200,7 +213,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
 
     // ---------------- End Date ----------------
     private fun setEndDatePicker() {
-        binding.datePickerCard1.setOnClickListener {
+        datePickerCard1.setOnClickListener {
             val pickerBuilder = MaterialDatePicker.Builder.datePicker()
                 .setTheme(R.style.MyDatePickerDialogTheme)
                 .setTitleText(getString(R.string.select_end_date))
@@ -227,9 +240,10 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
                     utcCalendar.get(Calendar.DAY_OF_MONTH)
                 )
 
-                binding.endDate.text = dateFormatter.format(endCalendar.time)
-                binding.endTime.text = formatTime(endCalendar)
+                endDate.text = dateFormatter.format(endCalendar.time)
+                endTime.text = formatTime(endCalendar)
                 viewModel.updateEndDate(endCalendar.time)
+                markFormDirty()
             }
 
             picker.show(parentFragmentManager, "END_DATE_PICK")
@@ -238,15 +252,16 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
 
     // ---------------- End Time ----------------
     private fun setEndTimePicker() {
-        binding.timePickerCard1.setOnClickListener {
+        timePickerCard1.setOnClickListener {
             val dialog = TimePickerDialog(
                 requireContext(),
                 { _, hour, minute ->
                     endCalendar.timeZone = selectedTimezone
                     endCalendar.set(Calendar.HOUR_OF_DAY, hour)
                     endCalendar.set(Calendar.MINUTE, minute)
-                    binding.endTime.text = formatTime(endCalendar)
+                    endTime.text = formatTime(endCalendar)
                     viewModel.updateEndDate(endCalendar.time)
+                    markFormDirty()
                 },
                 endCalendar.get(Calendar.HOUR_OF_DAY),
                 endCalendar.get(Calendar.MINUTE),
@@ -258,7 +273,7 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
 
     // ---------------- Timezone ----------------
     private fun setTimezonePicker() {
-        binding.timezonePickerCard.setOnClickListener {
+        timezonePickerCard.setOnClickListener {
             showTimezonePickerDialog()
         }
     }
@@ -451,12 +466,13 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
             endCalendar.timeZone = zone
             endCalendar.set(endYear, endMonth, endDay, endHour, endMinute)
 
-            binding.timezoneText.text = formatTimezone(zone)
-            binding.startTime.text = formatTime(startCalendar)
-            binding.endTime.text = formatTime(endCalendar)
+            timezoneText.text = formatTimezone(zone)
+            startTime.text = formatTime(startCalendar)
+            endTime.text = formatTime(endCalendar)
             viewModel.updateTimezone(zone.id)
             viewModel.updateStartDate(startCalendar.time)
             viewModel.updateEndDate(endCalendar.time)
+            markFormDirty()
             dialog.dismiss()
         }
 
@@ -513,24 +529,26 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         }
     }
 
-    // ---------------- Next ----------------
-    private fun setNextButton() {
-        binding.txtNext2.setOnClickListener {
-
-            if (startCalendar.time.after(endCalendar.time)) {
-                binding.dateErrorText.text = "End time must be after start time"
-                binding.dateErrorText.visibility = View.VISIBLE
-                return@setOnClickListener
-            }
-
-            viewModel.updateStartDate(startCalendar.time)
-            viewModel.updateEndDate(endCalendar.time)
-            viewModel.updateTimezone(selectedTimezone.id)
-
-            viewModel.saveDraft {
-                findNavController().navigate(R.id.action_interactionQ1_to_interactionQ2)
-            }
+    override fun onNextNavigate() {
+        if (startCalendar.time.after(endCalendar.time)) {
+            dateErrorText.text = "End time must be after start time"
+            dateErrorText.visibility = View.VISIBLE
+            return
         }
+
+        viewModel.updateStartDate(startCalendar.time)
+        viewModel.updateEndDate(endCalendar.time)
+        viewModel.updateTimezone(selectedTimezone.id)
+
+        viewModel.saveDraft {
+            findNavController().navigate(R.id.action_interactionQ1_to_interactionQ2)
+        }
+    }
+
+    override fun onSkipNavigate() {
+        wasSkipped = true
+        saveCurrentState()
+        findNavController().navigate(R.id.action_interactionQ1_to_interactionQ2)
     }
 
     override fun saveCurrentState() {
@@ -553,8 +571,4 @@ class InteractionQ1Fragment : Fragment(), StepValidator {
         return startCalendar.time.before(endCalendar.time)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

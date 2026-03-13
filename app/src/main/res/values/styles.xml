@@ -124,4 +124,8 @@
         <item name="android:colorControlNormal">@color/black</item>
     </style>
 
+    <style name="HintTextAppearance" parent="TextAppearance.Design.Hint">
+        <item name="android:fontFamily">@font/poppins_bold_new</item>
+    </style>
+
 </resources>

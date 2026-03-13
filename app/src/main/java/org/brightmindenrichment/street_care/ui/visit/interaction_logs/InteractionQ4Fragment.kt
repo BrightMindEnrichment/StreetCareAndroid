@@ -1,53 +1,48 @@
 package org.brightmindenrichment.street_care.ui.visit.interaction_logs
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ4Binding
 import org.brightmindenrichment.street_care.ui.widget.StepState
-import org.brightmindenrichment.street_care.ui.widget.StepValidator
-import org.brightmindenrichment.street_care.util.Constants
 
-class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), StepValidator {
+class InteractionQ4Fragment : BaseILQuestionFragment() {
 
-    private var _binding: FragmentLogInteractionQ4Binding? = null
-    private val binding get() = _binding!!
-
-    override val viewModel: InteractionLogViewModel by activityViewModels()
     private var wasSkipped = false
     private var isTouched = false
 
+    // Content view references
+    private lateinit var checkboxList: ViewGroup
+    private lateinit var otherCheckbox: CheckBox
+    private lateinit var tilOther: TextInputLayout
+    private lateinit var otherInput: android.widget.EditText
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override val stepNumber = 4
 
-        _binding = FragmentLogInteractionQ4Binding.bind(view)
+    override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.content_il_q4, container, false)
+    }
+
+    override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {
+        checkboxList = contentView.findViewById(R.id.checkbox_list)
+        otherCheckbox = contentView.findViewById(R.id.other_checkbox)
+        tilOther = contentView.findViewById(R.id.tilOther)
+        otherInput = contentView.findViewById(R.id.other_input)
 
         initializeViews()
         setupClickListeners()
         restoreSelections()
-
-        // Set up progress bar with current step and click handler
-        binding.progressBar.setCurrentStep(4)
-        binding.progressBar.onDotClicked = { step ->
-            saveCurrentState()
-            viewModel.saveDraft {
-                findNavController().popBackStack(Constants.INTERACTION_LOG_DEST_IDS[step - 1], false)
-            }
-        }
     }
 
     private fun initializeViews() {
-
         // Remove default tint from checkboxes
-        for (i in 0 until binding.checkboxList.childCount) {
-            val child = binding.checkboxList.getChildAt(i)
+        for (i in 0 until checkboxList.childCount) {
+            val child = checkboxList.getChildAt(i)
             if (child is CheckBox) {
                 child.buttonTintList = null
             }
@@ -55,78 +50,47 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
     }
 
     private fun setupClickListeners() {
-
         // Show/hide Other input
-        binding.otherCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            binding.tilOther.visibility =
-                if (isChecked) View.VISIBLE else View.GONE
-            if (!isChecked) binding.tilOther.error = null
+        otherCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            tilOther.visibility = if (isChecked) View.VISIBLE else View.GONE
+            if (!isChecked) tilOther.error = null
         }
 
         // Clear error when Other input is focused or text changes
-        binding.otherInput.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tilOther.error = null
+        otherInput.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) tilOther.error = null
         }
 
-        binding.otherInput.doAfterTextChanged {
-            if (it.toString().isNotEmpty()) binding.tilOther.error = null
-        }
-
-        // Next button → navigate forward
-        binding.btnNext.setOnClickListener {
-
-            val selectedOptions = getSelectedOptions()
-
-            if (selectedOptions.isEmpty()) {
-                performSkip()
-                return@setOnClickListener
-            }
-
-            // Other field validation if checkbox is checked
-            if (binding.otherCheckbox.isChecked && binding.otherInput.text.toString().trim().isEmpty()) {
-                binding.tilOther.error = "Please describe what you provided"
-                binding.otherInput.requestFocus()
-                return@setOnClickListener
-            }
-
-            // Save into ViewModel
-            viewModel.setSupportsProvided(selectedOptions)
-
-            // 🔥 DEBUG PRINT
-            android.util.Log.d(
-                "FORM_DEBUG",
-                "After Q4 Save: ${viewModel.interactionLog.value}"
-            )
-
-            viewModel.saveDraft {
-                // Navigate
-                findNavController().navigate(R.id.action_q4_to_q5)
-            }
-        }
-
-
-        // Previous → go back in stack
-        binding.btnPrevious.setOnClickListener {
-            val selectedOptions = getSelectedOptions()
-            if (selectedOptions.isNotEmpty()) {
-                viewModel.setSupportsProvided(selectedOptions)
-            }
-            viewModel.saveDraft {
-                findNavController().popBackStack()
-            }
-        }
-
-        binding.skipBtn.setOnClickListener {
-            performSkip()
+        otherInput.doAfterTextChanged {
+            if (it.toString().isNotEmpty()) tilOther.error = null
         }
     }
 
-    private fun performSkip() {
+    override fun onNextNavigate() {
+        val selectedOptions = getSelectedOptions()
+
+        if (selectedOptions.isEmpty()) {
+            onSkipNavigate()
+            return
+        }
+
+        // Other field validation if checkbox is checked
+        if (otherCheckbox.isChecked && otherInput.text.toString().trim().isEmpty()) {
+            tilOther.error = "Please describe what you provided"
+            otherInput.requestFocus()
+            return
+        }
+
+        // Save into ViewModel
+        viewModel.setSupportsProvided(selectedOptions)
+        android.util.Log.d("FORM_DEBUG", "After Q4 Save: ${viewModel.interactionLog.value}")
+        findNavController().navigate(R.id.action_q4_to_q5)
+    }
+
+    override fun onSkipNavigate() {
         wasSkipped = true
         saveCurrentState()
-        viewModel.saveDraft {
-            findNavController().navigate(R.id.action_q4_to_q5)
-        }
+        findNavController().navigate(R.id.action_q4_to_q5)
     }
 
     private fun restoreSelections() {
@@ -145,8 +109,8 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
             getString(R.string.other)
         )
 
-        for (i in 0 until binding.checkboxList.childCount) {
-            val child = binding.checkboxList.getChildAt(i)
+        for (i in 0 until checkboxList.childCount) {
+            val child = checkboxList.getChildAt(i)
             if (child !is CheckBox) continue
 
             if (child.id == R.id.other_checkbox) {
@@ -154,12 +118,12 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
                 when {
                     customOther != null -> {
                         child.isChecked = true
-                        binding.tilOther.visibility = View.VISIBLE
-                        binding.otherInput.setText(customOther)
+                        tilOther.visibility = View.VISIBLE
+                        otherInput.setText(customOther)
                     }
                     getString(R.string.other) in saved -> {
                         child.isChecked = true
-                        binding.tilOther.visibility = View.VISIBLE
+                        tilOther.visibility = View.VISIBLE
                     }
                 }
             } else {
@@ -169,23 +133,15 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
     }
 
     private fun getSelectedOptions(): List<String> {
-
         val selected = mutableListOf<String>()
 
-        for (i in 0 until binding.checkboxList.childCount) {
-
-            val child = binding.checkboxList.getChildAt(i)
+        for (i in 0 until checkboxList.childCount) {
+            val child = checkboxList.getChildAt(i)
 
             if (child is CheckBox && child.isChecked) {
-
                 if (child.id == R.id.other_checkbox) {
-
-                    val otherText = binding.otherInput.text.toString()
-
-                    selected.add(
-                        if (otherText.isNotBlank()) otherText else getString(R.string.other)
-                    )
-
+                    val otherText = otherInput.text.toString()
+                    selected.add(if (otherText.isNotBlank()) otherText else getString(R.string.other))
                 } else {
                     selected.add(child.text.toString())
                 }
@@ -214,11 +170,6 @@ class InteractionQ4Fragment : Fragment(R.layout.fragment_log_interaction_q4), St
 
     private fun isCurrentStepValid(): Boolean {
         return getSelectedOptions().isNotEmpty()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

@@ -322,7 +322,7 @@ a la comunidad.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="facebook_app_id">683179469569215</string>
     <string name="facebook_client_token">c78ca933cb65b513c29cd9f76e596d47</string>
-    <string name="save">Guardar Cambios</string>
+    <string name="save">Guardar</string>
     <string name="save_plain">Guardar</string>
     <string name="cancel">Cancelar</string>
     <string name="editUserName">Ingresa Nombre de Usuario</string>

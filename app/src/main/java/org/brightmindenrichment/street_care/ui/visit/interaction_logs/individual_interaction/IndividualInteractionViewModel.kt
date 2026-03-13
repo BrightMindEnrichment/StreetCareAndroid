@@ -40,6 +40,10 @@ class IndividualInteractionViewModel : ViewModel() {
     /** Returns the header text to display during edit mode, or null if creating a new II. */
     fun editingHeaderText(): String? = _editingHeaderText
 
+    /** LiveData for the current display name (updates after Q1 when user enters name). */
+    private val _currentDisplayName = MutableLiveData<String?>()
+    val currentDisplayName: LiveData<String?> get() = _currentDisplayName
+
     fun saveQ1(firstName: String, lastName: String?, locationLandmark: String?, state: String?, zip: String?, date: LocalDate?, time: LocalTime?, timeWithTimezone: String? = null) {
 
         // Initialize base instance if none exists
@@ -66,6 +70,15 @@ class IndividualInteractionViewModel : ViewModel() {
 
         // Update LiveData
         _currentInteraction.value = updated
+
+        // Update display name for header (used in Q2-Q4 screens)
+        val displayName = if (firstName.isNotBlank()) {
+            val lastInitial = lastName?.firstOrNull()?.let { " ${it}." }.orEmpty()
+            "Interaction with ${firstName}$lastInitial"
+        } else {
+            null
+        }
+        _currentDisplayName.value = displayName
     }
 
     fun saveQ2(supportsProvided: List<String>) {
@@ -99,6 +112,7 @@ class IndividualInteractionViewModel : ViewModel() {
         }
         _committedInteractions.value = current
         _currentInteraction.value = IndividualInteraction()
+        _currentDisplayName.value = null  // Clear display name when II is saved
     }
 
     /** Loads an existing committed interaction into the current form for editing. */
@@ -107,6 +121,7 @@ class IndividualInteractionViewModel : ViewModel() {
         val interaction = _committedInteractions.value?.getOrNull(index) ?: IndividualInteraction()
         _currentInteraction.value = interaction
         _editingHeaderText = buildDisplayName(interaction, index)
+        _currentDisplayName.value = null  // Clear display name when editing (use editingHeaderText instead)
     }
 
     /** Resets all in-session II state. Called when the user discards the IL/II workflow. */
@@ -115,6 +130,7 @@ class IndividualInteractionViewModel : ViewModel() {
         _currentInteraction.value = IndividualInteraction()
         editingIndex = null
         _editingHeaderText = null
+        _currentDisplayName.value = null
     }
 
     /** Syncs _committedInteractions from a restored DataStore draft. Called in Q1 after loadDraft(). */

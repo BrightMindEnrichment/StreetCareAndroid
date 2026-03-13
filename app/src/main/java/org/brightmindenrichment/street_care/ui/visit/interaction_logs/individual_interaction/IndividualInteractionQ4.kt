@@ -2,41 +2,49 @@ package org.brightmindenrichment.street_care.ui.visit.interaction_logs.individua
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import android.widget.TextView
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionQ4Binding
-import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
+import org.brightmindenrichment.street_care.util.toLocalDateFromPicker
+import org.brightmindenrichment.street_care.util.toPickerMillis
+import org.brightmindenrichment.street_care.util.toZonedString
+import org.brightmindenrichment.street_care.util.formatTimeWithTz
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import org.brightmindenrichment.street_care.util.toLocalDateFromPicker
-import org.brightmindenrichment.street_care.util.toPickerMillis
-import org.brightmindenrichment.street_care.util.toZonedString
-import org.brightmindenrichment.street_care.util.formatTimeWithTz
 
-class IndividualInteractionQ4 : Fragment() {
+class IndividualInteractionQ4 : BaseIIQuestionFragment() {
 
-    private var _binding: FragmentIndividualInteractionQ4Binding? = null
-    private val binding get() = _binding!!
+    companion object {
+        private const val TAG = "IIQ4Nav"
+    }
+
+    override val questionNumber = 4
 
     private var selectedDate: LocalDate? = null
     private var selectedTime: LocalTime? = null
 
     private val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
-    private val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
-    private val viewModel: IndividualInteractionViewModel by activityViewModels()
+    // Content view references
+    private lateinit var datePickerCard: MaterialCardView
+    private lateinit var timePickerCard: MaterialCardView
+    private lateinit var tvDate: TextView
+    private lateinit var tvTime: TextView
+    private lateinit var etNotes: TextInputEditText
 
     /** Get the timezone from the InteractionLogViewModel (set in ILq1). */
     private fun getInteractionTimezone(): ZoneId {
@@ -53,35 +61,28 @@ class IndividualInteractionQ4 : Fragment() {
     }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentIndividualInteractionQ4Binding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.content_ii_q4, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Set button text to "Save" for Q4 (final question)
+        binding.btnNext.text = getString(R.string.save)
+    }
 
-        val editHeader = viewModel.editingHeaderText()
-        if (editHeader != null) {
-            binding.tvHeader.text = editHeader
-        } else {
-            interactionLogViewModel.interactionIndex.observe(viewLifecycleOwner) { idx ->
-                binding.tvHeader.text = if (idx <= 1) {
-                    getString(R.string.individual_interaction_title_base)
-                } else {
-                    getString(R.string.individual_interaction_title_numbered, idx)
-                }
-            }
-        }
+    override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {
+        // Initialize view references
+        datePickerCard = contentView.findViewById(R.id.datePickerCard)
+        timePickerCard = contentView.findViewById(R.id.timePickerCard)
+        tvDate = contentView.findViewById(R.id.tvDate)
+        tvTime = contentView.findViewById(R.id.tvTime)
+        etNotes = contentView.findViewById(R.id.etNotes)
 
         // Observe timezone changes and refresh time display
         interactionLogViewModel.interactionLog.observe(viewLifecycleOwner) { _ ->
             if (selectedTime != null && selectedDate != null) {
-                binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
+                tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
             }
         }
 
@@ -89,7 +90,7 @@ class IndividualInteractionQ4 : Fragment() {
         viewModel.currentInteraction.value?.let { saved ->
             saved.followUpDate?.let {
                 selectedDate = LocalDate.parse(it)
-                binding.tvDate.text = dateFormatter.format(selectedDate)
+                tvDate.text = dateFormatter.format(selectedDate)
             }
             saved.followUpTime?.let {
                 try {
@@ -97,25 +98,25 @@ class IndividualInteractionQ4 : Fragment() {
                     val zdt = ZonedDateTime.parse(it)
                     selectedTime = zdt.toLocalTime()
                     if (selectedDate != null) {
-                        binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
+                        tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
                     }
                 } catch (e: Exception) {
                     // Fall back to LocalTime parsing if it's just a time string
                     try {
                         selectedTime = LocalTime.parse(it)
                         if (selectedDate != null) {
-                            binding.tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
+                            tvTime.text = formatTimeWithTz(selectedDate!!, selectedTime!!, getInteractionTimezone())
                         }
                     } catch (e2: Exception) {
                         // Silently ignore if parsing fails
                     }
                 }
             }
-            saved.additionalDetails?.let { binding.etNotes.setText(it) }
+            saved.additionalDetails?.let { etNotes.setText(it) }
         }
 
         // Date picker
-        binding.datePickerCard.setOnClickListener {
+        datePickerCard.setOnClickListener {
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             val keyboardWasVisible = imm.isActive
 
@@ -133,23 +134,23 @@ class IndividualInteractionQ4 : Fragment() {
             picker.addOnPositiveButtonClickListener { millis ->
                 val pickedDate = millis.toLocalDateFromPicker()
                 selectedDate = pickedDate
-                binding.tvDate.text = dateFormatter.format(pickedDate)
+                tvDate.text = dateFormatter.format(pickedDate)
 
                 // If time is already selected, update its display with new timezone abbrev for this date
                 if (selectedTime != null) {
-                    binding.tvTime.text = formatTimeWithTz(pickedDate, selectedTime!!, getInteractionTimezone())
+                    tvTime.text = formatTimeWithTz(pickedDate, selectedTime!!, getInteractionTimezone())
                 }
 
                 // Restore keyboard state
                 if (!keyboardWasVisible) {
-                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                    imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
                 }
             }
 
             picker.addOnDismissListener {
                 // Restore keyboard state on dismiss (cancel or outside tap)
                 if (!keyboardWasVisible) {
-                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                    imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
                 }
             }
 
@@ -157,7 +158,7 @@ class IndividualInteractionQ4 : Fragment() {
         }
 
         // Time picker
-        binding.timePickerCard.setOnClickListener {
+        timePickerCard.setOnClickListener {
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             val keyboardWasVisible = imm.isActive
 
@@ -178,98 +179,113 @@ class IndividualInteractionQ4 : Fragment() {
                 val pickedTime = LocalTime.of(picker.hour, picker.minute)
                 selectedTime = pickedTime
                 if (selectedDate != null) {
-                    binding.tvTime.text = formatTimeWithTz(selectedDate!!, pickedTime, getInteractionTimezone())
+                    tvTime.text = formatTimeWithTz(selectedDate!!, pickedTime, getInteractionTimezone())
                 }
                 // Restore keyboard state
                 if (!keyboardWasVisible) {
-                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                    imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
                 }
             }
 
             picker.addOnDismissListener {
                 // Restore keyboard state on dismiss (cancel or outside tap)
                 if (!keyboardWasVisible) {
-                    imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                    imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
                 }
             }
 
             picker.show(parentFragmentManager, "time_picker_q4")
         }
+    }
 
-        // Previous -> back to Q3
-        binding.txtPrevious2.setOnClickListener {
-            val notes = binding.etNotes.text?.toString()?.trim().orEmpty()
-            val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
-            val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
-            viewModel.saveQ4(
-                selectedDate?.toString(),
-                selectedTime?.toString(),
-                notes.takeUnless { it.isEmpty() },
-                timeWithTz
-            )
-            mergeIntoILAndSave(editingIdx) {
-                findNavController().popBackStack()
-            }
+    override fun skipButtonVisible(): Boolean = false
+
+    override fun onPreviousClicked() {
+        val notes = etNotes.text?.toString()?.trim().orEmpty()
+        val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+        val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
+        viewModel.saveQ4(
+            selectedDate?.toString(),
+            selectedTime?.toString(),
+            notes.takeUnless { it.isEmpty() },
+            timeWithTz
+        )
+        mergeIntoILAndSave(editingIdx) {
+            findNavController().popBackStack()
         }
+    }
 
-        // Skip -> commit with no follow-up data and return
-        binding.txtSkip.setOnClickListener {
-            val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
-            viewModel.saveQ4(null, null, null, null)
-            mergeIntoILAndSave(editingIdx) {
-                if (editingIdx == null) interactionLogViewModel.nextInteraction()
-                findNavController().navigate(R.id.individualInteractionFragment)
-            }
-        }
-
-        // Save -> validate, persist, then return to list
-        binding.txtNext2.setOnClickListener {
-            val notes = binding.etNotes.text?.toString()?.trim().orEmpty()
-            binding.tvDate.error = null
-            binding.tvTime.error = null
-            val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
-            val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
-            viewModel.saveQ4(
-                selectedDate?.toString(),
-                selectedTime?.toString(),
-                notes.takeUnless { it.isEmpty() },
-                timeWithTz
+    override fun onNextClicked() {
+        val notes = etNotes.text?.toString()?.trim().orEmpty()
+        tvDate.error = null
+        tvTime.error = null
+        val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
+        Log.d(TAG, "onNextClicked: editingIdx=$editingIdx, navDest=${findNavController().currentDestination?.id}")
+        val timeWithTz = selectedTime?.let { it.toZonedString(getInteractionTimezone()) }
+        viewModel.saveQ4(
+            selectedDate?.toString(),
+            selectedTime?.toString(),
+            notes.takeUnless { it.isEmpty() },
+            timeWithTz
+        )
+        mergeIntoILAndSave(editingIdx) {
+            if (editingIdx == null) interactionLogViewModel.nextInteraction()
+            Log.d(TAG, "Navigating to individualInteractionFragment, editingIdx=$editingIdx, clearing Q1-Q4 stack")
+            findNavController().navigate(
+                R.id.individualInteractionFragment,
+                null,
+                NavOptions.Builder()
+                    .setPopUpTo(R.id.interactionQ7Fragment, false) // Pop back to Q7, keep it in stack
+                    .build()
             )
-            mergeIntoILAndSave(editingIdx) {
-                if (editingIdx == null) interactionLogViewModel.nextInteraction()
-                findNavController().navigate(R.id.individualInteractionFragment)
-            }
+        }
+    }
+
+    override fun onSkipClicked() {
+        val editingIdx = viewModel.editingIndex          // capture BEFORE saveQ4 resets it
+        viewModel.saveQ4(null, null, null, null)
+        mergeIntoILAndSave(editingIdx) {
+            if (editingIdx == null) interactionLogViewModel.nextInteraction()
+            findNavController().navigate(
+                R.id.individualInteractionFragment,
+                null,
+                NavOptions.Builder()
+                    .setPopUpTo(R.id.interactionQ7Fragment, false) // Pop back to Q7, keep it in stack
+                    .build()
+            )
         }
     }
 
     private fun mergeIntoILAndSave(editingIdx: Int?, onComplete: (() -> Unit)? = null) {
         val committed = viewModel.committedInteractions.value
+        Log.d(TAG, "mergeIntoILAndSave: editingIdx=$editingIdx, committedSize=${committed?.size ?: 0}, ilCommittedSize=${interactionLogViewModel.interactionLog.value?.individualInteractions?.size ?: 0}")
         if (committed == null) {
+            Log.d(TAG, "mergeIntoILAndSave: no committed interactions, skipping")
             onComplete?.invoke()
             return
         }
         if (editingIdx != null) {
             val updated = committed.getOrNull(editingIdx)
             if (updated == null) {
+                Log.d(TAG, "mergeIntoILAndSave: no item at editingIdx=$editingIdx")
                 onComplete?.invoke()
                 return
             }
+            Log.d(TAG, "mergeIntoILAndSave: replacing at index $editingIdx")
             interactionLogViewModel.replaceIndividualInteraction(editingIdx, updated)
         } else {
             val newItem = committed.lastOrNull()
             if (newItem == null) {
+                Log.d(TAG, "mergeIntoILAndSave: no committed items")
                 onComplete?.invoke()
                 return
             }
+            Log.d(TAG, "mergeIntoILAndSave: adding new item")
             interactionLogViewModel.addIndividualInteraction(newItem)
         }
         interactionLogViewModel.saveDraft {
+            Log.d(TAG, "mergeIntoILAndSave: draft saved, invoking onComplete")
             onComplete?.invoke()
         }
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 }

@@ -4,38 +4,41 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import android.widget.EditText
+import android.widget.FrameLayout
 import androidx.navigation.fragment.findNavController
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentLogInteractionQ5Binding
 import org.brightmindenrichment.street_care.ui.widget.StepState
-import org.brightmindenrichment.street_care.ui.widget.StepValidator
-import org.brightmindenrichment.street_care.util.Constants
 
-class InteractionQ5Fragment : Fragment(), StepValidator {
-
-    private var _binding: FragmentLogInteractionQ5Binding? = null
-    private val binding get() = _binding!!
-
-    override val viewModel: InteractionLogViewModel by activityViewModels()
+class InteractionQ5Fragment : BaseILQuestionFragment() {
 
     private var helpedCount = 1
     private var joinedCount = 0
     private var wasSkipped = false
     private var isTouched = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLogInteractionQ5Binding.inflate(inflater, container, false)
-        return binding.root
+    // Content view references
+    private lateinit var etCountHelped: EditText
+    private lateinit var etCountJoined: EditText
+    private lateinit var btnDecreaseHelped: FrameLayout
+    private lateinit var btnIncreaseHelped: FrameLayout
+    private lateinit var btnDecreaseJoined: FrameLayout
+    private lateinit var btnIncreaseJoined: FrameLayout
+
+    override val stepNumber = 5
+
+    override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
+        return inflater.inflate(R.layout.content_il_q5, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {
+        // Get references to content views
+        etCountHelped = contentView.findViewById(R.id.et_count_helped)
+        etCountJoined = contentView.findViewById(R.id.et_count_joined)
+        btnDecreaseHelped = contentView.findViewById(R.id.btn_decrease_helped)
+        btnIncreaseHelped = contentView.findViewById(R.id.btn_increase_helped)
+        btnDecreaseJoined = contentView.findViewById(R.id.btn_decrease_joined)
+        btnIncreaseJoined = contentView.findViewById(R.id.btn_increase_joined)
 
         // Restore saved counts if returning from a later screen
         val saved = viewModel.interactionLog.value
@@ -46,58 +49,39 @@ class InteractionQ5Fragment : Fragment(), StepValidator {
 
         updateUI()
 
-        binding.btnIncreaseHelped.setOnClickListener { syncFromInput(); helpedCount++; updateUI() }
-        binding.btnDecreaseHelped.setOnClickListener { syncFromInput(); if (helpedCount > 1) { helpedCount--; updateUI() } }
+        btnIncreaseHelped.setOnClickListener { syncFromInput(); helpedCount++; updateUI() }
+        btnDecreaseHelped.setOnClickListener { syncFromInput(); if (helpedCount > 1) { helpedCount--; updateUI() } }
 
-        binding.btnIncreaseJoined.setOnClickListener { syncFromInput(); joinedCount++; updateUI() }
-        binding.btnDecreaseJoined.setOnClickListener { syncFromInput(); if (joinedCount > 0) { joinedCount--; updateUI() } else binding.btnDecreaseJoined.isEnabled = false }
-
-        binding.btnPrevious.setOnClickListener {
-            syncFromInput()
-            viewModel.updateCounts(helpedCount, joinedCount)
-            viewModel.saveDraft {
-                findNavController().popBackStack()
-            }
-        }
-
-        binding.btnSkip.setOnClickListener {
-            wasSkipped = true
-            navigateNext()
-        }
-        binding.btnNext.setOnClickListener { navigateNext() }
-
-        // Set up progress bar with current step and click handler
-        binding.progressBar.setCurrentStep(5)
-        binding.progressBar.onDotClicked = { step ->
-            saveCurrentState()
-            viewModel.saveDraft {
-                findNavController().popBackStack(Constants.INTERACTION_LOG_DEST_IDS[step - 1], false)
-            }
-        }
+        btnIncreaseJoined.setOnClickListener { syncFromInput(); joinedCount++; updateUI() }
+        btnDecreaseJoined.setOnClickListener { syncFromInput(); if (joinedCount > 0) { joinedCount--; updateUI() } else btnDecreaseJoined.isEnabled = false }
     }
 
     private fun syncFromInput() {
-        helpedCount = binding.etCountHelped.text.toString().toIntOrNull() ?: helpedCount
-        joinedCount = binding.etCountJoined.text.toString().toIntOrNull() ?: joinedCount
+        helpedCount = etCountHelped.text.toString().toIntOrNull() ?: helpedCount
+        joinedCount = etCountJoined.text.toString().toIntOrNull() ?: joinedCount
     }
 
     private fun updateUI() {
-        binding.etCountHelped.setText(helpedCount.toString())
-        binding.etCountJoined.setText(joinedCount.toString())
+        etCountHelped.setText(helpedCount.toString())
+        etCountJoined.setText(joinedCount.toString())
         // Disable minus button when helpedCount is 1 (minimum)
-        binding.btnDecreaseHelped.isEnabled = helpedCount > 1
-        binding.btnDecreaseHelped.alpha = if (helpedCount > 1) 1f else 0.5f
+        btnDecreaseHelped.isEnabled = helpedCount > 1
+        btnDecreaseHelped.alpha = if (helpedCount > 1) 1f else 0.5f
         // Disable minus button when joinedCount is 0 (minimum)
-        binding.btnDecreaseJoined.isEnabled = joinedCount > 0
-        binding.btnDecreaseJoined.alpha = if (joinedCount > 0) 1f else 0.5f
+        btnDecreaseJoined.isEnabled = joinedCount > 0
+        btnDecreaseJoined.alpha = if (joinedCount > 0) 1f else 0.5f
     }
 
-    private fun navigateNext() {
+    override fun onNextNavigate() {
         syncFromInput()
         viewModel.updateCounts(helpedCount, joinedCount)
-        viewModel.saveDraft {
-            findNavController().navigate(R.id.action_q5_to_q6)
-        }
+        findNavController().navigate(R.id.action_q5_to_q6)
+    }
+
+    override fun onSkipNavigate() {
+        wasSkipped = true
+        saveCurrentState()
+        onNextNavigate()
     }
 
     override fun saveCurrentState() {
@@ -117,11 +101,6 @@ class InteractionQ5Fragment : Fragment(), StepValidator {
 
     private fun isCurrentStepValid(): Boolean {
         return helpedCount > 0 || joinedCount > 0
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

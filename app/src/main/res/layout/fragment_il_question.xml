@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize"
@@ -25,7 +24,9 @@
             android:paddingTop="12dp"
             android:paddingBottom="24dp">
 
+            <!-- Page title — always "Visit Log" for IL -->
             <TextView
+                android:id="@+id/tvPageTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -36,6 +37,7 @@
                 android:includeFontPadding="false"
                 app:fontFamily="@font/poppins_bold_new" />
 
+            <!-- Progress dots — IL only -->
             <org.brightmindenrichment.street_care.ui.widget.StepProgressView
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
@@ -44,18 +46,16 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp" />
 
-            <!-- CARD (use CardView + inner layout from 1st, but shape/content like 2nd) -->
+            <!-- Card -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/cv_interaction_log"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 app:cardCornerRadius="10dp"
-                app:cardUseCompatPadding="true"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardUseCompatPadding="true"
                 app:strokeColor="@color/gray700"
                 app:strokeWidth="1.2dp">
 
@@ -63,81 +63,76 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingTop="18dp"
-                    android:paddingBottom="18dp">
+                    android:paddingBottom="14dp">
 
-                    <!-- top row: index + skip -->
+                    <!-- Header row: [step label] [Skip button] -->
                     <LinearLayout
+                        android:id="@+id/headerRow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:paddingHorizontal="16dp"
-                        android:paddingTop="0dp"
-                        android:paddingBottom="8dp">
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="4dp">
 
                         <TextView
-                            android:id="@+id/txt_question_index"
+                            android:id="@+id/tvStepLabel"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/additional_7_7"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             app:fontFamily="@font/poppins_regular" />
 
-                        <!-- using TextView as button (1st file style) -->
                         <TextView
-                            android:id="@+id/txt_skip"
+                            android:id="@+id/btnSkip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/skip"
                             android:textColor="@color/black"
-                            android:gravity="center"
-                            android:paddingVertical="6dp"
-                            android:paddingHorizontal="14dp"
-                            android:background="@drawable/rounded_btn"
                             android:textSize="13sp"
-                            app:fontFamily="@font/poppins_bold_new"/>
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="6dp"
+                            android:background="@drawable/rounded_btn"
+                            android:gravity="center"
+                            app:fontFamily="@font/poppins_bold_new" />
                     </LinearLayout>
 
-                    <!-- divider -->
+                    <!-- Divider -->
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
                         android:layout_height="0.7dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        app:dividerColor="@color/gray700"/>
+                        app:dividerColor="@color/gray700" />
 
-                    <!-- QUESTION TEXT (center, like 2nd) -->
-                    <TextView
-                        android:id="@+id/txt_question"
+                    <!-- CONTENT SLOT — subclass injects question content here -->
+                    <FrameLayout
+                        android:id="@+id/contentContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginHorizontal="16dp"
-                        android:gravity="center"
-                        android:text="@string/provide_details_prompt"
-                        android:textColor="@color/black"
-                        android:textSize="28sp"
-                        app:fontFamily="@font/poppins_bold_new"
-                        android:lineSpacingExtra="6dp"/>
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="0dp" />
 
-                    <!-- YES / NO ROW (use TextView buttons like 1st, styled like 2nd) -->
+                    <!-- Yes/No row — GONE by default, shown for ILq7 -->
                     <LinearLayout
+                        android:id="@+id/yesNoRow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:orientation="horizontal"
                         android:gravity="center"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="6dp"
+                        android:visibility="gone">
 
                         <TextView
-                            android:id="@+id/txt_yes"
+                            android:id="@+id/btnYes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
                             android:background="@drawable/yesbutton"
                             android:paddingHorizontal="20dp"
                             android:paddingVertical="8dp"
@@ -153,7 +148,7 @@
                             android:layout_height="0dp" />
 
                         <TextView
-                            android:id="@+id/txt_no"
+                            android:id="@+id/btnNo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/nobutton"
@@ -166,24 +161,49 @@
                             android:textSize="@dimen/text_size16"
                             app:fontFamily="Poppins" />
                     </LinearLayout>
-                    <TextView
-                        android:id="@+id/txt_previous5"
-                        android:layout_width="wrap_content"
+
+                    <!-- Standard button row: [Previous] [spacer] [Next] -->
+                    <LinearLayout
+                        android:id="@+id/buttonRow"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/Previous"
-                        android:textColor="@color/dark_green"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="8dp"
-                        android:textStyle="bold"
-                        android:paddingVertical="6dp"
-                        android:paddingHorizontal="18dp"
-                        android:background="@drawable/button_previous"/>
+                        android:orientation="horizontal"
+                        android:layout_marginTop="24dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <TextView
+                            android:id="@+id/btnPrevious"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/Previous"
+                            android:textColor="@color/dark_green"
+                            android:paddingVertical="6dp"
+                            android:paddingHorizontal="18dp"
+                            android:background="@drawable/button_previous"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:id="@+id/buttonSpacer"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/btnNext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/next_button"
+                            android:textColor="@color/accent1"
+                            android:textSize="16sp"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="22dp"
+                            android:background="@drawable/button_next"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                 </LinearLayout>
-
             </androidx.cardview.widget.CardView>
         </LinearLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
