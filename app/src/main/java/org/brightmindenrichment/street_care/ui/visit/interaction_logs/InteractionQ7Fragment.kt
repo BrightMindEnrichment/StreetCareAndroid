@@ -34,7 +34,7 @@ class InteractionQ7Fragment : BaseILQuestionFragment() {
     override fun showPreviousButton() = true
 
     override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.content_il_q7, container, false)
+        return inflater.inflate(R.layout.content_interaction_log_q7, container, false)
     }
 
     override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {

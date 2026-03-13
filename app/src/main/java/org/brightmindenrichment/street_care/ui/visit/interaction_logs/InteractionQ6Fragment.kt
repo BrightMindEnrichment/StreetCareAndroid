@@ -26,7 +26,7 @@ class InteractionQ6Fragment : BaseILQuestionFragment() {
     override val stepNumber = 6
 
     override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.content_il_q6, container, false)
+        return inflater.inflate(R.layout.content_interaction_log_q6, container, false)
     }
 
     override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {

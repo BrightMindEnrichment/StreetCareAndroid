@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import org.brightmindenrichment.street_care.R
-import org.brightmindenrichment.street_care.databinding.FragmentIiQuestionBinding
+import org.brightmindenrichment.street_care.databinding.FragmentIndividualInteractionQuestionBinding
 import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 
 /**
@@ -27,7 +27,7 @@ import org.brightmindenrichment.street_care.ui.visit.interaction_logs.Interactio
  */
 abstract class BaseIIQuestionFragment : Fragment() {
 
-    private var _binding: FragmentIiQuestionBinding? = null
+    private var _binding: FragmentIndividualInteractionQuestionBinding? = null
     protected val binding get() = _binding!!
 
     protected val interactionLogViewModel: InteractionLogViewModel by activityViewModels()
@@ -75,7 +75,7 @@ abstract class BaseIIQuestionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentIiQuestionBinding.inflate(inflater, container, false)
+        _binding = FragmentIndividualInteractionQuestionBinding.inflate(inflater, container, false)
         return binding.root
     }
 

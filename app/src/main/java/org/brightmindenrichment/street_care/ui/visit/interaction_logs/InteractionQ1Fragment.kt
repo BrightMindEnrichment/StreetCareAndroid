@@ -71,7 +71,7 @@ class InteractionQ1Fragment : BaseILQuestionFragment() {
     override fun showNextButton() = true
 
     override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.content_il_q1, container, false)
+        return inflater.inflate(R.layout.content_interaction_log_q1, container, false)
     }
 
     override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {

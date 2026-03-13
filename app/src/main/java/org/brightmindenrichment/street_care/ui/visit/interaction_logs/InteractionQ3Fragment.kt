@@ -46,7 +46,7 @@ class InteractionQ3Fragment : BaseILQuestionFragment() {
     override val stepNumber = 3
 
     override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.content_il_q3, container, false)
+        return inflater.inflate(R.layout.content_interaction_log_q3, container, false)
     }
 
     // ---- Places Autocomplete launcher ----

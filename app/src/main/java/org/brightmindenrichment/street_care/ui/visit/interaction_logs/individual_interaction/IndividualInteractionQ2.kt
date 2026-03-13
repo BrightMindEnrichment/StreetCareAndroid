@@ -28,7 +28,7 @@ class IndividualInteractionQ2 : BaseIIQuestionFragment() {
     private lateinit var etOther: TextInputEditText
 
     override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.content_ii_q2, container, false)
+        return inflater.inflate(R.layout.content_individual_interaction_q2, container, false)
     }
 
     override fun onContentViewCreated(contentView: View, savedInstanceState: Bundle?) {

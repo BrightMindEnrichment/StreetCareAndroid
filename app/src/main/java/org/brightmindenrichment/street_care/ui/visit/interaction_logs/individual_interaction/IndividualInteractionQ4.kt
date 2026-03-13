@@ -62,7 +62,7 @@ class IndividualInteractionQ4 : BaseIIQuestionFragment() {
 
 
     override fun inflateContent(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.content_ii_q4, container, false)
+        return inflater.inflate(R.layout.content_individual_interaction_q4, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
