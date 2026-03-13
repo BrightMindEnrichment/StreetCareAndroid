@@ -31,25 +31,14 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
         buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
         buildConfigField "String", "API_KEY_PLACES", "\"${properties.getProperty("API_KEY_PLACES")}\""
-    }
-
-    signingConfigs {
-        release {
-            // Check if the environment variables are set (i.e., the below code only runs in GitHub Actions.)
-            if (System.getenv("SIGNING_KEY_ALIAS") != null) {
-                storeFile file('release-keystore.jks')
-                storePassword System.getenv("SIGNING_STORE_PASSWORD")
-                keyAlias System.getenv("SIGNING_KEY_ALIAS")
-                keyPassword System.getenv("SIGNING_KEY_PASSWORD")
-            }
-        }
+        buildConfigField "String", "INTERACTION_LOG_COLLECTION", "\"${properties.getProperty("INTERACTION_LOG_COLLECTION")}\""
+        buildConfigField "String", "HELP_REQUEST_COLLECTION", "\"${properties.getProperty("HELP_REQUEST_COLLECTION")}\""
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -104,6 +93,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     //implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-config'
+    implementation 'com.google.firebase:firebase-analytics'
     // For FirebaseUI, you need to specify the version separately as it's not included in the Firebase BoM
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
 
@@ -127,8 +118,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
     implementation 'com.google.android.datatransport:transport-api:3.0.0'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
     implementation 'com.squareup.retrofit2:retrofit:2.6.3'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.3'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"

@@ -50,7 +50,7 @@ class Additional2 : Fragment() {
             findNavController().navigate(R.id.action_additional2_to_additional5)
         }
         binding.txtBack.setOnClickListener {
-            findNavController().navigate(R.id.action_additional2_to_visitForm7a)
+            findNavController().popBackStack()
         }
         binding.txtSkip3.setOnClickListener {
             findNavController().navigate(R.id.action_additional2_to_additional5)

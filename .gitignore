@@ -11,6 +11,7 @@
 .mtj.tmp/
 
 # Package Files #
+*.jar
 *.war
 *.nar
 *.ear
@@ -36,3 +37,6 @@ local.properties
 # firebase
 google-services.json
 .DS_Store
+
+.claude
+CLAUDE.md

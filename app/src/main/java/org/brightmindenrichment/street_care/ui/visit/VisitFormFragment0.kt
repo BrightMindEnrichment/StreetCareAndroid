@@ -7,33 +7,35 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 //import com.google.firebase.auth.ktx.auth
 //import com.google.firebase.ktx.Firebase
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentVisitBinding
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
+import org.brightmindenrichment.street_care.ui.visit.interaction_logs.InteractionLogViewModel
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.DetailsButtonClickListener
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitLogRecyclerAdapter
-import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitViewModel
-import org.brightmindenrichment.street_care.util.Extensions
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
+import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
 
 class VisitFormFragment0 : Fragment() {
     private var _binding: FragmentVisitBinding? = null
     val binding get() = _binding!!
-    private val sharedVisitViewModel: VisitViewModel by activityViewModels()
+    private val viewModel: InteractionLogViewModel by activityViewModels()
     private val visitDataAdapter = VisitDataAdapter()
+    private var draftExists = false
     companion object {
         fun newInstance() = VisitFormFragment0()
     }
@@ -48,37 +50,39 @@ class VisitFormFragment0 : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            binding.btnAddNew.setOnClickListener {
-                // if user is submitting multiple visit log together, the view model field should reset
-
-                if(FirebaseAuth.getInstance().currentUser != null) {
-                    // showImpactDialog(requireContext())
+        binding.btnAddNew.setOnClickListener {
+            if (FirebaseAuth.getInstance().currentUser != null) {
+                if (draftExists) {
+                    if (FeatureFlagManager.isEnabled(FeatureFlag.SHOW_IL_DRAFT_RESUME_DIALOG)) {
+                        showDraftResumeDialog()
+                    } else {
+                        viewModel.loadDraft { _ ->
+                            findNavController().navigate(R.id.interactionQ1Fragment)
+                        }
+                    }
+                } else {
                     val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                     val shouldShowDialog = prefs.getBoolean("dont_show_again", false)
-                    if(shouldShowDialog){
-                        sharedVisitViewModel.resetVisitLogPage()
-                        findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
-                    }else{
+                    if (shouldShowDialog) {
+                        viewModel.resetInteractionLog {
+                            if (isAdded) {
+                                findNavController().navigate(R.id.interactionQ1Fragment)
+                            }
+                        }
+                    } else {
                         showCustomDialogPH()
                     }
-
-
-                } else{
-                    /*  Extensions.showDialog(
-                          requireContext(), requireContext().getString(R.string.alert), requireContext().getString(R.string.visit_log_can_be_recorded_by_logged_in_users),
-                          requireContext().getString(R.string.ok),
-                          requireContext().getString(R.string.cancel))*/
-                    showCustomDialog()
                 }
-
-            }
-            if (FirebaseAuth.getInstance().currentUser != null) {
-                binding.historyMsg.visibility = View.GONE
-                updateUI()
             } else {
-                Log.d("BME", "not logged in")
+                showCustomDialog()
             }
+        }
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            binding.historyMsg.visibility = View.GONE
+            updateUI()
+        } else {
+            Log.d("BME", "not logged in")
+        }
 
 
 
@@ -91,8 +95,11 @@ class VisitFormFragment0 : Fragment() {
             .setTitle("I provided help!")
             .setMessage("Please fill out this form each time you perform an outreach. This helps you track your contributions and allows StreetCare to bring more support and services to help the community!")
             .setPositiveButton("OK") { dialog, _ ->
-                sharedVisitViewModel.resetVisitLogPage()
-                findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment1)
+                viewModel.resetInteractionLog {
+                    if (isAdded) {
+                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    }
+                }
                 dialog.dismiss()
             }
             .create()
@@ -106,10 +113,10 @@ class VisitFormFragment0 : Fragment() {
                 requireContext(),
                 visitDataAdapter,
                 object : DetailsButtonClickListener {
-                    override fun onClick(visitLog:VisitLog) {
-                        val bundle = bundleOf("visitLog" to visitLog)
+                    override fun onClick(visitLog: VisitLog) {
+                        val bundle = bundleOf("visitlogId" to visitLog)
                         findNavController().navigate(
-                            R.id.action_nav_visit_to_visitLogDetailsFragment,bundle
+                            R.id.action_nav_visit_to_visitLogDetailsFragment, bundle
                         )
                     }
                 })
@@ -139,22 +146,9 @@ class VisitFormFragment0 : Fragment() {
         val btnCancel = dialogView.findViewById<TextView>(R.id.cancel_btn)
 
         btnOK.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("from", "nav_visit")
-            }
-           // findNavController().navigate(R.id.action_nav_visit_to_profile)
             requireActivity()
                 .findViewById<BottomNavigationView>(R.id.bottomNav)
                 .selectedItemId = R.id.profile
-
-           val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.profile, true)
-                .build()
-
-
-            findNavController().navigate(R.id.action_nav_user_to_nav_login,bundle,navOptions)
-
-
             dialog.dismiss()
         }
 
@@ -173,7 +167,7 @@ class VisitFormFragment0 : Fragment() {
     }
 
     fun showCustomDialogPH() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_provided_help, null)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_log_interaction_thanks, null)
         val dialog = android.app.AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
@@ -183,18 +177,20 @@ class VisitFormFragment0 : Fragment() {
 
 
         val btnOK = dialogView.findViewById<TextView>(R.id.ok_btn)
-        val checkBox = dialogView.findViewById<CheckBox>(R.id.cbDontShowAgain)
+//        val checkBox = dialogView.findViewById<CheckBox>(R.id.cbDontShowAgain)
 
 
         btnOK.setOnClickListener {
-            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            if (checkBox.isChecked) {
-
-                prefs.edit().putBoolean("dont_show_again", true).apply()
+//            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+//            if (checkBox.isChecked) {
+//
+//                prefs.edit().putBoolean("dont_show_again", true).apply()
+//            }
+            viewModel.resetInteractionLog {
+                if (isAdded) {
+                    findNavController().navigate(R.id.interactionQ1Fragment)
+                }
             }
-            sharedVisitViewModel.resetVisitLogPage()
-
-            findNavController().navigate(R.id.action_nav_visit_to_visitFormFragment2)
             dialog.dismiss()
 
         }
@@ -208,6 +204,37 @@ class VisitFormFragment0 : Fragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
+    private fun showDraftResumeDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Resume previous session?")
+            .setMessage("You have an unfinished Interaction Log. Would you like to continue where you left off?")
+            .setPositiveButton("Continue Draft") { _, _ ->
+                viewModel.loadDraft { restored ->
+                    if (restored && isAdded) {
+                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    }
+                }
+            }
+            .setNegativeButton("Start Fresh") { _, _ ->
+                viewModel.resetInteractionLog {
+                    if (isAdded) {
+                        findNavController().navigate(R.id.interactionQ1Fragment)
+                    }
+                }
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val b = _binding ?: return
+        viewLifecycleOwner.lifecycleScope.launch {
+            draftExists = viewModel.hasDraft()
+            b.btnAddNew.text = if (draftExists) getString(R.string.continue_draft) else getString(R.string.add_new)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

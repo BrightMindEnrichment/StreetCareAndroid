@@ -1,0 +1,466 @@
+
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /TestUser/{TestUser} {
+    	  allow read, write: if true;
+    }
+    match /auditLog/{auditLog} {
+    	  allow read, write: if true;
+    }
+  	match /TutoringEnrollment/{TutoringEnrollment}{
+    	allow read, write: if true;
+    }
+    match /TutoringVolunteer/{TutoringVolunteer}{
+    	allow read, write: if true;
+    }
+    match /TutoringFeedback/{TutoringFeedback}{
+    	allow read, write: if true;
+    }
+    match /TutoringContactUsStickers/{TutoringContactUsStickers}{
+    	allow read, write: if true;
+    }
+    match /TutoringContactUs/{TutoringContactUs}{
+    	allow read, write: if true;
+    }
+    match /TutoringMembershipForm/{TutoringMembershipForm}{
+    	allow read, write: if true;
+    }
+    match /BMESignUp/{BMESignUp}{
+    	allow read, write: if true;
+    }
+    match /BMEVolunteer/{BMEVolunteer}{
+    	allow read, write: if true;
+    }
+    match /BMEUnsubscribe/{BMEUnsubscribe}{
+    	allow read, write: if true;
+    }
+    match /BMEFeedback/{BMEFeedback}{
+    	allow read, write: if true;
+    }
+  	match /BMEContactUsStickers/{BMEContactUsStickers}{
+    	allow read, write: if true;
+    }
+    match /BMEContactUs/{BMEContactUs}{
+    	allow read, write: if true;
+    }
+    match /BMESurvey/{BMESurvey}{
+    	allow read, write: if true;
+    }
+    match /BMEMembershipForm/{BMEMembershipForm}{
+    	allow read, write: if true;
+    }
+    match /StreetCareSurvey/{StreetCareSurvey}{
+    	allow read, write: if true;
+    }
+    match /StreetCareVisitLog/{StreetCareVisitLog}{
+    	allow read, write: if true;
+    }
+    match /StreetCareFeedback/{StreetCareFeedback}{
+    	allow read, write: if true;
+    }
+    match /StreetCareEvent/{StreetCareEvent}{
+    	allow read, write: if true;
+    }
+    match /StreetCareContactUsStickers/{StreetCareContactUsStickers}{
+    	allow read, write: if true;
+    }
+    match /StreetCareContactUs/{StreetCareContactUs}{
+    	allow read, write: if true;
+    }
+    match /StreetCareMembershipForm/{StreetCareMembershipForm}{
+    	allow read, write: if true;
+    }
+		match /feedbackBME/{feedbackBME}{
+      allow read, write: if true;
+    }
+    match /wellnessDonation/{wellnessDonation}{
+      allow read, write: if true;
+    }
+    match /wellnessParticipantGoogle/{wellnessParticipantGoogle}{
+      allow read: if true;
+    }
+    match /feedbackStreetCare/{feedbackStreetCare}{
+      allow read, write: if true;
+    }
+    match /visitLogNewForm/{visitLogTemp}{
+      allow read, write: if true;
+    }
+     match /pastVisitLogs/{pastVisitLogs}{
+      allow read, write: if true;
+    }
+    match /surveyStreetCare/{surveyStreetCare}{
+      allow read, write: if true;
+    }
+    match /testLog/{testLog}{
+      allow read: if true;
+      allow write: if request.auth.uid != null && request.auth.uid == request.resource.data.uid;
+    }
+    //
+    match /personalVisitLog/{personalVisitLog}{
+      allow read,write : if true;
+    //   allow create: if  request.auth.uid != null && request.auth.uid == request.resource.data.uid;
+    //   allow update, delete: if request.auth.uid != null && request.auth.uid == resource.data.uid;
+    }
+
+    // New firestore data collections:
+    // vistLog, connecting to Contact Form 7 Visit Log. ID: 5257
+    match /visitLog/{visitLog}{
+    	// allow read: if request.auth.uid != null;
+      // allow write: if request.auth.uid != null;
+      allow read, write: if true;
+    }
+    match /visitLogSubTest/{visitLogSubTest}{
+    	// allow read: if request.auth.uid != null;
+      // allow write: if request.auth.uid != null;
+      allow read, write: if true;
+    }
+    //Events
+    match /events/{eventsID=**}{
+    //allow read: if request.auth.uid != null;
+     // allow write: if true;
+     	allow read, write: if true;
+    }
+    match /contactInfo/{contactInfo}{
+    	// allow read: if request.auth.uid != null;
+      // allow write: if request.auth.uid != null;
+      allow read, write: if true;
+    }
+
+
+    // This rule allows anyone with your database reference to view, edit,
+    // and delete all data in your Firestore database. It is useful for getting
+    // started, but it is configured to expire after 30 days because it
+    // leaves your app open to attackers. At that time, all client
+    // requests to your Firestore database will be denied.
+    //
+    // Make sure to write security rules for your app before that time, or else
+    // all client requests to your Firestore database will be denied until you Update
+    // your rules
+    //
+    //Featured Items database
+    match /featuredItems/{featuredItems} {
+    	allow read: if request.auth.uid != null;
+      //allow read: if true;
+     // allow write: if request.auth.uid != null;
+    }
+
+    match /beforeYouGo/{beforeYouGo} {
+      allow read: if true;
+      	//allow read: if request.auth.uid != null;
+      //allow write: if request.auth.uid != null
+    }
+
+
+    match /VisitLogBook/{VisitLogBook}{
+    	// allow read: if request.auth.uid != null;
+      allow read: if true;
+      // allow write: if true;
+      allow write: if request.auth.uid != null;
+    }
+
+
+
+    //Homepage
+    match /homepage/{homepage}{
+    	//allow read: if true;
+      	allow read: if request.auth.uid != null;
+     // allow write: if request.auth.uid != null
+    }
+
+    //Homeimages
+    match /homepageImages/{homepageImages}{
+    	//allow read: if true;
+      	allow read: if request.auth.uid != null;
+     // allow write: if request.auth.uid != null
+    }
+
+    //Items to consider
+    match /itemsToConsider/{itemsToConsider}{
+    	//allow read: if true;
+      	allow read: if request.auth.uid != null;
+     // allow write: if request.auth.uid != null
+    }
+
+    //Online resources
+    match /onlineResources/{onlineResources}{
+    	//allow read: if true;
+      	allow read: if request.auth.uid != null;
+     // allow write: if request.auth.uid != null
+    }
+
+    //on the street
+    match /onTheStreet/{onTheStreet}{
+    	allow read: if true;
+      	//allow read: if request.auth.uid != null;
+     // allow write: if request.auth.uid != null
+    }
+
+    //User info
+    match /userInfo/{userInfo}{
+    	allow read: if request.auth.uid != null;
+      allow write: if request.auth.uid != null;
+    }
+
+    //Visit Logs
+    match /visitLogs/{visitLogs}{
+    	allow read: if request.auth.uid != null;
+     // allow write: if true;
+     	allow write: if request.auth.uid != null;
+    }
+
+    //pastVisitLogs
+    match /pastVisitLogs/{pastVisitLogs}{
+    	allow read: if request.auth.uid != null;
+     // allow write: if true;
+     	allow write: if request.auth.uid != null;
+    }
+
+
+    match /likedEvents/{likedEventsID=**}{
+    	allow read: if request.auth.uid != null;
+     // allow write: if true;
+     	allow write: if request.auth.uid != null;
+    }
+
+    //share your visitLogs
+    match /shareyourvisit/{shareyourvisit}{
+    	allow read: if request.auth.uid != null;
+      //allow write: if true;
+      	allow write: if request.auth.uid != null;
+    }
+
+    match /wantToHelp/{wantToHelp}{
+    //	allow read: if true;
+      	allow read: if request.auth.uid != null;
+        //	allow write: if request.auth.uid != null;
+      //allow write: if true;
+    }
+
+    //ios Homepage
+    match /iosHomepage/{iosHomepage}{
+    	//allow read: if true;
+      	allow read: if request.auth.uid != null;
+     // allow write: if request.auth.uid != null;
+    }
+
+    //iOS Online Resources
+    match /iosOnlineResources/{iosOnlineResources}{
+    	//allow read: if true;
+      	allow read: if request.auth.uid != null;
+     // allow write: if request.auth.uid != null;
+    }
+
+    //flutter app collections below
+    match /page_content/{page_contentID=**} {
+     allow read : if true;
+     //	allow read: if request.auth.uid != null;
+     // allow write: if request.auth != null;
+    }
+     match /surveys/{surveysID=**} {
+      allow read, write: if request.auth != null;
+    }
+		match /users/{usersID=**} {
+			// allow read : if true;
+			allow read, write: if true;
+      //request.auth != null;
+			}
+    match /usersByUsername/{usersByUsernameID=**} {
+     // allow read: if true;
+     	allow read: if request.auth.uid != null;
+      allow write : if request.auth!= null;
+    }
+
+    // Events Data access
+    match /sampleCollection/{sampleEvents} {
+     // allow read: if true;
+      allow read: if request.auth.uid != null;
+    //allow write: if request.auth.uid != null;
+    }
+    //Community Help Data
+    match /communityHelp/{helpPosts}{
+    	allow read: if request.auth.uid != null;
+      allow write : if request.auth!= null;
+    }
+    //Community Request Data
+    match /communityRequest/{requestPosts}{
+    	allow read: if request.auth.uid != null;
+      allow write : if request.auth!= null;
+    }
+
+    //outreachEvents Request Data
+    match /outreachEvents/{requestPosts}{
+    	allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if true;
+      allow write: if true;
+      //request.auth != null && request.auth.token.admin == true;
+      //request.auth.uid != null && request.auth.uid == request.resource.data.uid;
+    }
+		// match /users/{usersID=**} {
+		// 	// allow read : if true;
+		// 	allow read : if true;
+		// 	}
+		// match /users/{users} {
+		// // allow read : if true;
+		// 	allow read : if true;
+		// allow write: if true;
+		// }
+    match /outreachEventsCloudFuncTest/{outreachEventsCloudFuncTestId}{
+    	allow read, write: if true;
+    }
+    match /officialEvents/{requestPosts}{
+    	allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if true;
+      // allow write: if request.auth.uid != null && request.auth.uid == request.resource.data.uid;
+    }
+    match /helpRequests/{helpRequests} {
+    	// allow read : if true;
+			allow read : if true;
+      allow write: if true;
+    }
+    match /pastOutreachEvents/{helpRequests} {
+    	// allow read : if true;
+			allow read : if true;
+      allow write: if true;
+    }
+    match /contacts/{contact} {
+    	// allow read : if true;
+			allow read : if true;
+      allow write: if true;
+    }
+    match /outreachEventsAndroid/{helpRequests} {
+    	// allow read : if true;
+			allow read : if true;
+      allow write: if true;
+    }
+    match /interimPersonalVisitLog/{interimPersonalVisitLog} {
+			allow read : if true;
+      allow write: if true;
+    }
+    match /test_shardulk/{test_shardulk} {
+			allow read : if true;
+      allow write: if true;
+    }
+    match /TestSignUp_Vidhi/{test_shardulk} {
+			allow read : if true;
+      allow write: if true;
+    }
+    match /helpRequestsAndroid/{helpRequests} {
+    	// allow read : if true;
+			allow read : if true;
+      allow write: if true;
+    }
+
+    match /test_kb/{test_kb} {
+      allow read : if true;
+      allow write : if true;
+    }
+    match /userDocuments/{userDocuments}
+    {
+    allow read : if true;
+    allow write : if true;
+    }
+
+    // debug colections
+
+    match /testLogDev/{testLogDev}
+    {
+    allow read : if true;
+    allow write : if true;
+    }
+
+    match /outreachEventsDev/{outreachEventsDev}
+    {
+    allow read : if true;
+    allow write : if true;
+    }
+
+    match /personalVisitLogDev/{personalVisitLogDev}
+    {
+    allow read : if true;
+    allow write : if true;
+    }
+    match /bannedUser/{bannedUser}
+    {
+    allow read : if true;
+    allow write : if true;
+    }
+
+    // visitLogWebProd - pushing changes for visit log and community page to prod
+     match /visitLogWebProd/{visitLogWebProd}
+    {
+    allow read : if true;
+    allow write : if true;
+    }
+
+
+    match /SCChapterMembershipForm/{document}
+    {
+    allow read, write: if true;
+		}
+
+		match /adminUsers/{adminUsers}
+    {
+    allow read : if true;
+    allow write : if true;
+    }
+    match /VisitLogBook_New/{VisitLogBook_New}{
+    allow read : if true;
+    allow write : if true;
+    }
+    match /VisitLogsBook_Dev/{VisitLogsBook_Dev}{
+    allow read : if true;
+    allow write : if true;
+    }
+
+		function interactionLogHasOnlyAllowedFields(data) {
+      return data.keys().hasOnly([
+        'userId', 'outreachId', 'firstName', 'lastName', 'email', 'phoneNumber',
+        'interactionDate', 'startTimestamp', 'endTimestamp', 'listOfSupportsProvided',
+        'numPeopleHelped', 'carePackagesDistributed', 'carePackageContents',
+        'numPeopleJoined', 'addr1', 'addr2', 'city', 'state', 'zipcode',
+        'country', 'helpRequestCount', 'helpRequestDocIds', 'isPublic',
+        'status', 'lastModifiedTimestamp', 'lastActionPerformed','isFlagged','flaggedByUser'
+      ]);
+    }
+
+    function helpRequestHasOnlyAllowedFields(data) {
+      return data.keys().hasOnly([
+        'interactionLogDocId', 'firstName', 'lastName', 'locationLandmark',
+        'timestampOfInteraction', 'helpProvidedCategory', 'furtherHelpCategory',
+        'followUpTimestamp', 'additionalDetails',
+        'interactionLogFirstName', 'isPublic', 'status', 'lastModifiedTimestamp',
+        'lastActionPerformed', 'completedTimestamp', 'isCompleted'
+      ]);
+    }
+
+    match /HelpRequest/{docId} {
+      allow read: if true;
+      allow create, update: if helpRequestHasOnlyAllowedFields(request.resource.data);
+    }
+
+    match /InteractionLog/{docId} {
+      allow read: if true;
+      allow create, update: if interactionLogHasOnlyAllowedFields(request.resource.data);
+    }
+
+    match /HelpRequestDev/{docId} {
+      allow read: if true;
+      allow create, update: if helpRequestHasOnlyAllowedFields(request.resource.data);
+    }
+
+    match /InteractionLogDev/{docId} {
+      allow read: if true;
+      allow create, update: if interactionLogHasOnlyAllowedFields(request.resource.data);
+    }
+
+    match /Metrics/{Metrics} {
+    	allow read;
+    }
+  }
+}

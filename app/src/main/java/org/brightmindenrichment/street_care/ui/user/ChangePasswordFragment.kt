@@ -18,6 +18,8 @@ import org.brightmindenrichment.street_care.databinding.ChangePasswordBinding
 class ChangePasswordFragment : Fragment() {
     private var _binding: ChangePasswordBinding? = null
     private val binding get() = _binding!!
+    // Declared but not strictly necessary if using Firebase.auth directly.
+    // I'll initialize it and use it for cleaner access.
     private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
@@ -31,14 +33,16 @@ class ChangePasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Initialize Firebase Auth
+        auth = Firebase.auth
+
         binding.btnSaveChanges.setOnClickListener{
             onSaveChanges()
         }
         binding.btnCancel.setOnClickListener{
             onCancel()
         }
-
-
     }
 
     private fun onCancel() {
@@ -54,7 +58,9 @@ class ChangePasswordFragment : Fragment() {
             TextUtils.isEmpty(oldpassword) -> binding.editTextOldPassword.setError(getString(R.string.mandatory))
             TextUtils.isEmpty(newpassword) -> binding.editTextNewPassword.setError(getString(R.string.mandatory))
             TextUtils.isEmpty(reenternewpassword) -> binding.editTextReenterNewPassword.setError(getString(R.string.mandatory))
-            !newpassword.contentEquals(reenternewpassword) -> binding.editTextNewPassword.setError(getString(R.string.error_occurred))
+            // Check if passwords match
+            !newpassword.contentEquals(reenternewpassword) -> binding.editTextReenterNewPassword.setError(getString(R.string.error_occurred))
+            // Check if new password is the same as old password
             newpassword.contentEquals(oldpassword) -> binding.editTextNewPassword.setError(getString(R.string.same_password))
             else -> changePassword(oldpassword, newpassword)
         }
@@ -62,45 +68,51 @@ class ChangePasswordFragment : Fragment() {
 
     private fun changePassword(oldPassword: String, newPassword: String) {
 
-        val user = UserSingleton.userModel.currentUser
+        // CORRECTED: Use the standard Firebase Auth method to get the current user
+        val user = auth.currentUser
 
+        // CORRECTED: Indentation fix (this block starts on the same level as the statement above)
+        user?.let {
             // Check if the user is logged in
-            user?.let {
-                // Get user's email
-                val email = user.email
 
-                if (email == null) {
-                    // User's email is null
-                    Toast.makeText(requireContext(), getString(R.string.error_occurred), Toast.LENGTH_SHORT).show()
-                    return
-                }
+            // Get user's email
+            val email = user.email
 
-                // Re-authenticate the user with the old password
-                val credential = EmailAuthProvider.getCredential(email, oldPassword)
-                user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
-                    if (reauthTask.isSuccessful) {
-                        // If re-authentication is successful, update the password
-                        user.updatePassword(newPassword).addOnCompleteListener { updateTask ->
-                            if (updateTask.isSuccessful) {
-                                // Password updated successfully
-                                Toast.makeText(requireContext(), getString(R.string.password_updated), Toast.LENGTH_SHORT).show()
-                                findNavController().popBackStack()
-                            } else {
-                                // Password update failed
-                                Toast.makeText(requireContext(), getString(R.string.error_occurred), Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    } else {
-                        // Re-authentication failed
-                        Toast.makeText(requireContext(), getString(R.string.wrong_password), Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } ?: run {
-                // User is not logged in
-                Toast.makeText(requireContext(), getString(R.string.user_not_logged_in), Toast.LENGTH_SHORT).show()
+            if (email == null) {
+                // User's email is null
+                Toast.makeText(requireContext(), getString(R.string.error_occurred), Toast.LENGTH_SHORT).show()
+                return
             }
+
+            // Re-authenticate the user with the old password
+            val credential = EmailAuthProvider.getCredential(email, oldPassword)
+            user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
+                if (reauthTask.isSuccessful) {
+                    // If re-authentication is successful, update the password
+                    user.updatePassword(newPassword).addOnCompleteListener { updateTask ->
+                        if (updateTask.isSuccessful) {
+                            // Password updated successfully
+                            Toast.makeText(requireContext(), getString(R.string.password_updated), Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+                        } else {
+                            // Password update failed
+                            Toast.makeText(requireContext(), getString(R.string.error_occurred), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    // Re-authentication failed (usually wrong old password)
+                    Toast.makeText(requireContext(), getString(R.string.wrong_password), Toast.LENGTH_SHORT).show()
+                }
+            }
+        } ?: run {
+            // User is not logged in
+            Toast.makeText(requireContext(), getString(R.string.user_not_logged_in), Toast.LENGTH_SHORT).show()
+        }
 
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

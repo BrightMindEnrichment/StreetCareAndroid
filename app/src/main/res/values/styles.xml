@@ -76,6 +76,56 @@
         <item name="cornerSizeBottomLeft">10dp</item>
         <item name="cornerSizeBottomRight">10dp</item>
     </style>
+    <style name="InteractionDialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.5</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="shapeAppearanceMediumComponent">@style/DialogNoCorners</item>
+    </style>
+    <style name="DialogNoCorners" parent="">
+        <item name="cornerSize">0dp</item>
+    </style>
 
+    <!-- Progress dot styles: small Views styled in layout -->
+    <style name="ProgressDotBase">
+        <item name="android:layout_marginStart">6dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+    </style>
+
+    <style name="ThemeOverlay.StreetCare.DatePicker" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+    </style>
+    <style name="ThemeOverlay.StreetCare.TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+    </style>
+    <style name="ProgressDotFilled" parent="ProgressDotBase">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:background">@drawable/progress_dot_filled_yellow</item>
+    </style>
+
+    <style name="ProgressDotOutline" parent="ProgressDotBase">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:background">@drawable/progress_dot_outline_yellow</item>
+    </style>
+
+    <style name="ProgressDotDark" parent="ProgressDotBase">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:background">@drawable/progress_dot_dark</item>
+    </style>
+
+
+    <style name="CheckboxYellowTickTheme">
+        <item name="android:colorControlActivated">@color/golden_yellow</item>
+        <item name="android:colorControlNormal">@color/black</item>
+    </style>
+
+    <style name="HintTextAppearance" parent="TextAppearance.Design.Hint">
+        <item name="android:fontFamily">@font/poppins_bold_new</item>
+    </style>
 
 </resources>

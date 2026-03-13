@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/label_interaction_location_question"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:fontFamily="@font/poppins_bold_new" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/search_bar_rounded_background"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="4dp">
+
+            <ImageView
+                android:id="@+id/icon_search"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/desc_search_icon"
+                android:src="@drawable/ic_search"
+                app:tint="#616161" />
+
+            <AutoCompleteTextView
+                android:id="@+id/input_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/icon_mic"
+                android:layout_toEndOf="@id/icon_search"
+                android:background="@android:color/transparent"
+                android:completionThreshold="1"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="@string/search_for_address"
+                android:imeOptions="actionSearch"
+                android:inputType="textPostalAddress"
+                android:minHeight="48dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_bold_new" />
+
+            <ImageView
+                android:id="@+id/icon_mic"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/desc_mic_icon"
+                android:focusable="true"
+                android:padding="8dp"
+                android:src="@drawable/mic_24"
+                app:tint="#606060" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/cityInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                app:hintTextAppearance="@style/HintTextAppearance"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <EditText
+                    android:id="@+id/input_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_city_example"
+                    android:inputType="text"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_bold_new" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/stateInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:hintTextAppearance="@style/HintTextAppearance"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <EditText
+                    android:id="@+id/input_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_state_example"
+                    android:inputType="text"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_bold_new" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/zipInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:hintTextAppearance="@style/HintTextAppearance"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <EditText
+                android:id="@+id/input_zip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_zip_example"
+                android:maxLength="5"
+                android:inputType="number"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_bold_new" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/descriptionInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/HintTextAppearance"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <EditText
+                android:id="@+id/input_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/description"
+                android:minLines="3"
+                android:gravity="top"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_bold_new" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+</LinearLayout>

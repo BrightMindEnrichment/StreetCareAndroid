@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Section 1: Number of people helped -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/number_of_people_helped"
+        android:textSize="22sp"
+        app:fontFamily="@font/poppins_bold_new"
+        android:textColor="@color/black"
+        android:gravity="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <FrameLayout
+            android:id="@+id/btn_decrease_helped"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/circle_button_bg" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_minus"
+                android:tint="#F4D03F"
+                android:contentDescription="@string/decrease"
+                tools:ignore="UseAppTint" />
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/et_count_helped"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="12dp"
+            android:text="1"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/poppins_bold_new"
+            android:textColor="#000000"
+            android:inputType="number"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:selectAllOnFocus="true"
+            android:background="@drawable/textfield_bg" />
+
+        <FrameLayout
+            android:id="@+id/btn_increase_helped"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/circle_button_bg" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_plus"
+                android:tint="#F4D03F"
+                android:contentDescription="@string/increase"
+                tools:ignore="UseAppTint" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Section 2: How many people joined you -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:text="@string/how_many_people_joined_you"
+        android:textSize="24sp"
+        app:fontFamily="@font/poppins_bold_new"
+        android:textColor="@color/black"
+        android:gravity="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <FrameLayout
+            android:id="@+id/btn_decrease_joined"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/circle_button_bg" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_minus"
+                android:tint="#F4D03F"
+                android:contentDescription="@string/decrease"
+                tools:ignore="UseAppTint" />
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/et_count_joined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="12dp"
+            android:text="0"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/poppins_bold_new"
+            android:textColor="#000000"
+            android:inputType="number"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:selectAllOnFocus="true"
+            android:background="@drawable/textfield_bg" />
+
+        <FrameLayout
+            android:id="@+id/btn_increase_joined"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/circle_button_bg" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_plus"
+                android:tint="#F4D03F"
+                android:contentDescription="@string/increase"
+                tools:ignore="UseAppTint" />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>
