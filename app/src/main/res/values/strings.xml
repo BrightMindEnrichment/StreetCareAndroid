@@ -205,7 +205,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="Radio4">Wellness/Emotional Support</string>
     <string name="Radio5">Other</string>
     <string name="Radio6">Medical Help/Doctor</string>
-    <string name="Radio7">Social Work/Psychological support</string>
+    <string name="Radio7">Social Worker/Psychological support</string>
     <string name="Radio8">Lawyer/Legal</string>
 
     <string name="minus"> - </string>
@@ -707,7 +707,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="hygiene">Hygiene Products</string>
     <string name="support">Wellness/Emotional Support</string>
     <string name="medical_help">Medical Help/Doctor</string>
-    <string name="social_work_psychiatrist">Social Work/Psychiatrist</string>
+    <string name="social_work_psychiatrist">Social Worker/Psychiatrist</string>
     <string name="lawyer_legal">Lawyer/Legal</string>
     <string name="other">Other</string>
     <string name="question_2">What kind of help was provided?</string>
@@ -730,7 +730,7 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="items_in_care_package_examples">Blankets, Socks, ...</string>
     <string name="previous_btn_txt">Previous</string>
     <string name="next_btn_txt">Next</string>
-    <string name="what_items_were_included_in_the_care_package">What were the care items included?</string>
+    <string name="what_items_were_included_in_the_care_package">What care items were included?</string>
     <string name="increase_count_btn_txt">Increase count</string>
     <string name="decrease_count_btn_txt">Decrease count</string>
     <string name="number_of_care_packages_given_out">Number of care items given out</string>
