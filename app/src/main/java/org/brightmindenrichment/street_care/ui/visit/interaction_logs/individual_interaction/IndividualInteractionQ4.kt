@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
@@ -159,6 +160,16 @@ class IndividualInteractionQ4 : BaseIIQuestionFragment() {
 
         // Time picker
         timePickerCard.setOnClickListener {
+
+            // Check if date is selected first
+            if (selectedDate == null) {
+                Toast.makeText(
+                    requireContext(),
+                    "Please select a date first",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             val keyboardWasVisible = imm.isActive
 
