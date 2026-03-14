@@ -123,7 +123,6 @@ class InteractionLogFormConsentFragment : Fragment(R.layout.fragment_log_interac
     override fun onDestroyView() {
         super.onDestroyView()
         (activity as? AppCompatActivity)?.supportActionBar?.apply {
-            //setDisplayHomeAsUpEnabled(false)
             setHomeAsUpIndicator(null)
             title = prevTitle
         }
