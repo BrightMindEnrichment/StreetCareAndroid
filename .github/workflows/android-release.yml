@@ -39,10 +39,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      - name: 3. Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+      - name: 3. Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       # Uses vamsi-alluri/android-version-actions
       # The action logic automatically prioritizes 'specific_version' if provided;
