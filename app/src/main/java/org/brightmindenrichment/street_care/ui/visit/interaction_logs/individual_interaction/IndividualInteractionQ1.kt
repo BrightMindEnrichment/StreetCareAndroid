@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
@@ -313,6 +314,16 @@ class IndividualInteractionQ1 : BaseIIQuestionFragment() {
 
         // Time picker
         timePickerCard.setOnClickListener {
+
+            // Check if date is selected first
+            if (selectedDate == null) {
+                Toast.makeText(
+                    requireContext(),
+                    "Please select a date first",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             val keyboardWasVisible = imm.isActive
 
@@ -330,6 +341,7 @@ class IndividualInteractionQ1 : BaseIIQuestionFragment() {
                 .build()
 
             picker.addOnPositiveButtonClickListener {
+
                 val pickedTime = LocalTime.of(picker.hour, picker.minute)
 
                 // Validate: restrict to half day (12 hours) into the future
@@ -339,6 +351,15 @@ class IndividualInteractionQ1 : BaseIIQuestionFragment() {
                     val maxFutureDateTime = nowInTz.plusHours(12)
 
                     if (pickedDateTime.isAfter(maxFutureDateTime)) {
+
+                        val latestAllowedTime = maxFutureDateTime.format(
+                            DateTimeFormatter.ofPattern("hh:mm a")
+                        )
+                        Toast.makeText(
+                            requireContext(),
+                            "Select a valid time before $latestAllowedTime",
+                            Toast.LENGTH_LONG
+                        ).show()
                         tvTime.error = "Cannot select more than 12 hours in the future"
                         return@addOnPositiveButtonClickListener
                     }
