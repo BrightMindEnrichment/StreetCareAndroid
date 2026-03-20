@@ -55,6 +55,30 @@
           }
         },
         {
+          "client_id": "223295299587-an741r2jlk06vah0k7a51snc4695squr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "706417569be89042586fcf810173cdb3d9be1e9e"
+          }
+        },
+        {
+          "client_id": "223295299587-fa9i63q9ok2raj341tt82rf9t7vp9kch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "8f4456a7c2fe6376a55ce6908a7542b4265c061c"
+          }
+        },
+        {
+          "client_id": "223295299587-qrn2cb2e1e03rvekumjlvfmsc4dkrakg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "13e2c9b35efe485211d7cd714bac26d75ee9dbf7"
+          }
+        },
+        {
           "client_id": "223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com",
           "client_type": 3
         }
