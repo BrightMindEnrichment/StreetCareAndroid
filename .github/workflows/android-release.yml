@@ -59,25 +59,28 @@ jobs:
           # If specific_version is empty, this handles the patch/minor/major bump
           SemanticVersioningOptionToIncrement: ${{ (github.event_name == 'workflow_dispatch') && github.event.inputs.bump_type || 'patch' }}
 
-      - name: 5. Inject Configuration into local.properties
+      - name: 5. Write google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
+
+      - name: 6. Inject Configuration into local.properties
         run: |
           echo "API_KEY=${{ secrets.API_KEY }}" > ./local.properties
           echo "API_KEY_PLACES=${{ secrets.API_KEY_PLACES }}" >> ./local.properties
           echo "INTERACTION_LOG_COLLECTION=${{ secrets.INTERACTION_LOG_COLLECTION }}" >> ./local.properties
           echo "HELP_REQUEST_COLLECTION=${{ secrets.HELP_REQUEST_COLLECTION }}" >> ./local.properties
         
-      - name: 6. Decode and setup Keystore
+      - name: 7. Decode and setup Keystore
         run: |
           echo "${{ secrets.SIGNING_KEY_STORE_BASE64 }}" | base64 --decode > ${{ github.workspace }}/app/release-keystore.jks
 
-      - name: 7. Build and Sign App Bundle
+      - name: 8. Build and Sign App Bundle
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew bundleRelease
 
-      - name: 8. Upload to Internal Testing Track on Google Play
+      - name: 9. Upload to Internal Testing Track on Google Play
         uses: r0adkll/upload-google-play@v1.1.3
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
@@ -85,7 +88,7 @@ jobs:
           track: internal
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           
-      - name: 9. Commit and Push Version Bump
+      - name: 10. Commit and Push Version Bump
         run: |
           NEW_VERSION_NAME=$(grep "versionName " app/build.gradle | awk '{print $2}' | tr -d '"')
           TRIGGER_MSG=$(git log -1 --pretty=%s HEAD | awk '{ if (length($0) > 40) print substr($0, 1, 40) "..."; else print $0 }')
