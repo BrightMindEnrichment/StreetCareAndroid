@@ -20,8 +20,8 @@ android {
         applicationId "com.app.bmeapplication1"
         minSdk 31
         targetSdk 36
-        versionCode 262
-        versionName "26.0.3"
+        versionCode 263
+        versionName "26.0.4"
         // The pipeline updates the main branch with the version that's being released.
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
