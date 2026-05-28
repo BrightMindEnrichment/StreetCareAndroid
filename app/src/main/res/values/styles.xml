@@ -34,7 +34,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingEnd">12dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
     </style>
     <style name="BadgeIconStyle">
         <item name="android:layout_width">20dp</item>

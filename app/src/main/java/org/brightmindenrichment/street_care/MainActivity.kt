@@ -58,6 +58,7 @@ import org.brightmindenrichment.data.local.EventsDatabase
 import org.brightmindenrichment.street_care.databinding.ActivityMainBinding
 import org.brightmindenrichment.street_care.notification.NotificationWorker
 import org.brightmindenrichment.street_care.ui.community.model.DatabaseEvent
+import org.brightmindenrichment.street_care.ui.user.UserModel
 import org.brightmindenrichment.street_care.ui.user.UserSingleton
 import org.brightmindenrichment.street_care.ui.user.UserRepository
 import org.brightmindenrichment.street_care.ui.visit.InteractionLogDialog
@@ -84,6 +85,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dataStoreManager: DataStoreManager
 
     private val db = FirebaseFirestore.getInstance()
+    private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+        val currentUser = firebaseAuth.currentUser
+        Log.d(TAG, "Auth state changed. currentUser=${currentUser?.uid}")
+        if (currentUser != null && UserSingleton.userModel.currentUser?.uid != currentUser.uid) {
+            UserSingleton.userModel = UserModel(currentUser)
+        }
+    }
 
     @Inject
     lateinit var eventsDatabase: EventsDatabase
@@ -259,9 +267,19 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavView.setOnItemSelectedListener { item ->
             val currentDestId = navController.currentDestination?.id
+            Log.d(
+                TAG,
+                "Bottom-nav item tapped=${resourceName(item.itemId)}, " +
+                    "currentDestination=${resourceName(currentDestId)}, " +
+                    "selectedItem=${resourceName(bottomNavView.selectedItemId)}"
+            )
             if (currentDestId in interactionLogDestinations) {
 
                 fun navigateToItem() {
+                    Log.d(
+                        TAG,
+                        "navigateToItem from interaction log: target=${resourceName(item.itemId)}"
+                    )
                     // Pop the IL back stack back to nav_visit (where IL was launched from),
                     // then navigate to the target tab using standard NavigationUI behaviour.
                     navController.popBackStack(R.id.nav_visit, false)
@@ -272,11 +290,22 @@ class MainActivity : AppCompatActivity() {
                             .setPopUpTo(navController.graph.startDestinationId, false, true)
                             .build()
                         if (FirebaseAuth.getInstance().currentUser != null) {
+                            Log.d(TAG, "User logged in, routing loginRedirectFragment to nav_visit")
                             navController.navigate(R.id.nav_visit, null, opts)
                         } else {
+                            Log.d(
+                                TAG,
+                                "User logged out, routing loginRedirectFragment to " +
+                                    "loginVisitLogFragment"
+                            )
                             navController.navigate(R.id.loginVisitLogFragment, null, opts)
                         }
                     } else if (item.itemId != R.id.nav_visit) {
+                        Log.d(
+                            TAG,
+                            "Delegating bottom-nav navigation to NavigationUI for " +
+                                resourceName(item.itemId)
+                        )
                         NavigationUI.onNavDestinationSelected(item, navController)
                     }
                     // if item is nav_visit, popBackStack already landed us there
@@ -319,12 +348,23 @@ class MainActivity : AppCompatActivity() {
                     .setPopUpTo(navController.graph.startDestinationId, false, true)
                     .build()
                 if (FirebaseAuth.getInstance().currentUser != null) {
+                    Log.d(TAG, "Bottom-nav loginRedirectFragment tapped while logged in, opening nav_visit")
                     navController.navigate(R.id.nav_visit, null, visitNavOptions)
                 } else {
+                    Log.d(
+                        TAG,
+                        "Bottom-nav loginRedirectFragment tapped while logged out, opening " +
+                            "loginVisitLogFragment"
+                    )
                     navController.navigate(R.id.loginVisitLogFragment, null, visitNavOptions)
                 }
                 true
             } else {
+                Log.d(
+                    TAG,
+                    "Delegating bottom-nav navigation to NavigationUI for " +
+                        resourceName(item.itemId)
+                )
                 NavigationUI.onNavDestinationSelected(item, navController)
                 true
             }
@@ -332,6 +372,39 @@ class MainActivity : AppCompatActivity() {
 
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.d(
+                TAG,
+                "Destination changed to ${resourceName(destination.id)}; " +
+                    "bottomNavSelected=${resourceName(bottomNavView.selectedItemId)}"
+            )
+            val selectedBottomNavId = when (destination.id) {
+                R.id.nav_home -> R.id.nav_home
+                R.id.nav_community -> R.id.nav_community
+                R.id.nav_user,
+                R.id.nav_profile,
+                R.id.nav_editprofile,
+                R.id.nav_profileBadges,
+                R.id.profileMyEvents,
+                R.id.nav_login,
+                R.id.nav_sign_up,
+                R.id.nav_forgetPass,
+                R.id.nav_changepassword -> R.id.profile
+                else -> {
+                    if (destination.id in interactionLogDestinations ||
+                        destination.id in setOf(
+                            R.id.loginVisitLogFragment,
+                            R.id.loginRedirectFragment,
+                            R.id.nav_visit,
+                            R.id.surveySubmittedFragment
+                        )
+                    ) {
+                        R.id.loginRedirectFragment
+                    } else {
+                        null
+                    }
+                }
+            }
+            selectedBottomNavId?.let { bottomNavView.menu.findItem(it)?.isChecked = true }
             bottomNavView.visibility =
                 if (destination.id in setOf(
                     R.id.nav_home,
@@ -362,9 +435,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun resourceName(id: Int?): String {
+        if (id == null) return "null"
+        return runCatching { resources.getResourceEntryName(id) }
+            .getOrElse { id.toString() }
+    }
+
     override fun onStart() {
         super.onStart()
         Log.d("workManager", "onStart")
+        FirebaseAuth.getInstance().addAuthStateListener(authStateListener)
     }
 
     override fun onResume() {
@@ -397,6 +477,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d("workManager", "onStop")
+        FirebaseAuth.getInstance().removeAuthStateListener(authStateListener)
     }
     override fun onDestroy() {
         super.onDestroy()

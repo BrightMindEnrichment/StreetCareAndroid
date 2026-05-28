@@ -4,6 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_home">
+
+    <action
+        android:id="@+id/action_global_login_success_to_nav_user"
+        app:destination="@id/nav_user" />
+
+    <action
+        android:id="@+id/action_global_login_success_to_nav_visit"
+        app:destination="@id/nav_visit" />
+
     <include app:graph="@navigation/profile"/>
 
     <fragment

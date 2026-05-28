@@ -1380,14 +1380,14 @@ class PublicEvent : Fragment(), AdapterView.OnItemSelectedListener {
                 // holder.avatarImage.setImageResource(R.drawable.avatar)
             }
 
-            // Other click listeners - keep them simple for now
-            holder.rootLayout.setOnClickListener {
-                Log.d("PublicEvent", "Card clicked - implement details view later")
-                onItemClick?.invoke(visitLog,position)
-            }
+            // Details should open only from the dedicated button, not from the whole card.
+            holder.rootLayout.setOnClickListener(null)
+            holder.rootLayout.isClickable = false
+            holder.rootLayout.isFocusable = false
 
             holder.detailsButton.setOnClickListener {
-                Log.d("PublicEvent", "Details button clicked - implement later")
+                Log.d("PublicEvent", "Details button clicked")
+                onItemClick?.invoke(visitLog, position)
             }
         }
 

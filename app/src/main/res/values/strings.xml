@@ -100,6 +100,8 @@
 
 
     <string name="user_button_sign_out">Sign Out</string>
+    <string name="sign_out_title">Sign Out</string>
+    <string name="sign_out_message">Are you sure you want to sign out?</string>
     <string name="user_button_remove_account">Remove Account</string>
     <string name="user_button_sign_up">Sign Up</string>
     <string name="user_button_login">Login</string>
@@ -123,10 +125,9 @@
     <string name="company">Company/Organization (Optional)</string>
     <string name="reenter_password">Re-enter Password</string>
 
-    <string name="default_web_client_id">223295299587-7mhp355dmib6ldbvhs8c58jpvs9ka7bq.apps.googleusercontent.com</string>
-
     <!-- error messages -->
     <string name="error_login_failed">Authentication failed.</string>
+    <string name="error_google_sign_in_unavailable">Google Sign-In is unavailable for this app build right now. Please use email login or try again later.</string>
     <string name="error_password_must_match">Passwords must match.</string>
     <string name="error_missing_required_data">Missing required information.</string>
     <string name="password_mismatch">Password and re-enter password are different.</string>

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import org.brightmindenrichment.street_care.R
 
 
@@ -31,7 +32,7 @@ class UserFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val currentUser = UserSingleton.userModel.currentUser
+        val currentUser = FirebaseAuth.getInstance().currentUser
         if(currentUser==null) {
             buttonLogin = view.findViewById<Button>(R.id.user_button_login)
             buttonSignUp = view.findViewById<Button>(R.id.user_button_sign_up)
@@ -47,6 +48,9 @@ class UserFragment : Fragment() {
 
         }
         else{
+            if (UserSingleton.userModel.currentUser?.uid != currentUser.uid) {
+                UserSingleton.userModel = UserModel(currentUser)
+            }
             findNavController().navigate(R.id.action_nav_user_to_nav_profile)
         }
 

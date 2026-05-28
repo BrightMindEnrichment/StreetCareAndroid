@@ -6,7 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingStart="16dp"
+    android:paddingTop="4dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
 
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
@@ -18,7 +21,6 @@
         <!-- Chapter Leader Badge -->
         <LinearLayout
             style="@style/BadgeContainerStyle"
-            android:paddingStart="5dp"
             tools:ignore="UseCompoundDrawables">
             <ImageView
                 style="@style/BadgeIconStyle"
@@ -32,7 +34,6 @@
         <!-- Street Care Hub Leader Badge -->
         <LinearLayout
             style="@style/BadgeContainerStyle"
-            android:paddingStart="10dp"
             tools:ignore="UseCompoundDrawables">
             <ImageView
                 style="@style/BadgeIconStyle"
@@ -46,7 +47,6 @@
         <!-- Chapter Member Badge -->
         <LinearLayout
             style="@style/BadgeContainerStyle"
-            android:paddingStart="5dp"
             tools:ignore="UseCompoundDrawables">
             <ImageView
                 style="@style/BadgeIconStyle"
@@ -60,7 +60,6 @@
         <!-- Account Holder Badge -->
         <LinearLayout
             style="@style/BadgeContainerStyle"
-            android:paddingStart="2dp"
             tools:ignore="UseCompoundDrawables">
             <ImageView
                 style="@style/BadgeIconStyle"
