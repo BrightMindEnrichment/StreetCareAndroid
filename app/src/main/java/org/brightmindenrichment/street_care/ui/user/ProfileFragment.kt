@@ -1,7 +1,6 @@
 package org.brightmindenrichment.street_care.ui.user
 
 import android.app.AlertDialog
-import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -43,7 +42,7 @@ class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    private val currentUser get() = UserSingleton.userModel.currentUser
+    private val currentUser get() = FirebaseAuth.getInstance().currentUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +74,8 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_nav_profile_to_profileMyEvents)
         }*/
         binding.btnsignout.setOnClickListener{
-            buttonSignOutOnClick()
+            Log.d(TAG, "Sign out button tapped")
+            showSignOutConfirmation()
         }
         binding.textDeleteAccount.setOnClickListener {
             val builder = AlertDialog.Builder(context)
@@ -94,6 +94,21 @@ class ProfileFragment : Fragment() {
             alert.show()
         }
 
+    }
+
+    private fun showSignOutConfirmation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.sign_out_title))
+            .setMessage(getString(R.string.sign_out_message))
+            .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                Log.d(TAG, "Sign out confirmed")
+                buttonSignOutOnClick()
+            }
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                Log.d(TAG, "Sign out canceled")
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun buttonSignOutOnClick() {
@@ -188,7 +203,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun googleSignOut(){
-        val providerData = currentUser!!.providerData
+        val providerData = currentUser?.providerData ?: return
         for (userInfo in providerData) {
             val providerId = userInfo.providerId
             if(providerId=="google.com"){
@@ -245,9 +260,15 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
 
     companion object {
+        private const val TAG = "ProfileFragment"
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

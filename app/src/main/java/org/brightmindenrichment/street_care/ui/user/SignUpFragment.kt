@@ -1,6 +1,5 @@
 package org.brightmindenrichment.street_care.ui.user
 
-import android.content.ContentValues
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -10,15 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 //import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 //import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.brightmindenrichment.street_care.R
 import org.brightmindenrichment.street_care.databinding.FragmentSignUpBinding
@@ -26,6 +24,10 @@ import java.util.*
 
 
 class SignUpFragment : Fragment() {
+    companion object {
+        private const val TAG = "SignUpFragment"
+    }
+
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
     private var userName: String = ""
@@ -38,17 +40,25 @@ class SignUpFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val signInListener = object : SignInListener {
             override fun onSignInSuccess() {
-                findNavController().popBackStack()
-                Log.d(ContentValues.TAG, "Firebase user signin success")
+                Log.d(TAG, "Firebase user signin success")
+                val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
+                if (bottomNav.selectedItemId == R.id.profile) {
+                    findNavController().navigate(R.id.nav_user)
+                } else {
+                    bottomNav.selectedItemId = R.id.profile
+                }
             }
 
             override fun onSignInError() {
-                Log.d(ContentValues.TAG, "Firebase user signin fail")
+                Log.e(TAG, "Firebase user signin fail")
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.error_login_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
-        val activityResultRegistryOwner = requireActivity() as? ActivityResultRegistryOwner
-
-        loginObserver = LoginLifeCycleObserver(requireContext(), signInListener)
+        loginObserver = LoginLifeCycleObserver(requireActivity(), signInListener)
         lifecycle.addObserver(loginObserver)
     }
 
@@ -148,7 +158,7 @@ class SignUpFragment : Fragment() {
                             val db = FirebaseFirestore.getInstance()
                             db.collection("users").document(currentUser?.uid ?: "??").set(userData).addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    Log.d(ContentValues.TAG, "uploading user data to firebase:success")
+                                    Log.d(TAG, "uploading user data to firebase:success")
                                 }
                                 Toast.makeText(activity,
                                     getString(R.string.successfully_register), Toast.LENGTH_SHORT).show();
@@ -180,7 +190,7 @@ class SignUpFragment : Fragment() {
         */
 
         binding.layoutsiginmethod.cardGoogle.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch {
                 loginObserver.fetchGoogleSignInCredentials()
             }
         }
@@ -198,5 +208,10 @@ class SignUpFragment : Fragment() {
         super.onDestroy()
         // Remove the observer when the Fragment is destroyed
         lifecycle.removeObserver(loginObserver)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

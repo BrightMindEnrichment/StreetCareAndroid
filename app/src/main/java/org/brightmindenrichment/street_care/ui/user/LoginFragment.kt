@@ -1,6 +1,5 @@
 package org.brightmindenrichment.street_care.ui.user
 
-import android.content.ContentValues
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -13,6 +12,7 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +26,11 @@ import org.brightmindenrichment.street_care.databinding.FragmentLoginBinding
 
 
 class LoginFragment : Fragment() {
+    companion object {
+        private const val TAG = "LoginFragment"
+        private const val ROUTE_DIAG_REV = "login-route-2026-05-27-1729"
+    }
+
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
@@ -35,19 +40,25 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "LoginFragment diagnostic revision=$ROUTE_DIAG_REV")
 
         val signInListener = object : SignInListener {
             override fun onSignInSuccess() {
-                findNavController().popBackStack()
-                Log.d(ContentValues.TAG, "Firebase user signIn success")
+                Log.d(TAG, "Firebase user signIn success")
+                routeAfterSuccessfulSignIn()
             }
 
             override fun onSignInError() {
-                Log.d(ContentValues.TAG, "Firebase user signIn fail")
+                Log.e(TAG, "Firebase user signIn fail")
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.error_login_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
-        loginObserver = LoginLifeCycleObserver(requireContext(), signInListener)
+        loginObserver = LoginLifeCycleObserver(requireActivity(), signInListener)
         lifecycle.addObserver(loginObserver)
 
     }
@@ -113,10 +124,10 @@ class LoginFragment : Fragment() {
                     if (task.isSuccessful) {
                         lifecycleScope.launch(Dispatchers.IO) {
                             UserSingleton.userModel = UserRepository().fetchUserData()
-                            Log.d(ContentValues.TAG, "getUserData :: userName: ${UserSingleton.userModel}, imageUri: ${UserSingleton.userModel}")
+                            Log.d(TAG, "getUserData :: userName: ${UserSingleton.userModel}, imageUri: ${UserSingleton.userModel}")
                             withContext(Dispatchers.Main) {
                                 disableUI(false)
-                                updateUI()
+                                routeAfterSuccessfulSignIn()
                             }
                         }
                     } else {
@@ -147,7 +158,7 @@ class LoginFragment : Fragment() {
         *
         */
         binding.layoutsiginmethod.cardGoogle.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch {
                 loginObserver.fetchGoogleSignInCredentials()
             }
         }
@@ -168,17 +179,77 @@ class LoginFragment : Fragment() {
     }
 
     private fun updateUI() {
-        Toast.makeText(activity,
-            getString(R.string.successfully_login), Toast.LENGTH_SHORT).show();
-        binding.editTextTextEmailAddress.text?.clear()
-        binding.editTextTextPassword.text?.clear()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.successfully_login),
+            Toast.LENGTH_SHORT
+        ).show()
+        _binding?.editTextTextEmailAddress?.text?.clear()
+        _binding?.editTextTextPassword?.text?.clear()
+    }
 
-      /*  requireActivity()
-            .findViewById<BottomNavigationView>(R.id.bottomNav)
-            .selectedItemId = R.id.nav_user*/
+    private fun routeAfterSuccessfulSignIn() {
+        try {
+            val currentDestinationId = findNavController().currentDestination?.id
+            Log.d(
+                TAG,
+                "routeAfterSuccessfulSignIn start: rev=$ROUTE_DIAG_REV, " +
+                    "from=${arguments?.getString("from")}, currentDestinationId=$currentDestinationId"
+            )
+            updateUI()
+            Log.d(TAG, "routeAfterSuccessfulSignIn after updateUI")
+            val fromVisit = arguments?.getString("from") == "nav_visit"
+            val actionId = if (fromVisit) {
+                R.id.action_global_login_success_to_nav_visit
+            } else {
+                R.id.action_global_login_success_to_nav_user
+            }
+            Log.d(
+                TAG,
+                "Scheduling post-login navigation: fromVisit=$fromVisit, " +
+                    "actionId=$actionId"
+            )
+            _binding?.root?.post {
+                try {
+                    if (!isAdded) {
+                        Log.w(TAG, "Skipping post-login navigation because fragment is detached")
+                        return@post
+                    }
+                    val navOptions = NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .setPopUpTo(R.id.nav_login, true)
+                        .build()
+                    Log.d(TAG, "Issuing delayed navigate() using actionId=$actionId")
+                    findNavController().navigate(actionId, null, navOptions)
+                    Log.d(TAG, "Navigation requested using actionId=$actionId")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Delayed post-login navigation failed", e)
+                    signInFallbackToast()
+                }
+            } ?: run {
+                Log.e(TAG, "Cannot navigate after sign-in because binding is null")
+                signInFallbackToast()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "routeAfterSuccessfulSignIn failed", e)
+            signInFallbackToast()
+        }
+    }
 
-        findNavController().navigate(R.id.nav_user)
+    private fun resourceName(id: Int?): String {
+        if (id == null) return "null"
+        return runCatching { resources.getResourceEntryName(id) }
+            .getOrElse { id.toString() }
+    }
 
+    private fun signInFallbackToast() {
+        activity?.let {
+            Toast.makeText(
+                it,
+                getString(R.string.error_login_failed),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
 
@@ -192,11 +263,6 @@ class LoginFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val from = arguments?.getString("from")
-        if (from == "nav_visit") {
-            requireActivity()
-                .findViewById<BottomNavigationView>(R.id.bottomNav)
-                .selectedItemId = R.id.loginRedirectFragment
-        }
+        _binding = null
     }
 }
