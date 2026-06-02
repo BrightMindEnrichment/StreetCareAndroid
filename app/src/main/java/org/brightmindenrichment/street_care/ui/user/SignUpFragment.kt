@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -36,6 +37,12 @@ class SignUpFragment : Fragment() {
     private var company: String = ""
     lateinit var loginObserver: LoginLifeCycleObserver
 
+    private val legacyGoogleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        loginObserver.handleLegacyGoogleSignInResult(result.data)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val signInListener = object : SignInListener {
@@ -58,7 +65,9 @@ class SignUpFragment : Fragment() {
                 ).show()
             }
         }
-        loginObserver = LoginLifeCycleObserver(requireActivity(), signInListener)
+        loginObserver = LoginLifeCycleObserver(requireActivity(), signInListener) {
+            legacyGoogleSignInLauncher.launch(loginObserver.getLegacyGoogleSignInIntent())
+        }
         lifecycle.addObserver(loginObserver)
     }
 

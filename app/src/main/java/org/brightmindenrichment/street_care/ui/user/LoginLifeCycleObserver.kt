@@ -1,6 +1,7 @@
 package org.brightmindenrichment.street_care.ui.user
 
 import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.credentials.CredentialManager
@@ -10,6 +11,9 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -27,7 +31,8 @@ import org.brightmindenrichment.street_care.R
 
 class LoginLifeCycleObserver(
     private val activity: Activity,
-    private val signInListener: SignInListener
+    private val signInListener: SignInListener,
+    private val launchLegacyGoogleSignIn: (() -> Unit)? = null
 ) : DefaultLifecycleObserver {
     companion object {
         private const val TAG = "LoginLifeCycleObserver"
@@ -72,17 +77,65 @@ class LoginLifeCycleObserver(
                 e
             )
             withContext(Dispatchers.Main) {
-
-                Toast.makeText(
-                    activity,
-                    activity.getString(R.string.error_google_sign_in_unavailable),
-                    Toast.LENGTH_LONG
-                ).show()
+                if (launchLegacyGoogleSignIn == null) {
+                    Toast.makeText(
+                        activity,
+                        activity.getString(R.string.error_google_sign_in_unavailable),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                launchLegacyGoogleSignIn?.invoke()
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting credential Google", e)
+            Log.e(
+                TAG,
+                "Error getting credential Google. " +
+                    "applicationId=${BuildConfig.APPLICATION_ID}, " +
+                    "webClientId=${activity.getString(R.string.default_web_client_id)}, " +
+                    "exception=${e::class.java.name}, message=${e.message}",
+                e
+            )
+            if (shouldUseLegacyGoogleSignIn(e)) {
+                withContext(Dispatchers.Main) {
+                    launchLegacyGoogleSignIn?.invoke() ?: signInListener.onSignInError()
+                }
+            } else {
+                signInListener.onSignInError()
+            }
+        }
+    }
+
+    fun getLegacyGoogleSignInIntent(): Intent {
+        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(activity.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        return GoogleSignIn.getClient(activity, signInOptions).signInIntent
+    }
+
+    fun handleLegacyGoogleSignInResult(data: Intent?) {
+        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken
+            if (idToken.isNullOrBlank()) {
+                Log.e(TAG, "Legacy Google sign in returned a null ID token")
+                signInListener.onSignInError()
+                return
+            }
+            Log.d(TAG, "Legacy Google sign in returned ID token")
+            launchFirebaseAuthWithGoogle(idToken)
+        } catch (e: ApiException) {
+            Log.e(TAG, "Legacy Google sign in failed with statusCode=${e.statusCode}", e)
             signInListener.onSignInError()
         }
+    }
+
+    private fun shouldUseLegacyGoogleSignIn(exception: Exception): Boolean {
+        val message = exception.message.orEmpty()
+        return launchLegacyGoogleSignIn != null &&
+            (message.contains("Account reauth failed", ignoreCase = true) ||
+                message.contains("[16]"))
     }
 
     private fun initGoogleSignIn(result: GetCredentialResponse) {

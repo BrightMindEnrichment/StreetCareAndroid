@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -37,6 +38,11 @@ class LoginFragment : Fragment() {
     private lateinit var loginObserver: LoginLifeCycleObserver
     private lateinit var bottomNavigationView: BottomNavigationView
 
+    private val legacyGoogleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        loginObserver.handleLegacyGoogleSignInResult(result.data)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +64,9 @@ class LoginFragment : Fragment() {
             }
         }
 
-        loginObserver = LoginLifeCycleObserver(requireActivity(), signInListener)
+        loginObserver = LoginLifeCycleObserver(requireActivity(), signInListener) {
+            legacyGoogleSignInLauncher.launch(loginObserver.getLegacyGoogleSignInIntent())
+        }
         lifecycle.addObserver(loginObserver)
 
     }
