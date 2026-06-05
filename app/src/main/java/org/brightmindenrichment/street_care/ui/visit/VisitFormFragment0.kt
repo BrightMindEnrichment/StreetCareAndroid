@@ -28,11 +28,24 @@ import org.brightmindenrichment.street_care.ui.visit.interaction_logs.Interactio
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.DetailsButtonClickListener
 import org.brightmindenrichment.street_care.ui.visit.visit_forms.VisitLogRecyclerAdapter
 import org.brightmindenrichment.street_care.util.featureflags.FeatureFlag
+import org.brightmindenrichment.street_care.ui.visit.InteractionLogDataAdapter
+import org.brightmindenrichment.street_care.ui.visit.data.InteractionLog
+import org.brightmindenrichment.street_care.ui.visit.visit_forms.InteractionLogRecyclerAdapter
 import org.brightmindenrichment.street_care.util.featureflags.FeatureFlagManager
+import org.brightmindenrichment.street_care.ui.visit.visit_forms.InteractionDetailsButtonClickListener
+
+import androidx.core.content.ContextCompat
+import com.google.android.flexbox.FlexboxLayout
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.text.SimpleDateFormat
+import java.util.Locale
+
 
 class VisitFormFragment0 : Fragment() {
     private var _binding: FragmentVisitBinding? = null
     val binding get() = _binding!!
+
+    private val interactionLogDataAdapter = InteractionLogDataAdapter()
     private val viewModel: InteractionLogViewModel by activityViewModels()
     private val visitDataAdapter = VisitDataAdapter()
     private var draftExists = false
@@ -106,31 +119,173 @@ class VisitFormFragment0 : Fragment() {
             .show()
     }
     private fun updateUI() {
-        visitDataAdapter.refreshAll {
-            val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView_visit)
-            recyclerView?.layoutManager = LinearLayoutManager(view?.context)
-            recyclerView?.adapter = VisitLogRecyclerAdapter(
-                requireContext(),
-                visitDataAdapter,
-                object : DetailsButtonClickListener {
-                    override fun onClick(visitLog: VisitLog) {
-                        val bundle = bundleOf("visitlogId" to visitLog)
-                        findNavController().navigate(
-                            R.id.action_nav_visit_to_visitLogDetailsFragment, bundle
-                        )
-                    }
-                })
-            val totalItemsDonated = visitDataAdapter.getTotalItemsDonated
-            val totalOutreaches = visitDataAdapter.size
-            val totalPeopleHelped = visitDataAdapter.getTotalPeopleCount
 
+        interactionLogDataAdapter.refreshAll {
+            val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView_visit)
+
+            recyclerView?.layoutManager = LinearLayoutManager(view?.context)
+
+            recyclerView?.adapter = InteractionLogRecyclerAdapter(
+                requireContext(),
+                interactionLogDataAdapter,
+                object : InteractionDetailsButtonClickListener {
+                    override fun onClick(interactionLog: InteractionLog) {
+                        showInteractionLogDetailsSheet(interactionLog)
+                    }
+                }
+            )
+
+            val totalItemsDonated =
+                interactionLogDataAdapter.interactions.sumOf { it.carePackagesDistributed }
+
+            val totalOutreaches =
+                interactionLogDataAdapter.size
+
+            val totalPeopleHelped =
+                interactionLogDataAdapter.interactions.sumOf { it.numPeopleHelped }
 
             binding.txtItemDonate.text = totalItemsDonated.toString()
             binding.txtOutreaches.text = totalOutreaches.toString()
             binding.txtPplHelped.text = totalPeopleHelped.toString()
         }
 
+    }
 
+    private fun showInteractionLogDetailsSheet(interactionLog: InteractionLog) {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val sheetView = layoutInflater.inflate(
+            R.layout.bottom_sheet_interaction_log_details,
+            null
+        )
+
+        sheetView.findViewById<TextView>(R.id.tvInteractionName).text =
+            interactionLog.displayName()
+
+        sheetView.findViewById<TextView>(R.id.tvInteractionDate).text =
+            interactionLog.formattedDate()
+
+        sheetView.findViewById<TextView>(R.id.tvInteractionCityState).text =
+            interactionLog.formattedCityState()
+
+        sheetView.findViewById<TextView>(R.id.tvInteractionPhone).text =
+            interactionLog.phoneNumber.ifBlank { "N/A" }
+
+        sheetView.findViewById<TextView>(R.id.tvInteractionTime).text =
+            interactionLog.formattedTimeRange()
+
+        sheetView.findViewById<TextView>(R.id.tvInteractionAddress).text =
+            interactionLog.formattedAddress()
+
+        sheetView.findViewById<TextView>(R.id.tvInteractionEmail).text =
+            interactionLog.email.ifBlank { "N/A" }
+
+        sheetView.findViewById<TextView>(R.id.tvPeopleJoined).text =
+            getString(R.string.people_joined_count, interactionLog.numPeopleJoined)
+
+        sheetView.findViewById<TextView>(R.id.tvHelpRequestCount).text =
+            getString(R.string.help_request_count_value, interactionLog.helpRequestCount)
+
+        sheetView.findViewById<TextView>(R.id.tvPeopleHelped).text =
+            getString(R.string.people_helped_count, interactionLog.numPeopleHelped)
+
+        sheetView.findViewById<TextView>(R.id.tvCarePackagesDistributed).text =
+            getString(
+                R.string.care_packages_distributed_count,
+                interactionLog.carePackagesDistributed
+            )
+
+        val chipContainer =
+            sheetView.findViewById<FlexboxLayout>(R.id.supportChipContainer)
+
+        chipContainer.removeAllViews()
+
+        val supportItems = interactionLog.listOfSupportsProvided
+            .ifEmpty { interactionLog.carePackageContents }
+
+        supportItems.forEach { support ->
+            chipContainer.addView(createSupportChip(support))
+        }
+
+        sheetView.findViewById<TextView>(R.id.btnCloseInteractionDetails)
+            .setOnClickListener {
+                bottomSheetDialog.dismiss()
+            }
+
+        bottomSheetDialog.setContentView(sheetView)
+
+        bottomSheetDialog.setOnShowListener { dialog ->
+            val bottomSheet = (dialog as BottomSheetDialog)
+                .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+
+            bottomSheet?.background = null
+        }
+
+        bottomSheetDialog.show()
+    }
+
+    private fun InteractionLog.displayName(): String {
+        return listOf(firstName, lastName)
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .joinToString(" ")
+            .ifBlank { "N/A" }
+    }
+
+    private fun InteractionLog.formattedDate(): String {
+        val date = startTimestamp?.toDate() ?: return "N/A"
+        return SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date)
+    }
+
+    private fun InteractionLog.formattedTimeRange(): String {
+        val start = startTimestamp?.toDate()
+        val end = endTimestamp?.toDate()
+
+        if (start == null && end == null) return "N/A"
+
+        val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+        return when {
+            start != null && end != null -> "${formatter.format(start)} - ${formatter.format(end)}"
+            start != null -> formatter.format(start)
+            else -> "N/A"
+        }
+    }
+
+    private fun InteractionLog.formattedCityState(): String {
+        return listOf(city, state)
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .joinToString(", ")
+            .ifBlank { "N/A" }
+    }
+
+    private fun InteractionLog.formattedAddress(): String {
+        return listOf(addr1, addr2, city, state, zipcode, country)
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .joinToString(", ")
+            .ifBlank { "N/A" }
+    }
+
+    private fun createSupportChip(text: String): TextView {
+        return TextView(requireContext()).apply {
+            this.text = text
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.gray700))
+            textSize = 13f
+            setPadding(14.dp(), 6.dp(), 14.dp(), 6.dp())
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_interaction_chip)
+
+            layoutParams = FlexboxLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 8.dp(), 8.dp())
+            }
+        }
+    }
+
+    private fun Int.dp(): Int {
+        return (this * resources.displayMetrics.density).toInt()
     }
     fun showCustomDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_login_2, null)
