@@ -62,6 +62,17 @@ jobs:
       - name: 5. Write google-services.json
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
 
+      - name: 5b. Debug - Verify google-services.json SHA-1 entries
+        run: |
+          cat app/google-services.json | python3 -c "
+          import json,sys
+          data=json.load(sys.stdin)
+          for client in data['client']:
+              pkg=client['client_info']['android_client_info']['package_name']
+              for oc in client.get('oauth_client',[]):
+                  if oc.get('client_type')==1:
+                      print(f'{pkg}: {oc[\"android_info\"][\"certificate_hash\"]}')
+
       - name: 6. Inject Configuration into local.properties
         run: |
           echo "API_KEY=${{ secrets.API_KEY }}" > ./local.properties
