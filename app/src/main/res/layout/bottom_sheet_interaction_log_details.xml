@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/interactionDetailsBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_interaction_bottom_sheet_white"
+    android:fillViewport="false"
+    android:paddingBottom="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="24dp">
+
+        <View
+            android:layout_width="92dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/bg_bottom_sheet_handle" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_interaction_details_card_white"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_person_icon"
+                    app:tint="@color/gray700" />
+
+                <TextView
+                    android:id="@+id/tvInteractionName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="Boston" />
+
+                <ImageView
+                    android:id="@+id/ivInteractionVerified"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_verified_yellow" />
+            </LinearLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:columnCount="2">
+
+                <TextView
+                    android:id="@+id/tvInteractionDate"
+                    style="@style/InteractionSheetInfoText"
+                    android:drawableStart="@drawable/baseline_calendar_month_24"
+                    tools:text="04/13/2026" />
+
+                <TextView
+                    android:id="@+id/tvInteractionCityState"
+                    style="@style/InteractionSheetInfoText"
+                    android:drawableStart="@drawable/ic_baseline_location_on_24"
+                    tools:text="Boston, Massachusetts" />
+
+                <TextView
+                    android:id="@+id/tvInteractionPhone"
+                    style="@style/InteractionSheetInfoText"
+                    android:drawableStart="@drawable/ic_baseline_contact_phone_24"
+                    tools:text="N/A" />
+
+                <TextView
+                    android:id="@+id/tvInteractionTime"
+                    style="@style/InteractionSheetInfoText"
+                    android:drawableStart="@drawable/baseline_access_time_24"
+                    tools:text="06:00 PM - 08:00 PM" />
+
+                <TextView
+                    android:id="@+id/tvInteractionAddress"
+                    style="@style/InteractionSheetInfoText"
+                    android:drawableStart="@drawable/ic_location"
+                    tools:text="139 Tremont St, Boston, MA 02111, USA" />
+
+                <TextView
+                    android:id="@+id/tvInteractionEmail"
+                    style="@style/InteractionSheetInfoText"
+                    android:drawableStart="@drawable/ic_baseline_email_24"
+                    tools:text="bostonteam@example.org" />
+            </GridLayout>
+
+            <TextView
+                android:id="@+id/tvPeopleJoined"
+                style="@style/InteractionSheetMetricText"
+                android:layout_marginTop="20dp"
+                tools:text="People Joined                                      3" />
+
+            <TextView
+                android:id="@+id/tvHelpRequestCount"
+                style="@style/InteractionSheetMetricText"
+                tools:text="Help Request Count" />
+
+            <TextView
+                android:id="@+id/tvPeopleHelped"
+                style="@style/InteractionSheetMetricText"
+                tools:text="People Helped                                      2" />
+
+            <TextView
+                android:id="@+id/tvCarePackagesDistributed"
+                style="@style/InteractionSheetMetricText"
+                tools:text="Care Packages Distributed                 1" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/supportChipContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:flexWrap="wrap">
+
+                <TextView
+                    style="@style/InteractionSheetChip"
+                    tools:text="Food and Drink" />
+
+                <TextView
+                    style="@style/InteractionSheetChip"
+                    tools:text="Hygiene Products" />
+
+                <TextView
+                    style="@style/InteractionSheetChip"
+                    tools:text="Wellness / Emotional Support" />
+            </com.google.android.flexbox.FlexboxLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnCloseInteractionDetails"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/round_outlined_button"
+            android:gravity="center"
+            android:text="@string/close"
+            android:textColor="@color/dark_green"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>

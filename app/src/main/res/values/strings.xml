@@ -774,4 +774,10 @@ If needed, you may fill out  one log \n for your entire day.
     <string name="increase">Increase</string>
     <string name="decrease">Decrease</string>
 
+
+    <string name="people_joined_count">People Joined %1$d</string>
+    <string name="help_request_count_value">Help Request Count %1$d</string>
+    <string name="people_helped_count">People Helped %1$d</string>
+    <string name="care_packages_distributed_count">Care Packages Distributed %1$d</string>
+
 </resources>

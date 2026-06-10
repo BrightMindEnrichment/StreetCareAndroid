@@ -129,4 +129,38 @@
         <item name="android:fontFamily">@font/poppins_bold_new</item>
     </style>
 
+    <style name="InteractionSheetInfoText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_marginBottom">14dp</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/gray700</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="InteractionSheetMetricText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="InteractionSheetChip">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:background">@drawable/bg_interaction_chip</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:textColor">@color/gray700</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
 </resources>
