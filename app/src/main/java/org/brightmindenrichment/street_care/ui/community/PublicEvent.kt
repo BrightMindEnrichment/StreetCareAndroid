@@ -1118,6 +1118,7 @@ class PublicEvent : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
             when (val item = groupedItems[position]) {
                 is ListItem.Header -> {
                     val headerHolder = holder as HeaderViewHolder
@@ -1389,6 +1390,7 @@ class PublicEvent : Fragment(), AdapterView.OnItemSelectedListener {
                 Log.d("PublicEvent", "Details button clicked")
                 onItemClick?.invoke(visitLog, position)
             }
+
         }
 
         override fun getItemCount(): Int = groupedItems.size

@@ -13,6 +13,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import org.brightmindenrichment.street_care.ui.community.data.Event
 import org.brightmindenrichment.street_care.util.Extensions.Companion.getDayInMilliSec
 import java.util.Date
+import java.util.Calendar
+
 
 
 object Queries {
@@ -73,6 +75,34 @@ object Queries {
             .collection("helpRequests")
             .orderBy("createdAt", order)
             .limit(50)  // Limits to 50 documents
+    }
+
+    fun getPublicInteractionLogQueryUpTo50(
+        order: Query.Direction = Query.Direction.ASCENDING
+    ): Query {
+        val startDate = Calendar.getInstance().apply {
+            set(2024, Calendar.JUNE, 1, 0, 0, 0)
+        }.time
+
+        return Firebase.firestore
+            .collection("visitLogWebProd")
+            .whereEqualTo("public", true)
+            .whereEqualTo("status", "approved")
+            .whereGreaterThan("dateTime", Timestamp(startDate))
+            .orderBy("dateTime", order)
+            .limit(50)
+    }
+
+    fun getLoadVisitLogBookNewQueryUpTo50 (
+        order: Query.Direction = Query.Direction.ASCENDING
+    ): Query{
+
+        return Firebase.firestore
+            .collection("VisitLogBook_New")
+            .whereEqualTo("isPublic", true)
+       //     .whereEqualTo("status", "approved")
+      //      .orderBy("timeStamp", order)
+            .limit(50)
     }
 
     fun getHelpRequestEventsQuery(

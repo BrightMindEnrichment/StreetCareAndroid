@@ -149,7 +149,8 @@
     <string name="turn_on_location">Please Turn On Location to see the Events near you.</string>
     <string name="location_permission_denied">Please allow Street Care to access location to see events near you</string>
     <string name="getting_events">Getting Events...</string>
-    <string name="public_logs" translatable="false">Public Interaction Logs</string>
+    <string name="help_needed">Help Needed</string>
+    <string name="public_interaction_log" translatable="false">Public Interaction Log</string>
     <string name="events_map">Events</string>
     <string name="default_location_placeholder">Unavailable</string>
     <string name="city_field">City:  </string>

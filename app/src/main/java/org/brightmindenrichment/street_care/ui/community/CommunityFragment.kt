@@ -45,6 +45,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.DocumentSnapshot
 import org.brightmindenrichment.street_care.util.Queries.getUpcomingEventsQueryUpTo50
+import org.brightmindenrichment.street_care.util.Queries.getHelpRequestDefaultQueryUpTo50
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -54,7 +55,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.cancel
+import com.google.firebase.firestore.Query
+import org.brightmindenrichment.street_care.util.Queries.getLoadVisitLogBookNewQueryUpTo50
+import org.brightmindenrichment.street_care.util.Queries.getPublicInteractionLogQueryUpTo50
 import java.util.*
+
 
 
 private val TAG = "COMMUNITY_FRAGMENT"
@@ -80,6 +85,10 @@ class CommunityFragment : Fragment(), OnMapReadyCallback  {
         val markerColor: Float
     )
     private var cachedEvents: List<MarkerData>? = null
+    private var cachedHelpRequests: List<MarkerData>? = null
+    private var cachedPublicInteractionLog: List<MarkerData>? = null
+    private var cachedVisitLogBookNew: List<MarkerData>? = null
+
 
     // Geocode for Maps
     private val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
@@ -159,7 +168,10 @@ class CommunityFragment : Fragment(), OnMapReadyCallback  {
 
         // Only load events, not help requests
         loadEvents()
-    }
+        //loadHelpRequests()
+        loadPublicInteractionLog()
+        loadVisitLogBookNew()
+   }
 
     private fun showLocationServiceToast(stringResId: Int) {
         if (!hasShownLocationServiceToast) {
@@ -205,19 +217,24 @@ class CommunityFragment : Fragment(), OnMapReadyCallback  {
         }
     }
 
-    // Modified to handle only events
-    private fun loadEvents() {
+    private fun loadMapData(
+        isEvent: Boolean,
+        cached: List<MarkerData>?,
+        updateCache: (List<MarkerData>) -> Unit,
+        query: () -> Task<QuerySnapshot>,
+        getMarkerColor: (document: DocumentSnapshot) -> Float
+    ) {
         if (!binding.mapLoadingContainer.isVisible) {
             binding.mapLoadingContainer.visibility = View.VISIBLE
         }
 
-        if (cachedEvents != null) {
-            cachedEvents?.forEach { addMarkerToMap(it) }
+        if (cached != null) {
+            cached.forEach { addMarkerToMap(it) }
             binding.mapLoadingContainer.visibility = View.GONE
             return
         }
 
-        getUpcomingEventsQueryUpTo50().get().addOnSuccessListener { querySnapshot ->
+        query().addOnSuccessListener { querySnapshot ->
             coroutineScope.launch(Dispatchers.IO) {
                 val markerDataList = mutableListOf<MarkerData>()
                 val geocoder = Geocoder(requireContext())
@@ -235,31 +252,93 @@ class CommunityFragment : Fragment(), OnMapReadyCallback  {
                             append(locationMap?.get("zipcode") ?: "")
                         }.trim()
 
-                        // Skip creating markers for documents with empty or invalid location data
+                        //skip creating markers for documents with empty or invalid location data
                         if (address.isEmpty() || address == ", ,  ") {
                             return@async null
                         }
-                        val title = document.getString("title") ?: "Event"
-                        val description = document.getString("description") ?: ""
+
+                        val title = document.getString("title") ?: if (isEvent) "Event" else "Public Interaction Log"
+
+                        val descriptionText = document.getString("description") ?: ""
+                        val whatGiven = document.get("whatGiven") as? List<*> ?: listOf<String>()
+
+                        val fullDescription = buildString {
+                            if (descriptionText.isNotBlank()) append(descriptionText)
+                            if (whatGiven.isNotEmpty()) {
+                                if (isNotEmpty()) append("\n")  // line break if description exists
+                                append("Items Given: ${whatGiven.joinToString(", ")}")
+                            }
+                        }
+
+                        //val title = document.getString("title") ?: if(isEvent) "Event" else "Help Request"
+                        //val description = document.getString("description") ?: ""
 
                         getMarkerDataFromLocation(
                             geocoder,
                             address,
                             title,
-                            description,
-                            BitmapDescriptorFactory.HUE_YELLOW // Yellow for events
+                            descriptionText,
+                            getMarkerColor(document)
                         )
                     }
                 }
 
                 processMarkerResults(deferredResults, markerDataList) {
-                    cachedEvents = markerDataList
+                    updateCache(markerDataList)
                 }
             }
         }.addOnFailureListener {
             binding.mapLoadingContainer.visibility = View.GONE
         }
     }
+
+
+    private fun loadEvents() = loadMapData(
+        isEvent = true,
+        cached = cachedEvents,
+        updateCache = { cachedEvents = it },
+        query = { getUpcomingEventsQueryUpTo50().get() },
+        getMarkerColor = { BitmapDescriptorFactory.HUE_YELLOW }
+    )
+
+    private fun loadHelpRequests() = loadMapData(
+        isEvent = false,
+        cached = cachedHelpRequests,
+        updateCache = { cachedHelpRequests = it },
+        query = { getHelpRequestDefaultQueryUpTo50().get() },
+        getMarkerColor = { document ->
+            if (document.getBoolean("isHelpNeeded") == true)
+                BitmapDescriptorFactory.HUE_GREEN
+            else
+                BitmapDescriptorFactory.HUE_RED
+        }
+    )
+
+    private fun loadPublicInteractionLog() = loadMapData(
+        isEvent = false,
+        cached = cachedPublicInteractionLog,
+        updateCache = { cachedPublicInteractionLog = it },
+        query = { getPublicInteractionLogQueryUpTo50(Query.Direction.DESCENDING).get() },
+        getMarkerColor = { document ->
+            // Optional logic, depends on your schema
+            val whatGiven = document.get("whatGiven") as? List<*> ?: listOf<String>()
+            if ("Food and Drink" in whatGiven) BitmapDescriptorFactory.HUE_RED
+            else BitmapDescriptorFactory.HUE_CYAN
+        }
+    )
+
+    private fun loadVisitLogBookNew() = loadMapData(
+        isEvent = false,
+        cached = cachedVisitLogBookNew,
+        updateCache = { cachedVisitLogBookNew = it },
+        query = { getLoadVisitLogBookNewQueryUpTo50(Query.Direction.DESCENDING).get() },
+        getMarkerColor = { document ->
+            // Optional logic, depends on your schema
+            val whatGiven = document.get("whatGiven") as? List<*> ?: listOf<String>()
+            if ("Food and Drink" in whatGiven) BitmapDescriptorFactory.HUE_RED
+            else BitmapDescriptorFactory.HUE_CYAN
+        }
+    )
 
     private suspend fun processMarkerResults(
         deferredResults: List<Deferred<MarkerData?>>,

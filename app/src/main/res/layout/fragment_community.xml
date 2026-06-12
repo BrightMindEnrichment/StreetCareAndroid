@@ -176,7 +176,7 @@
                 android:layout_marginStart="16dp"
                 android:drawableStart="@drawable/marker_red"
                 android:drawablePadding="8dp"
-                android:text="@string/public_logs"
+                android:text="@string/public_interaction_log"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintTop_toTopOf="parent"
