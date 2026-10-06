@@ -169,7 +169,7 @@ dependencies {
 
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.49")
-    kapt("com.google.dagger:hilt-android-compiler:2.46.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.49")
     implementation 'androidx.hilt:hilt-work:1.2.0'
 
     // Room Database
