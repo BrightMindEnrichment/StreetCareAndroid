@@ -55,6 +55,7 @@ fun launchPlacesAutocomplete(
             Place.Field.ADDRESS_COMPONENTS
         )
         val builder = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+            .setCountries(listOf("US"))
         if (initialQuery.isNotBlank()) builder.setInitialQuery(initialQuery)
         launcher.launch(builder.build(context))
     } catch (e: Exception) {

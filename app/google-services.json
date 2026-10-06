@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "223295299587-01fn9p7n7b960i40t3vniqj8a26ig8bc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "4ab26a87607843abb31dbbbec10ec24a36564688"
+          }
+        },
+        {
           "client_id": "223295299587-6tg0n97skq5tjamb60gk975aitahlole.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -39,27 +47,27 @@
           }
         },
         {
-          "client_id": "223295299587-cmne0482rb87aidagvt7tteog1okmpde.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.app.bmeapplication1",
-            "certificate_hash": "e94cadc460b381b9b0fff4e5fcd5cc12650a7495"
-          }
-        },
-        {
-          "client_id": "223295299587-i9vndduo0b5uano7s0kfcmehsn5n0fe4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.app.bmeapplication1",
-            "certificate_hash": "f94122d0662e275df44544f644d42fdcd3751fb4"
-          }
-        },
-        {
           "client_id": "223295299587-an741r2jlk06vah0k7a51snc4695squr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.app.bmeapplication1",
             "certificate_hash": "706417569be89042586fcf810173cdb3d9be1e9e"
+          }
+        },
+        {
+          "client_id": "223295299587-bvtakr4rdu4polqjav6unafi04adflre.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "3dddb2597a80bc2d2433a1a2e85843b1893e80e9"
+          }
+        },
+        {
+          "client_id": "223295299587-cmne0482rb87aidagvt7tteog1okmpde.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "e94cadc460b381b9b0fff4e5fcd5cc12650a7495"
           }
         },
         {
@@ -71,11 +79,35 @@
           }
         },
         {
+          "client_id": "223295299587-i9vndduo0b5uano7s0kfcmehsn5n0fe4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "f94122d0662e275df44544f644d42fdcd3751fb4"
+          }
+        },
+        {
+          "client_id": "223295299587-lg9n9m38on1b2upfeo25fb8nmnlivofl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "80dc76a17cf3eef0285d1dcf0b4e66daf7c633b8"
+          }
+        },
+        {
           "client_id": "223295299587-qrn2cb2e1e03rvekumjlvfmsc4dkrakg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.app.bmeapplication1",
             "certificate_hash": "13e2c9b35efe485211d7cd714bac26d75ee9dbf7"
+          }
+        },
+        {
+          "client_id": "223295299587-ukspavt06ffgu8q3to23jgd07q7olah7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bmeapplication1",
+            "certificate_hash": "70a9a71238c4d4c2bb373eef540844f9dfffa5bc"
           }
         },
         {
@@ -99,10 +131,11 @@
               "client_type": 3
             },
             {
-              "client_id": "223295299587-a2me8rouf1raslujp5muqkjm8gjcc5on.apps.googleusercontent.com",
+              "client_id": "223295299587-vr936oh7jd44691s2tnn3lg38iedlrh7.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.cbit.Street-Care"
+                "bundle_id": "com.bme.StreetCare",
+                "app_store_id": "1553805037"
               }
             }
           ]
@@ -146,10 +179,11 @@
               "client_type": 3
             },
             {
-              "client_id": "223295299587-a2me8rouf1raslujp5muqkjm8gjcc5on.apps.googleusercontent.com",
+              "client_id": "223295299587-vr936oh7jd44691s2tnn3lg38iedlrh7.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.cbit.Street-Care"
+                "bundle_id": "com.bme.StreetCare",
+                "app_store_id": "1553805037"
               }
             }
           ]
@@ -173,6 +207,14 @@
           }
         },
         {
+          "client_id": "223295299587-8b9u3haltdnq2kuamo8aq18okraefaj8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bmeapplication1",
+            "certificate_hash": "dc2005d2142cd0d2edcd0f22a0588693aa660cf0"
+          }
+        },
+        {
           "client_id": "223295299587-dinnroh9j2lb858kphbgb96f8t6j0eq2.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -193,10 +235,11 @@
               "client_type": 3
             },
             {
-              "client_id": "223295299587-a2me8rouf1raslujp5muqkjm8gjcc5on.apps.googleusercontent.com",
+              "client_id": "223295299587-vr936oh7jd44691s2tnn3lg38iedlrh7.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.cbit.Street-Care"
+                "bundle_id": "com.bme.StreetCare",
+                "app_store_id": "1553805037"
               }
             }
           ]
@@ -211,14 +254,6 @@
         }
       },
       "oauth_client": [
-        {
-          "client_id": "223295299587-mir24uqbehmku1kk7hbkgujj28gknpae.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "org.brightmindenrichment.street_care",
-            "certificate_hash": "77eac3ac88dcdc74be8b27b2fbbc9722c64c441b"
-          }
-        },
         {
           "client_id": "223295299587-vh7ps2e4vete3rhc3agl71o4gcupptt2.apps.googleusercontent.com",
           "client_type": 1,
@@ -248,10 +283,11 @@
               "client_type": 3
             },
             {
-              "client_id": "223295299587-a2me8rouf1raslujp5muqkjm8gjcc5on.apps.googleusercontent.com",
+              "client_id": "223295299587-vr936oh7jd44691s2tnn3lg38iedlrh7.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.cbit.Street-Care"
+                "bundle_id": "com.bme.StreetCare",
+                "app_store_id": "1553805037"
               }
             }
           ]

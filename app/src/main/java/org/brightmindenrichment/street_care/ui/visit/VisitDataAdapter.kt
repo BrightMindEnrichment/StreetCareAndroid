@@ -10,6 +10,7 @@ import com.google.firebase.firestore.QuerySnapshot
 //import com.google.firebase.ktx.Firebase
 import org.brightmindenrichment.street_care.ui.visit.data.Status
 import org.brightmindenrichment.street_care.ui.visit.data.VisitLog
+import org.brightmindenrichment.street_care.util.FirestoreCollections
 import java.util.*
 
 
@@ -53,7 +54,7 @@ class VisitDataAdapter {
         var completedFetches = 0
 
         fun checkAndFinish() {
-            if (completedFetches == 3) {
+            if (completedFetches == 4) {
                 visits.clear()
                 visits.addAll(allVisits.sortedByDescending { it.date })
                 onComplete()
@@ -461,6 +462,50 @@ class VisitDataAdapter {
             }
             .addOnFailureListener {
                 Log.w("VisitLog", "Failed to fetch visitLogWebProd: $it")
+                completedFetches++
+                checkAndFinish()
+            }
+
+        db.collection(FirestoreCollections.INTERACTION_LOG)
+            .whereEqualTo("userId", user.uid)
+            .get()
+            .addOnSuccessListener { result ->
+                Log.d("VisitLog", "InteractionLog query: uid=${user.uid} returned ${result.size()} docs")
+                for (document in result) {
+                    try {
+                        val visit = VisitLog()
+                        visit.id = document.id
+
+                        (document.get("startTimestamp") as? com.google.firebase.Timestamp)?.toDate()?.let {
+                            visit.date = it
+                        }
+
+                        val addr1 = document.getString("addr1") ?: ""
+                        val city = document.getString("city") ?: ""
+                        val state = document.getString("state") ?: ""
+                        val zip = document.getString("zipcode") ?: ""
+                        visit.whereVisit = listOf(addr1, city, state, zip).filter { it.isNotBlank() }.joinToString(", ")
+
+                        (document.get("numPeopleHelped") as? Long)?.let {
+                            visit.peopleCount = it
+                            totalPeopleCount += it
+                        }
+
+                        (document.get("carePackagesDistributed") as? Long)?.let {
+                            visit.number_of_items = it
+                            totalItemsDonated += it
+                        }
+
+                        allVisits.add(visit)
+                    } catch (e: Exception) {
+                        Log.e("VisitLog", "Error parsing InteractionLog document ${document.id}: $e")
+                    }
+                }
+                completedFetches++
+                checkAndFinish()
+            }
+            .addOnFailureListener {
+                Log.w("VisitLog", "Failed to fetch InteractionLog: $it")
                 completedFetches++
                 checkAndFinish()
             }

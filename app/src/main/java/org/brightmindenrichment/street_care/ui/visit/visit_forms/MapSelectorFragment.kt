@@ -119,6 +119,7 @@ class MapSelectorFragment : Fragment(), OnMapReadyCallback {
             Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS
         )
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+            .setCountries(listOf("US"))
             .build(requireContext())
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
         requireActivity().overridePendingTransition(R.anim.slide_in_top, R.anim.no_animation)

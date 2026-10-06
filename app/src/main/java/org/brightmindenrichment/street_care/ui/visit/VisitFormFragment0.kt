@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -114,10 +113,7 @@ class VisitFormFragment0 : Fragment() {
                 visitDataAdapter,
                 object : DetailsButtonClickListener {
                     override fun onClick(visitLog: VisitLog) {
-                        val bundle = bundleOf("visitlogId" to visitLog)
-                        findNavController().navigate(
-                            R.id.action_nav_visit_to_visitLogDetailsFragment, bundle
-                        )
+                        InteractionLogDialog().show(parentFragmentManager, "InteractionDialog")
                     }
                 })
             val totalItemsDonated = visitDataAdapter.getTotalItemsDonated
@@ -232,6 +228,9 @@ class VisitFormFragment0 : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             draftExists = viewModel.hasDraft()
             b.btnAddNew.text = if (draftExists) getString(R.string.continue_draft) else getString(R.string.add_new)
+        }
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            updateUI()
         }
     }
 
